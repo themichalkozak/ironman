@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ironman/domain/entities/event/event_list_response.dart';
+import 'file:///C:/Users/themi/flutter/ProjectFlutter/ironman/lib/domain/event/entity/event_list_response.dart';
 
 class EventDetailResponse extends EventListingResponse {
 
