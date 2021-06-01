@@ -21,8 +21,8 @@ class RankResponse {
   final String athleteFlag;
   final List<AthleteCategory> athleteCategories;
 
-  // const !!!!!!!!!!!!!!!!!!!!!!!
-  const RankResponse({
+
+  RankResponse({
     @required this.athleteId,
     @required this.athleteTitle,
     @required this.athleteFlag,
@@ -35,7 +35,7 @@ class AthleteCategory {
   final int total;
   final int events;
 
-  const AthleteCategory({
+  AthleteCategory({
     @required this.rank,
     @required this.total,
     @required this.events,
