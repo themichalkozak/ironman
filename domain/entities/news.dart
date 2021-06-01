@@ -13,4 +13,7 @@ class News extends Equatable {
     @required this.newsEntryDate,
     @required this.newsThumbnail,
   });
+
+  @override
+  List get props => [newsId,newsTitle,newsEntryDate,newsThumbnail];
 }
