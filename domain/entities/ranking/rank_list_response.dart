@@ -18,26 +18,20 @@ class RankListResponse extends Equatable {
 class RankResponse {
   final int athleteId;
   final String athleteTitle;
+  final String athleteGender;
   final String athleteFlag;
-  final List<AthleteCategory> athleteCategories;
-
-
-  RankResponse({
-    @required this.athleteId,
-    @required this.athleteTitle,
-    @required this.athleteFlag,
-    @required this.athleteCategories,
-  });
-}
-
-class AthleteCategory {
   final int rank;
   final int total;
   final int events;
 
-  AthleteCategory({
+  const RankResponse({
+    @required this.athleteId,
+    @required this.athleteTitle,
+    @required this.athleteGender,
+    @required this.athleteFlag,
     @required this.rank,
     @required this.total,
     @required this.events,
   });
 }
+
