@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ironman/domain/entities/news/news.dart';
+import 'package:ironman/domain/entities/news/news_list_response.dart';
 
 class NewsDetailedResponse extends News {
 
