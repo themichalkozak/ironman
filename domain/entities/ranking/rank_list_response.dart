@@ -3,11 +3,16 @@ import 'package:flutter/foundation.dart';
 
 class RankListResponse extends Equatable {
   final int id;
-  final int catetgoryId;
+  final int categoryId;
   final String rankingName;
   final String rankingCategoryName;
 
-
+  RankListResponse({
+    @required this.id,
+    @required this.categoryId,
+    @required this.rankingName,
+    @required this.rankingCategoryName,
+  });
 }
 
 class RankResponse {
@@ -16,6 +21,13 @@ class RankResponse {
   final String athleteFlag;
   final List<AthleteCategory> athleteCategories;
 
+  // const !!!!!!!!!!!!!!!!!!!!!!!
+  const RankResponse({
+    @required this.athleteId,
+    @required this.athleteTitle,
+    @required this.athleteFlag,
+    @required this.athleteCategories,
+  });
 }
 
 class AthleteCategory {
