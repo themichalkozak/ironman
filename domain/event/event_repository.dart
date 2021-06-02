@@ -8,7 +8,7 @@ abstract class EventRepository {
   Future<Either<Failure, List<Event>>> getEvents(
       EventTense eventTense);
 
-  Future<Either<Failure, Event>> getEventsByQuery(
+  Future<Either<Failure, List<Event>>> searchEventsByQuery(
       String query, EventTense eventTense);
 
   Future<Either<Failure, EventDetailResponse>> getEventById(int id);
