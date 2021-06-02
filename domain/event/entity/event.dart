@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-class EventListingResponse extends Equatable {
+class Event extends Equatable {
   final int eventId;
   final String eventTitle;
   final String eventDate;
@@ -10,7 +10,7 @@ class EventListingResponse extends Equatable {
   final String eventCountryName;
   final String eventFlag;
 
-  EventListingResponse({
+  Event({
     @required this.eventId,
     @required this.eventTitle,
     @required this.eventDate,

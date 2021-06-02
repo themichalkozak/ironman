@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'file:///C:/Users/themi/flutter/ProjectFlutter/ironman/lib/domain/event/entity/event_list_response.dart';
+import 'package:ironman/domain/event/entity/event.dart';
 
-class EventDetailResponse extends EventListingResponse {
+class EventDetailResponse extends Event {
 
   final List<EventSpecification> eventSpecifications;
   final String eventWebSite;
