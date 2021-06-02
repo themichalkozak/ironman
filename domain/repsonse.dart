@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-abstract class Response<T> extends Equatable {
+class Response<T> extends Equatable {
   final String status;
   final int currentPage;
   final int lastPage;
