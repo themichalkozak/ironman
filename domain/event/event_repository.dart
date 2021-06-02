@@ -1,5 +1,5 @@
 import 'package:dartz/dartz.dart';
-import 'package:ironman/core/failure.dart';
+import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/domain/event/entity/event_detail.dart';
 import 'package:ironman/domain/event/entity/event.dart';
 import 'package:ironman/domain/event/event_tense.dart';

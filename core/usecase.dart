@@ -1,11 +1,10 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
-import 'package:ironman/core/failure.dart';
 
-abstract class UseCase<Type,Params> {
+import 'error/failure.dart';
 
-  Future<Either<Failure,Type>> call(Params params);
-
+abstract class UseCase<Type, Params> {
+  Future<Either<Failure, Type>> call(Params params);
 }
 
 class NoParams extends Equatable {}

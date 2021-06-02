@@ -3,7 +3,7 @@ import 'package:ironman/domain/event/event_tense.dart';
 
 abstract class EventRemoteDataSource {
 
-  Future<EventModel> getEvents(EventTense eventTense);
+  Future<List<EventModel>> getEvents(EventTense eventTense);
 
   Future<EventModel> searchEventsByQuery(String query, EventTense eventTense);
 

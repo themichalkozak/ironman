@@ -1,0 +1,37 @@
+import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
+import 'package:ironman/core/error/failure.dart';
+import 'package:ironman/core/platform/network_info.dart';
+import 'package:ironman/data/event/event_remote_data_source.dart';
+import 'package:ironman/domain/event/entity/event.dart';
+import 'package:ironman/domain/event/entity/event_detail.dart';
+import 'package:ironman/domain/event/event_repository.dart';
+import 'package:ironman/domain/event/event_tense.dart';
+
+class EventRepositoryImpl extends EventRepository {
+  final EventRemoteDataSource remoteDataSource;
+  final NetworkInfo networkInfo;
+
+  EventRepositoryImpl({
+    @required this.remoteDataSource,
+    @required this.networkInfo,
+  });
+
+  @override
+  Future<Either<Failure, List<Event>>> getEvents(EventTense eventTense) async {
+    networkInfo.isConnected;
+    return Right(await remoteDataSource.getEvents(eventTense));
+  }
+
+  @override
+  Future<Either<Failure, EventDetail>> getEventById(int id) {
+    // todo not implemented
+  }
+
+  @override
+  Future<Either<Failure, List<Event>>> searchEventsByQuery(
+      String query, EventTense eventTense) {
+    // todo not implemented
+    return null;
+  }
+}
