@@ -9,3 +9,4 @@ class Failure extends Equatable {
 class ServerFailure extends Failure {}
 
 class NoInternetFailure extends Failure {}
+class NoElementFailure extends Failure {}
