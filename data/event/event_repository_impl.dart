@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
 import 'package:ironman/data/event/event_remote_data_source.dart';
@@ -19,19 +20,42 @@ class EventRepositoryImpl extends EventRepository {
 
   @override
   Future<Either<Failure, List<Event>>> getEvents(EventTense eventTense) async {
-    networkInfo.isConnected;
-    return Right(await remoteDataSource.getEvents(eventTense));
+
+    if (!await networkInfo.isConnected) {
+      return Left(NoInternetFailure());
+    }
+    try {
+      return Right(await remoteDataSource.getEvents(eventTense));
+    } on ServerExceptions {
+      return Left(ServerFailure());
+    }
   }
 
   @override
-  Future<Either<Failure, EventDetail>> getEventById(int id) {
-    // todo not implemented
+  Future<Either<Failure, EventDetail>> getEventById(int id) async {
+
+    if(!await networkInfo.isConnected){
+      return Left(NoInternetFailure());
+    }
+
+    try{
+      return Right(await remoteDataSource.getEventById(id));
+    } on ServerExceptions{
+      return Left(NoElementFailure());
+    }
   }
 
   @override
   Future<Either<Failure, List<Event>>> searchEventsByQuery(
-      String query, EventTense eventTense) {
-    // todo not implemented
-    return null;
+      String query, EventTense eventTense) async {
+
+    if(!await networkInfo.isConnected){
+      return Left(NoInternetFailure());
+    }
+    try{
+      return Right(await remoteDataSource.searchEventsByQuery(query, eventTense));
+    }on ServerExceptions {
+      return Left(ServerFailure());
+    }
   }
 }
