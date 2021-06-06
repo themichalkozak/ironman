@@ -23,16 +23,14 @@ class EventModel extends Event {
 
   factory EventModel.fromJson(Map<String,dynamic> json){
 
-    var eventModelJson = json['data'];
-
     return EventModel(
-      eventId: eventModelJson['event_id'],
-      eventCountryName: eventModelJson['event_country'],
-      eventVenue: eventModelJson['event_venue'],
-      eventFinishDate: eventModelJson['event_finish_date'],
-      eventDate: eventModelJson['event_date'],
-      eventTitle: eventModelJson['event_title'],
-      eventFlag: eventModelJson['event_flag'],
+      eventId: json['event_id'],
+      eventCountryName: json['event_country'],
+      eventVenue: json['event_venue'],
+      eventFinishDate: json['event_finish_date'],
+      eventDate: json['event_date'],
+      eventTitle: json['event_title'],
+      eventFlag: json['event_flag'],
     );
   }
 }
