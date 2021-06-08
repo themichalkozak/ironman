@@ -2,13 +2,25 @@ part of 'event_bloc.dart';
 
 @immutable
 abstract class EventState extends Equatable {
-  EventState([List props = const <dynamic>[]]): super(props);
+  EventState([List props = const <dynamic>[]]) : super(props);
 }
 
-class EventInitial extends EventState {}
+class Empty extends EventState {}
 
-class GetEvents extends EventState {
-  final EventTense eventTense;
+class Loading extends EventState {}
 
-  GetEvents(this.eventTense): super([eventTense]);
+class Loaded extends EventState {
+  final List<Event> events;
+
+  Loaded({
+    @required this.events,
+  });
+}
+
+class Error extends EventState {
+  final String errorMessage;
+
+  Error({
+    @required this.errorMessage,
+  });
 }
