@@ -13,5 +13,5 @@ class EventInitial extends EventEvent {}
 class GetEventsEvent extends EventEvent {
   final EventTense eventTense;
 
-  GetEventsEvent(this.eventTense) : super([eventTense]);
+  GetEventsEvent({this.eventTense = EventTense.All}) : super([eventTense]);
 }

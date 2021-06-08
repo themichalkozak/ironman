@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:meta/meta.dart';
 import 'package:ironman/domain/event/useCases/get_events.dart';
-import './bloc.dart';
+import 'bloc.dart';
 
 const String NO_ELEMENT_FAILURE_MESSAGE = 'Event not found';
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
@@ -16,7 +16,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   EventBloc({
     @required GetEvents getEvents,
   })  : assert(getEvents != null),
-        getEvents = getEvents;
+        getEvents = getEvents,super(Empty());
 
   @override
   EventState get initialState => Empty();
