@@ -1,4 +1,7 @@
-part of 'event_bloc.dart';
+
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:ironman/domain/event/event_tense.dart';
 
 @immutable
 abstract class EventEvent extends Equatable {
@@ -7,8 +10,8 @@ abstract class EventEvent extends Equatable {
 
 class EventInitial extends EventEvent {}
 
-class GetEvents extends EventEvent {
+class GetEventsEvent extends EventEvent {
   final EventTense eventTense;
 
-  GetEvents(this.eventTense) : super([eventTense]);
+  GetEventsEvent(this.eventTense) : super([eventTense]);
 }

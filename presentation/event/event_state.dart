@@ -1,4 +1,6 @@
-part of 'event_bloc.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/foundation.dart';
+import 'package:ironman/domain/event/entity/event.dart';
 
 @immutable
 abstract class EventState extends Equatable {
