@@ -7,3 +7,11 @@ class ServerExceptions implements Exception {
     @required this.message,
   });
 }
+
+class NoElementExceptions implements Exception {
+  final String message;
+
+  const NoElementExceptions({
+    @required this.message
+  });
+}

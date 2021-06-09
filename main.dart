@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/injector_container.dart' as di;
-import 'package:ironman/presentation/event/bloc/bloc.dart';
-import 'package:ironman/presentation/event/screens/event_screen.dart';
+import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 
-import 'presentation/event/bloc/event_bloc.dart';
+import 'features/event/presentation/screens/event_screen.dart';
+
 
 void main() async {
    WidgetsFlutterBinding.ensureInitialized();
