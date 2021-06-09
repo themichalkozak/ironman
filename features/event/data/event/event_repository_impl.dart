@@ -58,6 +58,8 @@ class EventRepositoryImpl extends EventRepository {
       return Right(await remoteDataSource.searchEventsByQuery(query, eventTense));
     }on ServerExceptions {
       return Left(ServerFailure());
+    }on NoElementExceptions catch(error) {
+      return Left(NoElementFailure(error: error.message));
     }
   }
 }
