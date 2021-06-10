@@ -13,7 +13,7 @@ class ResponseModel<T> extends Response {
     @required this.currentPage,
     @required this.lastPage,
     @required this.data,
-    @required this.message,
+    this.message,
   });
 
   factory ResponseModel.fromJson(Map<String,dynamic> json) {

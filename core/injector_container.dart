@@ -2,6 +2,7 @@ import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ironman/core/platform/network_info.dart';
 import 'package:ironman/features/event/domain/useCases/get_events.dart';
+import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import '../features/event/data/event/event_remote_data_source.dart';
 import '../features/event/data/event/event_repository_impl.dart';
@@ -14,8 +15,9 @@ Future<void> init() async {
   // Features
   // UseCases
   sl.registerLazySingleton(() => GetEvents(sl()));
+  sl.registerLazySingleton(() => SearchEventsByQuery(sl()));
   // Bloc
-  sl.registerFactory<EventBloc>(() => (EventBloc(getEvents: sl())));
+  sl.registerFactory<EventBloc>(() => (EventBloc(getEvents: sl(),searchEventsByQuery: sl())));
   // Repositories
   sl.registerLazySingleton<EventRepository>(
       () => EventRepositoryImpl(

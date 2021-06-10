@@ -7,26 +7,25 @@ import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import '../event_repository.dart';
 
-class SearchEventsByQuery extends UseCase<List<Event>, Params> {
+class SearchEventsByQuery
+    extends UseCase<List<Event>, SearchEventsByQueryParams> {
   final EventRepository repository;
-
 
   SearchEventsByQuery(this.repository);
 
   @override
-  Future<Either<Failure, List<Event>>> call(Params params) {
-    return repository.searchEventsByQuery(params.query,params.eventTense);
+  Future<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params) {
+    return repository.searchEventsByQuery(params.query, params.eventTense);
   }
-
 }
 
-class Params extends Equatable {
+class SearchEventsByQueryParams extends Equatable {
   final String query;
   final EventTense eventTense;
 
-  Params({
+  SearchEventsByQueryParams({
     @required this.query,
     @required this.eventTense,
-  }) :super([query,eventTense]);
-
+  })  : assert(query != null),
+        super([query, eventTense]);
 }
