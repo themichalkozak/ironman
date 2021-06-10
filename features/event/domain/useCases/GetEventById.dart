@@ -7,21 +7,21 @@ import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 import '../event_repository.dart';
 
-class GetEventById extends UseCase<Event, Params> {
+class GetEventById extends UseCase<Event, GetEventByIdParams> {
   final EventRepository repository;
 
   GetEventById(this.repository);
 
   @override
-  Future<Either<Failure, EventDetail>> call(Params params) {
+  Future<Either<Failure, EventDetail>> call(GetEventByIdParams params) {
     return repository.getEventById(params.id);
   }
 }
 
-class Params extends Equatable {
+class GetEventByIdParams extends Equatable {
   final int id;
 
-  Params({
+  GetEventByIdParams({
     @required this.id,
   }) : super([id]);
 }
