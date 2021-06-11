@@ -6,7 +6,12 @@ import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/widgets/loading_widget.dart';
 import 'package:ironman/features/event/presentation/widgets/message_display.dart';
 
+
+
 class EventDetailScreen extends StatelessWidget {
+
+  static const String routeName = 'event-detail-screen';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

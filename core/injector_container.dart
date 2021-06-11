@@ -1,6 +1,7 @@
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ironman/core/platform/network_info.dart';
+import 'package:ironman/core/route/app_router.dart';
 import 'package:ironman/features/event/domain/useCases/get_event_by_id.dart';
 import 'package:ironman/features/event/domain/useCases/get_events.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
@@ -30,6 +31,7 @@ Future<void> init() async {
   sl.registerLazySingleton<EventRemoteDataSource>(() => EventRemoteDataSourceImpl(sl()));
   // Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
+  sl.registerLazySingleton<AppRouter>(() => AppRouter());
   // External
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());
