@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 
 @immutable
@@ -13,7 +12,7 @@ class Empty extends EventState {}
 class Loading extends EventState {}
 
 class Loaded extends EventState {
-  final List<Event> events;
+  final List events;
 
   Loaded({
     @required this.events,

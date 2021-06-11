@@ -6,6 +6,7 @@ import 'package:ironman/features/event/domain/useCases/get_event_by_id.dart';
 import 'package:ironman/features/event/domain/useCases/get_events.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/presentation/bloc/detail/bloc.dart';
 import '../features/event/data/event/event_remote_data_source.dart';
 import '../features/event/data/event/event_repository_impl.dart';
 import '../features/event/domain/event_repository.dart';
@@ -20,7 +21,8 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SearchEventsByQuery(sl()));
   sl.registerLazySingleton(() => GetEventById(sl()));
   // Bloc
-  sl.registerFactory<EventBloc>(() => (EventBloc(getEvents: sl(),searchEventsByQuery: sl(),getEventById:sl() )));
+  sl.registerFactory<EventBloc>(() => (EventBloc(getEvents: sl(),searchEventsByQuery: sl())));
+  sl.registerFactory<EventDetailBloc>(() => (EventDetailBloc(getEventById: sl())));
   // Repositories
   sl.registerLazySingleton<EventRepository>(
       () => EventRepositoryImpl(

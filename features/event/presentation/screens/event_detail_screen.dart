@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
-import 'package:ironman/features/event/presentation/bloc/bloc.dart';
-import 'package:ironman/features/event/presentation/widgets/loading_widget.dart';
-import 'package:ironman/features/event/presentation/widgets/message_display.dart';
-
-
+import 'package:ironman/features/event/presentation/bloc/detail/bloc.dart';
+import 'package:ironman/features/event/presentation/widgets/widgets.dart';
 
 class EventDetailScreen extends StatelessWidget {
 
@@ -15,7 +13,7 @@ class EventDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<EventBloc, EventState>(
+      body: BlocBuilder<EventDetailBloc, EventDetailState>(
         builder: (context, state) {
           if (state is Loading) {
             return LoadingWidget();
@@ -23,8 +21,8 @@ class EventDetailScreen extends StatelessWidget {
           if (state is Error) {
             return MessageDisplay(message: state.errorMessage);
           }
-          if (state is LoadedDetail) {
-            return buildBody(context, state.event);
+          if (state is Loaded) {
+            return buildBody(context, state.data);
           }
           return Center(
             child: Text('Bug 🍑'),

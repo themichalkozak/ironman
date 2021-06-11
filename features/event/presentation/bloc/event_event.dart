@@ -25,11 +25,3 @@ class SearchEventsByQueryEvent extends EventEvent {
   }): super([query,eventTense]);
 
 }
-
-class GetEventByIdEvent extends EventEvent {
-  final int id;
-
-  GetEventByIdEvent({
-    @required this.id,
-  }):super([id]);
-}
