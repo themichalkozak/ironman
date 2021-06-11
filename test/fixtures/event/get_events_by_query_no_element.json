@@ -1,0 +1,16 @@
+{
+  "code": 200,
+  "status": "success",
+  "current_page": 1,
+  "data": [],
+  "first_page_url": "https://api.triathlon.org/v1/search?per_page=3&query=123456&collection=events&page=1",
+  "from": null,
+  "last_page": 1,
+  "last_page_url": "https://api.triathlon.org/v1/search?per_page=3&query=123456&collection=events&page=1",
+  "next_page_url": null,
+  "path": "https://api.triathlon.org/v1/search",
+  "per_page": "3",
+  "prev_page_url": null,
+  "to": null,
+  "total": 0
+}

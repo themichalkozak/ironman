@@ -1,0 +1,317 @@
+{
+  "code": 200,
+  "status": "success",
+  "current_page": 1,
+  "data": [
+    {
+      "event_id": 122987,
+      "event_title": "1992 POL Duathlon National Championships",
+      "event_slug": "1992_pol_duathlon_national_championships",
+      "event_edit_date": "1992-01-01T00:00:00+00:00",
+      "event_venue": "",
+      "event_country": "Poland",
+      "event_latitude": 0,
+      "event_longitude": 0,
+      "event_date": "1992-01-01",
+      "event_finish_date": "1992-01-01",
+      "event_country_isoa2": "PL",
+      "event_country_noc": "POL",
+      "event_region_id": 10,
+      "event_country_id": 246,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [],
+      "event_specifications": [
+        {
+          "cat_name": "Duathlon",
+          "cat_id": 355,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Standard",
+          "cat_id": 368,
+          "cat_parent_id": 355
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/pl.png",
+      "event_listing": "https://www.triathlon.org/events/event/1992_pol_duathlon_national_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/122987",
+      "timestamp": 694224000,
+      "sport": [
+        {
+          "cat_name": "Duathlon",
+          "cat_id": 355,
+          "cat_parent_id": null
+        }
+      ],
+      "specification": [
+        {
+          "cat_name": "Standard",
+          "cat_id": 368,
+          "cat_parent_id": 355
+        }
+      ],
+      "federation_event": true,
+      "web_gallery": false,
+      "hr_gallery": false,
+      "has_ag_prog": false,
+      "event_redirect": false,
+      "media_centre": false,
+      "event_on_ott": false,
+      "event_postponed_to_2021": false,
+      "event_postponed": false,
+      "event_cancelled": false,
+      "event_new_date": false,
+      "hide_from_events": false,
+      "hide_from_results": false,
+      "_highlightResult": {
+        "event_title": {
+          "value": "1992 POL Duathlon National Championships",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_venue": {
+          "value": "",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_country": {
+          "value": "<span class=\"text-semibold\"><u>Poland</u></span>",
+          "matchLevel": "full",
+          "fullyHighlighted": true,
+          "matchedWords": [
+            "poland"
+          ]
+        },
+        "sport": [
+          {
+            "cat_name": {
+              "value": "Duathlon",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "specification": [
+          {
+            "cat_name": {
+              "value": "Standard",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "event_id": 122986,
+      "event_title": "1992 POL Middle Distance Triathlon National Championships",
+      "event_slug": "1992_pol_middle_distance_triathlon_national_championships",
+      "event_edit_date": "2018-01-09T15:57:51+00:00",
+      "event_venue": "",
+      "event_country": "Poland",
+      "event_latitude": 0,
+      "event_longitude": 0,
+      "event_date": "1992-01-01",
+      "event_finish_date": "1992-01-01",
+      "event_country_isoa2": "PL",
+      "event_country_noc": "POL",
+      "event_region_id": 10,
+      "event_country_id": 246,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [],
+      "event_specifications": [
+        {
+          "cat_name": "Long Distance Triathlon",
+          "cat_id": 356,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Middle Distance",
+          "cat_id": 373,
+          "cat_parent_id": 356
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/pl.png",
+      "event_listing": "https://www.triathlon.org/events/event/1992_pol_middle_distance_triathlon_national_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/122986",
+      "timestamp": 694224000,
+      "sport": [
+        {
+          "cat_name": "Long Distance Triathlon",
+          "cat_id": 356,
+          "cat_parent_id": null
+        }
+      ],
+      "specification": [
+        {
+          "cat_name": "Middle Distance",
+          "cat_id": 373,
+          "cat_parent_id": 356
+        }
+      ],
+      "federation_event": true,
+      "web_gallery": false,
+      "hr_gallery": false,
+      "has_ag_prog": false,
+      "event_redirect": false,
+      "media_centre": false,
+      "event_on_ott": false,
+      "event_postponed_to_2021": false,
+      "event_postponed": false,
+      "event_cancelled": false,
+      "event_new_date": false,
+      "hide_from_events": false,
+      "hide_from_results": false,
+      "_highlightResult": {
+        "event_title": {
+          "value": "1992 POL Middle Distance Triathlon National Championships",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_venue": {
+          "value": "",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_country": {
+          "value": "<span class=\"text-semibold\"><u>Poland</u></span>",
+          "matchLevel": "full",
+          "fullyHighlighted": true,
+          "matchedWords": [
+            "poland"
+          ]
+        },
+        "sport": [
+          {
+            "cat_name": {
+              "value": "Long Distance Triathlon",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "specification": [
+          {
+            "cat_name": {
+              "value": "Middle Distance",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "event_id": 122985,
+      "event_title": "1992 POL Triathlon National Championships",
+      "event_slug": "1992_pol_triathlon_national_championships",
+      "event_edit_date": "1992-01-01T00:00:00+00:00",
+      "event_venue": "",
+      "event_country": "Poland",
+      "event_latitude": 0,
+      "event_longitude": 0,
+      "event_date": "1992-01-01",
+      "event_finish_date": "1992-01-01",
+      "event_country_isoa2": "PL",
+      "event_country_noc": "POL",
+      "event_region_id": 10,
+      "event_country_id": 246,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Standard",
+          "cat_id": 377,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/pl.png",
+      "event_listing": "https://www.triathlon.org/events/event/1992_pol_triathlon_national_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/122985",
+      "timestamp": 694224000,
+      "sport": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        }
+      ],
+      "specification": [
+        {
+          "cat_name": "Standard",
+          "cat_id": 377,
+          "cat_parent_id": 357
+        }
+      ],
+      "federation_event": true,
+      "web_gallery": false,
+      "hr_gallery": false,
+      "has_ag_prog": false,
+      "event_redirect": false,
+      "media_centre": false,
+      "event_on_ott": false,
+      "event_postponed_to_2021": false,
+      "event_postponed": false,
+      "event_cancelled": false,
+      "event_new_date": false,
+      "hide_from_events": false,
+      "hide_from_results": false,
+      "_highlightResult": {
+        "event_title": {
+          "value": "1992 POL Triathlon National Championships",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_venue": {
+          "value": "",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_country": {
+          "value": "<span class=\"text-semibold\"><u>Poland</u></span>",
+          "matchLevel": "full",
+          "fullyHighlighted": true,
+          "matchedWords": [
+            "poland"
+          ]
+        },
+        "sport": [
+          {
+            "cat_name": {
+              "value": "Triathlon",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "specification": [
+          {
+            "cat_name": {
+              "value": "Standard",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "first_page_url": "https://api.triathlon.org/v1/search?per_page=3&query=POLAND&collection=events&page=1",
+  "from": 1,
+  "last_page": 15,
+  "last_page_url": "https://api.triathlon.org/v1/search?per_page=3&query=POLAND&collection=events&page=15",
+  "next_page_url": "https://api.triathlon.org/v1/search?per_page=3&query=POLAND&collection=events&page=2",
+  "path": "https://api.triathlon.org/v1/search",
+  "per_page": "3",
+  "prev_page_url": null,
+  "to": 3,
+  "total": 44
+}

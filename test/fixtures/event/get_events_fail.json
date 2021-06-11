@@ -1,0 +1,7 @@
+{
+"code": 401,
+"status": "fail",
+"data": {
+"message": "You are not authorised for this resource"
+}
+}

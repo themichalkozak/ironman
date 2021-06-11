@@ -1,0 +1,1 @@
+enum EventTense {Upcoming,Past,All}

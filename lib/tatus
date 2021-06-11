@@ -1,0 +1,23 @@
+[1mdiff --git a/main.dart b/main.dart[m
+[1mindex 09188d2..60dfec1 100644[m
+[1m--- a/main.dart[m
+[1m+++ b/main.dart[m
+[36m@@ -1,6 +1,7 @@[m
+ import 'package:flutter/material.dart';[m
+ import 'package:flutter_bloc/flutter_bloc.dart';[m
+ import 'package:ironman/core/injector_container.dart' as di;[m
+[32m+[m[32mimport 'package:ironman/features/event/domain/event_tense.dart';[m
+ import 'package:ironman/features/event/presentation/bloc/bloc.dart';[m
+ import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';[m
+ [m
+[36m@@ -27,8 +28,8 @@[m [mclass MyApp extends StatelessWidget {[m
+           )[m
+         ),[m
+         home: BlocProvider([m
+[31m-          create: (context) => di.sl<EventBloc>()..add(GetEventByIdEvent(id: 149007)),[m
+[31m-          child: EventDetailScreen(),[m
+[32m+[m[32m          create: (context) => di.sl<EventBloc>()..add(GetEventsEvent(eventTense: EventTense.All)),[m
+[32m+[m[32m          child: EventScreen(),[m
+         )[m
+     );[m
+   }[m
