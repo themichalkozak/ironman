@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-class Response<T> extends Equatable {
+class ListingResponse<T> extends Equatable {
   final String status;
   final int currentPage;
   final int lastPage;
   final List<T> data;
 
-  Response({
+  ListingResponse({
     @required this.status,
     @required this.currentPage,
     @required this.lastPage,
