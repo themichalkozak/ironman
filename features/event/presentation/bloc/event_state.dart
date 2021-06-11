@@ -19,6 +19,14 @@ class Loaded extends EventState {
   }):super([events]);
 }
 
+class LoadedDetail extends EventState {
+  final Event event;
+
+  LoadedDetail({
+    @required this.event,
+  }):super([event]);
+}
+
 class Error extends EventState {
   final String errorMessage;
 
