@@ -2,9 +2,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:ironman/features/event/domain/event_tense.dart';
+import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import '../../../../core/utils/constants.dart';
 import 'package:ironman/core/error/exceptions.dart';
-import '../../../../core/ResponseModel.dart';
+import '../../../../core/listing_response_model.dart';
 import 'EventDetailModel.dart';
 import 'EventModel.dart';
 
@@ -33,7 +34,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     if (response.statusCode != 200) {
       throw ServerExceptions(message: 'Error');
     }
-    final responseModel = ResponseModel.fromJson(json.decode(response.body));
+    final responseModel = ListingResponseModel.fromJson(json.decode(response.body));
 
     if (responseModel.status == 'fail') {
       throw ServerExceptions(message: responseModel.message);
@@ -53,7 +54,23 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
   }
 
   @override
-  Future<EventDetailModel> getEventById(int id) {}
+  Future<EventDetailModel> getEventById(int id) async {
+
+    final endpoint = '/v1/events';
+    final uri = Uri.https(BASE_URL,'$endpoint/$id');
+
+    final response = await client.get(uri,
+        headers:  {'Content-Type': 'application/json',
+          'apikey': API_KEY});
+
+    if(response.statusCode != 200){
+      throw ServerExceptions(message: SERVER_FAILURE_MESSAGE);
+    }
+
+    final jsonMap = json.decode(response.body);
+
+    return EventDetailModel.fromJson(jsonMap);
+  }
 
   @override
   Future<List<EventModel>> searchEventsByQuery( String query, EventTense eventTense) async {
@@ -69,7 +86,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       throw ServerExceptions(message: response.statusCode.toString());
     }
 
-    final responseModel = ResponseModel.fromJson(json.decode(response.body));
+    final responseModel = ListingResponseModel.fromJson(json.decode(response.body));
 
 
     if(responseModel.status == 'fail'){
