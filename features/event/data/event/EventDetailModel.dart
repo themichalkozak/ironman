@@ -26,25 +26,24 @@ class EventDetailModel extends EventDetail {
             information: information);
 
   factory EventDetailModel.fromJson(Map<String, dynamic> json) {
-    final eventJson = json['features.event.data'];
 
     List<EventSpecificationModel> eventSpecificationModels = [];
 
-    (eventJson['event_specifications'] as List).forEach((json) {
+    (json['event_specifications'] as List)?.forEach((json) {
       eventSpecificationModels.add(EventSpecificationModel.fromJson(json));
     });
 
     return EventDetailModel(
-        eventId: eventJson['eventId'],
-        eventTitle: eventJson['event_id'],
-        eventDate: eventJson['event_date'],
-        eventFinishDate: eventJson['event_finish_date'],
-        eventVenue: eventJson['event_venue'],
-        eventCountryName: eventJson['event_country'],
-        eventFlag: eventJson['event_flag'],
+        eventId: json['event_id'],
+        eventTitle: json['event_title'],
+        eventDate: json['event_date'],
+        eventFinishDate: json['event_finish_date'],
+        eventVenue: json['event_venue'],
+        eventCountryName: json['event_country'],
+        eventFlag: json['event_flag'],
         eventSpecifications: eventSpecificationModels,
-        eventWebSite: eventJson['eventId'],
-        information: eventJson['eventId']);
+        eventWebSite: json['eventId'],
+        information: json['eventId']);
   }
 }
 
