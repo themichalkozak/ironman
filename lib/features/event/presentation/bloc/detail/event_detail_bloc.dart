@@ -14,6 +14,8 @@ class EventDetailBloc extends Bloc<EventDetailEvent, EventDetailState> {
   })  : assert(getEventById != null),
         super(Empty());
 
+  EventDetailState get initialState => Empty();
+
   @override
   Stream<EventDetailState> mapEventToState(EventDetailEvent event) async* {
     if (event is GetEventByIdEvent) {

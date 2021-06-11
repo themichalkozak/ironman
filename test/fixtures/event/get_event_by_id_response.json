@@ -1,0 +1,138 @@
+{
+  "code": 200,
+  "status": "success",
+  "data": {
+    "event_id": 149007,
+    "event_title": "1985 Ulster ETU Triathlon Team Relay European Championships",
+    "event_slug": "1985_ulster_etu_triathlon_team_relay_european_championships",
+    "event_edit_date": "2020-07-07T07:52:12+00:00",
+    "event_venue": "Ulster",
+    "event_country": "Ireland",
+    "event_latitude": 54.76166,
+    "event_longitude": -6.96123,
+    "event_date": "1985-06-08",
+    "event_finish_date": "1985-06-08",
+    "event_country_isoa2": "IE",
+    "event_country_noc": "IRL",
+    "event_region_id": 10,
+    "event_country_id": 188,
+    "event_region_name": "Europe",
+    "event_status": "Scheduled",
+    "event_categories": [
+      {
+        "cat_name": "Continental Championship",
+        "cat_id": 340,
+        "cat_parent_id": null
+      }
+    ],
+    "event_specifications": [
+      {
+        "cat_name": "Triathlon",
+        "cat_id": 357,
+        "cat_parent_id": null
+      },
+      {
+        "cat_name": "Relay",
+        "cat_id": 379,
+        "cat_parent_id": 357
+      }
+    ],
+    "event_flag": "https://triathlon-images.imgix.net/images/icons/ie.png",
+    "event_listing": "https://www.triathlon.org/events/event/1985_ulster_etu_triathlon_team_relay_european_championships",
+    "event_api_listing": "https://api.triathlon.org/v1//events/149007",
+    "information": null,
+    "logo": null,
+    "event_website": null,
+    "schedule": null,
+    "briefing": null,
+    "entry_fee": null,
+    "prize_money": null,
+    "contact": {
+      "contact_name": null,
+      "contact_phone": null,
+      "contact_fax": null,
+      "contact_email": null,
+      "contact_address": null
+    },
+    "social": {
+      "twitter": null,
+      "facebook": null
+    },
+    "travel": {
+      "closest_airport": null,
+      "local_transport": null,
+      "host_hotel": null,
+      "homestay": null
+    },
+    "media": {
+      "media_centre": false,
+      "media_details": null
+    },
+    "rankings": {
+      "points_deduction": 0,
+      "rankings_override": false,
+      "event_container": false
+    },
+    "documents": null,
+    "course_maps": null,
+    "technical_delegate": null,
+    "gallery": [],
+    "hr_gallery": false,
+    "event_news": null,
+    "event_videos": null,
+    "related_events": [
+      {
+        "event_id": 149007,
+        "event_title": "1985 Ulster ETU Triathlon Team Relay European Championships",
+        "event_slug": "1985_ulster_etu_triathlon_team_relay_european_championships",
+        "event_edit_date": "2020-07-07T07:52:12+00:00",
+        "event_venue": "Ulster",
+        "event_country": "Ireland",
+        "event_latitude": 54.76166,
+        "event_longitude": -6.96123,
+        "event_date": "1985-06-08",
+        "event_finish_date": "1985-06-08",
+        "event_country_isoa2": "IE",
+        "event_country_noc": "IRL",
+        "event_region_id": 10,
+        "event_country_id": 188,
+        "event_region_name": "Europe",
+        "event_status": "Scheduled",
+        "event_categories": [
+          {
+            "cat_name": "Continental Championship",
+            "cat_id": 340,
+            "cat_parent_id": null
+          }
+        ],
+        "event_specifications": [
+          {
+            "cat_name": "Triathlon",
+            "cat_id": 357,
+            "cat_parent_id": null
+          },
+          {
+            "cat_name": "Relay",
+            "cat_id": 379,
+            "cat_parent_id": 357
+          }
+        ],
+        "event_flag": "https://triathlon-images.imgix.net/images/icons/ie.png",
+        "event_listing": "https://www.triathlon.org/events/event/1985_ulster_etu_triathlon_team_relay_european_championships",
+        "event_api_listing": "https://api.triathlon.org/v1//events/149007"
+      }
+    ],
+    "programs": [
+      {
+        "prog_id": 405641,
+        "event_id": 149007,
+        "prog_name": "Men Relay",
+        "prog_date": "1985-06-08",
+        "prog_time": null,
+        "prog_notes": null,
+        "results": true,
+        "team": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,289 @@
+import 'package:flutter_test/flutter_test.dart';
+import 'package:http/http.dart' as http;
+import 'package:ironman/core/error/failure.dart';
+import 'package:ironman/core/listing_response_model.dart';
+import 'package:ironman/core/error/exceptions.dart';
+import 'package:ironman/core/utils/constants.dart';
+import 'package:ironman/features/event/data/event/EventDetailModel.dart';
+import 'package:ironman/features/event/data/event/EventModel.dart';
+import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
+import 'package:ironman/features/event/domain/event_tense.dart';
+import 'package:ironman/features/event/presentation/bloc/bloc.dart';
+import 'package:mockito/mockito.dart';
+
+import '../../../../../fixtures/fixture_reader.dart';
+
+class MockHttpClient extends Mock implements http.Client {}
+
+void main() {
+  EventRemoteDataSourceImpl dataSourceImpl;
+  MockHttpClient mockHttpClient;
+
+  setUp(() {
+    mockHttpClient = MockHttpClient();
+    dataSourceImpl = EventRemoteDataSourceImpl(mockHttpClient);
+  });
+
+  void setUpMockHttpClientFailure404() {
+    when(mockHttpClient.get(any, headers: anyNamed('headers')))
+        .thenAnswer((_) async => http.Response('Somth goes wrong', 404));
+  }
+
+  group('get Events', () {
+    Uri setUpMockHttpClientSuccessResponse(String jsonPath, String endpoint) {
+      final uri = Uri.https(BASE_URL, endpoint);
+
+      when(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+          .thenAnswer((_) async => http.Response(fixture(jsonPath), 200));
+
+      return uri;
+    }
+
+    test(
+        'get Events where is correct apikey should perform get request', () async {
+      // arrange
+      // mock response for EventRemoteDataSourceImpl
+
+      final jsonPath = 'event/get_events_3_per_page_ordered_by_asc.json';
+      final endpoint = '/v1/events';
+      final uri = setUpMockHttpClientSuccessResponse(jsonPath, endpoint);
+
+      // act
+      // send get request to API
+      await dataSourceImpl.getEvents(EventTense.All);
+      // assert
+      // check if this method was called
+
+      verify(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
+    });
+
+    EventModel eventModel1 = EventModel(
+        eventId: 149007,
+        eventTitle:
+        '1985 Ulster ETU Triathlon Team Relay European Championships',
+        eventDate: '1985-06-08',
+        eventFinishDate: '1985-06-08',
+        eventVenue: 'Ulster',
+        eventCountryName: 'Ireland',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/ie.png');
+
+    EventModel eventModel2 = EventModel(
+        eventId: 140860,
+        eventTitle: '1985 Immenstadt ETU Triathlon European Championships',
+        eventDate: '1985-07-27',
+        eventFinishDate: '1985-07-27',
+        eventVenue: 'Immenstadt',
+        eventCountryName: 'Germany',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/de.png');
+
+    EventModel eventModel3 = EventModel(
+        eventId: 140949,
+        eventTitle:
+        '1985 Almere ETU Long Distance Triathlon European Championships',
+        eventDate: '1985-08-17',
+        eventFinishDate: '1985-08-17',
+        eventVenue: 'Almere',
+        eventCountryName: 'Netherlands',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/nl.png');
+
+    List<EventModel> eventModels = [eventModel1, eventModel2, eventModel3];
+
+    test('get Events when apikey is correct return List of EventModel',
+            () async {
+          // arrange
+          final String jsonPath = 'event/get_events_3_per_page_ordered_by_asc.json';
+          final endpoint = '/v1/events';
+          setUpMockHttpClientSuccessResponse(jsonPath, endpoint);
+
+          // act
+          final result = await dataSourceImpl.getEvents(EventTense.All);
+
+          // assert
+          expect(result, equals(eventModels));
+        });
+
+    test('get Events when error is 404 response code or other', () async {
+      // arrange
+      setUpMockHttpClientFailure404();
+      // act
+      final call = dataSourceImpl.getEvents;
+      // assert
+      expect(() => call(EventTense.All), throwsA(isA<ServerExceptions>()));
+    });
+  });
+
+  group('getEvents by query', () {
+    Uri setUpMockHttpClientSuccessResponse(String queryParam, String jsonPath,
+        String endpoint) {
+      final queryParams = {'query': queryParam};
+
+      final uri = Uri.https(BASE_URL, endpoint, queryParams);
+      when(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+          .thenAnswer((_) async => http.Response(fixture(jsonPath), 200));
+
+      return uri;
+    }
+
+    test('getEvents by query when apikey is correct called get request',
+            () async {
+          // arrange
+          final queryParam = 'poland';
+          final jsonPath = 'event/get_events_PL.json';
+          final endpoint = '/v1/search/events';
+          final uri =
+          setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint);
+          // act
+          await dataSourceImpl.searchEventsByQuery(queryParam, EventTense.All);
+          // assert
+          verify(mockHttpClient.get(uri,
+              headers: {
+                'Content-Type': 'application/json',
+                'apikey': API_KEY
+              }));
+        });
+
+    final tEventModel1 = EventModel(
+        eventId: 122987,
+        eventTitle: "1992 POL Duathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "Poland",
+        eventDate: "1992-01-01",
+        eventFinishDate: "1992-01-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
+
+    final tEventModel2 = EventModel(
+        eventId: 122986,
+        eventTitle: "1992 POL Middle Distance Triathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "Poland",
+        eventDate: "1992-01-01",
+        eventFinishDate: "1992-01-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
+    final tEventModel3 = EventModel(
+        eventId: 122985,
+        eventTitle: "1992 POL Triathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "Poland",
+        eventDate: "1992-01-01",
+        eventFinishDate: "1992-01-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
+
+    List<EventModel> tEventModels = [tEventModel1, tEventModel2, tEventModel3];
+
+    final tResponse = ListingResponseModel(
+        status: "success", currentPage: 1, lastPage: 15, data: tEventModels);
+
+    test(
+        'getEvents by query when apikey is correct return valid response model',
+            () async {
+          // arrange
+          final queryParam = 'poland';
+          final jsonPath = 'event/get_events_PL.json';
+          final endpoint = '/v1/search/events';
+          setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint);
+          // act
+          final result =
+          await dataSourceImpl.searchEventsByQuery(queryParam, EventTense.All);
+
+          // assert
+          expect(result, equals(tResponse.data));
+        });
+
+    test('getEvents by query when response is empty throw NoElementException',
+            () async {
+          // arrange
+          final queryParam = '-123=*';
+          final jsonPath = 'event/get_events_by_query_no_element.json';
+          final endpoint = '/v1/search/events';
+          setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint);
+          // act
+          final call =
+          dataSourceImpl.searchEventsByQuery(queryParam, EventTense.All);
+
+          // assert
+          expect(() => call, throwsA(isA<NoElementExceptions>()));
+        });
+
+    test(
+        'getEvents by query when responseCode is 404 or other throw ServerException',
+            () async {
+          // arrange
+          setUpMockHttpClientFailure404();
+
+          final call = dataSourceImpl.searchEventsByQuery('d', EventTense.All);
+
+          // assert
+          expect(() => call, throwsA(isA<ServerExceptions>()));
+        });
+  });
+
+  group('getEventById', () {
+    // arrange
+    final id = 149007;
+    final endpoint = '/v1/events';
+    final uri = Uri.https(BASE_URL, '$endpoint/$id');
+
+    test('getEventById when apiKey is correct called get request', () async {
+      when(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+          .thenAnswer((_) async =>
+          http.Response(fixture('event/get_event_by_id.json'), 200));
+
+      // act
+      await dataSourceImpl.getEventById(id);
+
+      // assert
+      verify(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
+    });
+
+    test(
+        'getEventById when is correct apikey return valid EventModel', () async {
+      // arrange
+      final testListEventSpec = [
+        EventSpecificationModel(name: 'Triathlon', id: 357, parentId: null),
+        EventSpecificationModel(name: 'Relay', id: 379, parentId: 357)
+      ];
+
+      final testEventDetail = EventDetailModel(
+          eventId: 149007,
+          eventTitle: '1985 Ulster ETU Triathlon Team Relay European Championships',
+          eventDate: "1985-06-08",
+          eventFinishDate: "1985-06-08",
+          eventVenue: 'Ulster',
+          eventCountryName: 'Ireland',
+          eventFlag: 'https://triathlon-images.imgix.net/images/icons/ie.png',
+          eventSpecifications: testListEventSpec,
+          eventWebSite:
+          null,
+          information: null);
+
+      when(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+          .thenAnswer((_) async =>
+          http.Response(fixture('event/get_event_by_id.json'), 200));
+      // act
+      final result = await dataSourceImpl.getEventById(id);
+
+      // assert
+      expect(result, equals(testEventDetail));
+    });
+
+    test('getEventById when statusCode is not 200 throw ServerException', () {
+      // arrange
+      when(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+      .thenThrow(ServerExceptions(message: SERVER_FAILURE_MESSAGE));
+
+      // act
+      final call = dataSourceImpl.getEventById(id);
+
+      // assert
+
+      expect(() => call,throwsA(isA<ServerExceptions>()));
+    });
+  });
+}

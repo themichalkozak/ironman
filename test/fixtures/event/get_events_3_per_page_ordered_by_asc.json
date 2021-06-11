@@ -1,0 +1,137 @@
+{
+  "code": 200,
+  "status": "success",
+  "current_page": 1,
+  "data": [
+    {
+      "event_id": 149007,
+      "event_title": "1985 Ulster ETU Triathlon Team Relay European Championships",
+      "event_slug": "1985_ulster_etu_triathlon_team_relay_european_championships",
+      "event_edit_date": "2020-07-07T07:52:12+00:00",
+      "event_venue": "Ulster",
+      "event_country": "Ireland",
+      "event_latitude": 54.76166,
+      "event_longitude": -6.96123,
+      "event_date": "1985-06-08",
+      "event_finish_date": "1985-06-08",
+      "event_country_isoa2": "IE",
+      "event_country_noc": "IRL",
+      "event_region_id": 10,
+      "event_country_id": 188,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Continental Championship",
+          "cat_id": 340,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Relay",
+          "cat_id": 379,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/ie.png",
+      "event_listing": "https://www.triathlon.org/events/event/1985_ulster_etu_triathlon_team_relay_european_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/149007"
+    },
+    {
+      "event_id": 140860,
+      "event_title": "1985 Immenstadt ETU Triathlon European Championships",
+      "event_slug": "1985_immenstadt_etu_triathlon_european_championships",
+      "event_edit_date": "2020-12-04T09:52:55+00:00",
+      "event_venue": "Immenstadt",
+      "event_country": "Germany",
+      "event_latitude": 47.55922,
+      "event_longitude": 10.22066,
+      "event_date": "1985-07-27",
+      "event_finish_date": "1985-07-27",
+      "event_country_isoa2": "DE",
+      "event_country_noc": "GER",
+      "event_region_id": 10,
+      "event_country_id": 170,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Continental Championship",
+          "cat_id": 340,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Standard",
+          "cat_id": 377,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/de.png",
+      "event_listing": "https://www.triathlon.org/events/event/1985_immenstadt_etu_triathlon_european_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/140860"
+    },
+    {
+      "event_id": 140949,
+      "event_title": "1985 Almere ETU Long Distance Triathlon European Championships",
+      "event_slug": "1985_almere_etu_long_distance_triathlon_european_championships",
+      "event_edit_date": "2020-11-19T09:49:32+00:00",
+      "event_venue": "Almere",
+      "event_country": "Netherlands",
+      "event_latitude": 52.35078,
+      "event_longitude": 5.2647,
+      "event_date": "1985-08-17",
+      "event_finish_date": "1985-08-17",
+      "event_country_isoa2": "NL",
+      "event_country_noc": "NED",
+      "event_region_id": 10,
+      "event_country_id": 230,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Continental Championship",
+          "cat_id": 340,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Long Distance Triathlon",
+          "cat_id": 356,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Long Distance",
+          "cat_id": 374,
+          "cat_parent_id": 356
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/nl.png",
+      "event_listing": "https://www.triathlon.org/events/event/1985_almere_etu_long_distance_triathlon_european_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/140949"
+    }
+  ],
+  "first_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=1",
+  "from": 1,
+  "last_page": 1481,
+  "last_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=1481",
+  "next_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=2",
+  "path": "https://api.triathlon.org/v1/events",
+  "per_page": "3",
+  "prev_page_url": null,
+  "to": 3,
+  "total": 4443
+}

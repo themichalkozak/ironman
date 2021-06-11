@@ -1,0 +1,102 @@
+{
+    "event_id": 122987,
+    "event_title": "1992 POL Duathlon National Championships",
+    "event_slug": "1992_pol_duathlon_national_championships",
+    "event_edit_date": "1992-01-01T00:00:00+00:00",
+    "event_venue": "",
+    "event_country": "Poland",
+    "event_latitude": 0,
+    "event_longitude": 0,
+    "event_date": "1992-01-01",
+    "event_finish_date": "1992-01-01",
+    "event_country_isoa2": "PL",
+    "event_country_noc": "POL",
+    "event_region_id": 10,
+    "event_country_id": 246,
+    "event_region_name": "Europe",
+    "event_status": "Scheduled",
+    "event_categories": [],
+    "event_specifications": [
+      {
+        "cat_name": "Duathlon",
+        "cat_id": 355,
+        "cat_parent_id": null
+      },
+      {
+        "cat_name": "Standard",
+        "cat_id": 368,
+        "cat_parent_id": 355
+      }
+    ],
+    "event_flag": "https://triathlon-images.imgix.net/images/icons/pl.png",
+    "event_listing": "https://www.triathlon.org/events/event/1992_pol_duathlon_national_championships",
+    "event_api_listing": "https://api.triathlon.org/v1//events/122987",
+    "information": null,
+    "logo": null,
+    "event_website": null,
+    "schedule": null,
+    "briefing": null,
+    "entry_fee": null,
+    "prize_money": null,
+    "contact": {
+      "contact_name": null,
+      "contact_phone": null,
+      "contact_fax": null,
+      "contact_email": null,
+      "contact_address": null
+    },
+    "social": {
+      "twitter": null,
+      "facebook": null
+    },
+    "travel": {
+      "closest_airport": null,
+      "local_transport": null,
+      "host_hotel": null,
+      "homestay": null
+    },
+    "media": {
+      "media_centre": false,
+      "media_details": null
+    },
+    "rankings": {
+      "points_deduction": 0,
+      "rankings_override": false,
+      "event_container": false
+    },
+    "documents": null,
+    "course_maps": [
+      {
+        "title": "",
+        "file": null
+      }
+    ],
+    "technical_delegate": null,
+    "gallery": [],
+    "hr_gallery": false,
+    "event_news": null,
+    "event_videos": null,
+    "related_events": [],
+    "programs": [
+      {
+        "prog_id": 323735,
+        "event_id": 122987,
+        "prog_name": "Elite Men",
+        "prog_date": "1992-01-01",
+        "prog_time": null,
+        "prog_notes": "Only top three are shown.\nTimes are not available.\nDistances: 1st Run 7.5 km, Bike 30 km, 2nd Run 3,5 km.",
+        "results": true,
+        "team": false
+      },
+      {
+        "prog_id": 323736,
+        "event_id": 122987,
+        "prog_name": "Elite Women",
+        "prog_date": "1992-01-01",
+        "prog_time": null,
+        "prog_notes": "Only top three are shown.\nTimes are not available.\nDistances: 1st Run 7.5 km, Bike 30 km, 2nd Run 3,5 km.",
+        "results": true,
+        "team": false
+      }
+    ]
+}
