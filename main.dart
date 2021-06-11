@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/injector_container.dart' as di;
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';
 
 import 'features/event/presentation/screens/event_screen.dart';
 
@@ -20,10 +21,14 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
+          textTheme: TextTheme(
+            headline1: TextStyle(fontSize: 20,fontWeight: FontWeight.bold,color: Colors.black),
+            headline2: TextStyle(fontSize: 16,fontWeight: FontWeight.bold),
+          )
         ),
         home: BlocProvider(
-          create: (context) => di.sl<EventBloc>()..add(GetEventsEvent()),
-          child: EventScreen(),
+          create: (context) => di.sl<EventBloc>()..add(GetEventByIdEvent(id: 149007)),
+          child: EventDetailScreen(),
         )
     );
   }

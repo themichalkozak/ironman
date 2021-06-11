@@ -24,7 +24,19 @@ class EventDetail extends Event {
             eventFinishDate: eventFinishDate,
             eventVenue: eventVenue,
             eventCountryName: eventCountryName,
-            eventFlag: eventCountryName);
+            eventFlag: eventFlag);
+
+  @override
+  String toString() =>
+      """ eventId: $eventId,
+            eventTitle: $eventTitle,
+            eventDate: $eventDate,
+            eventFinishDate: $eventFinishDate,
+            eventVenue: $eventVenue,
+            eventCountryName: $eventCountryName,
+            eventFlag: $eventFlag
+            information: $information,
+            enterWebsite: $eventWebSite """;
 }
 
 class EventSpecification {

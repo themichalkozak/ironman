@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
+import 'package:ironman/features/event/domain/entity/event_detail.dart';
 
 @immutable
 abstract class EventState extends Equatable {
@@ -20,11 +21,12 @@ class Loaded extends EventState {
 }
 
 class LoadedDetail extends EventState {
-  final Event event;
+  final EventDetail event;
 
   LoadedDetail({
     @required this.event,
-  }):super([event]);
+  }): assert(event != null)
+  ,super([event]);
 }
 
 class Error extends EventState {

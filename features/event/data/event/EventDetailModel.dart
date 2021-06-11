@@ -42,8 +42,8 @@ class EventDetailModel extends EventDetail {
         eventCountryName: json['event_country'],
         eventFlag: json['event_flag'],
         eventSpecifications: eventSpecificationModels,
-        eventWebSite: json['eventId'],
-        information: json['eventId']);
+        eventWebSite: json['eventId'] ?? '',
+        information: json['eventId']) ?? 'No information';
   }
 }
 

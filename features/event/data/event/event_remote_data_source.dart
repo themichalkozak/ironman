@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:ironman/core/response_model.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import '../../../../core/utils/constants.dart';
@@ -63,13 +64,13 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
         headers:  {'Content-Type': 'application/json',
           'apikey': API_KEY});
 
-    if(response.statusCode != 200){
-      throw ServerExceptions(message: SERVER_FAILURE_MESSAGE);
+    final responseModel = ResponseModel.fromJson(json.decode(response.body));
+
+    if(responseModel.status == 'fail'){
+      throw ServerExceptions(message: responseModel.message);
     }
 
-    final jsonMap = json.decode(response.body);
-
-    return EventDetailModel.fromJson(jsonMap);
+    return EventDetailModel.fromJson(responseModel.data);
   }
 
   @override
