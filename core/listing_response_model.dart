@@ -25,4 +25,5 @@ class ResponseModel<T> extends Response {
       message: json['message']
     );
   }
+  
 }
