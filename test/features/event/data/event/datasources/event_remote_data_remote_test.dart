@@ -1,14 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:ironman/core/error/failure.dart';
-import 'package:ironman/core/listing_response_model.dart';
 import 'package:ironman/core/error/exceptions.dart';
+import '../../../../../../lib/core/data/response_model.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/data/event/EventDetailModel.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
-import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:mockito/mockito.dart';
 
 import '../../../../../fixtures/fixture_reader.dart';
@@ -173,7 +172,7 @@ void main() {
 
     List<EventModel> tEventModels = [tEventModel1, tEventModel2, tEventModel3];
 
-    final tResponse = ListingResponseModel(
+    final tResponse = ResponseModel(
         status: "success", currentPage: 1, lastPage: 15, data: tEventModels);
 
     test(
@@ -230,7 +229,7 @@ void main() {
       when(mockHttpClient.get(uri,
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
           .thenAnswer((_) async =>
-          http.Response(fixture('event/get_event_by_id.json'), 200));
+          http.Response(fixture('event/get_event_by_id_response.json'), 200));
 
       // act
       await dataSourceImpl.getEventById(id);
@@ -264,7 +263,7 @@ void main() {
       when(mockHttpClient.get(uri,
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
           .thenAnswer((_) async =>
-          http.Response(fixture('event/get_event_by_id.json'), 200));
+          http.Response(fixture('event/get_event_by_id_response.json'), 200));
       // act
       final result = await dataSourceImpl.getEventById(id);
 
