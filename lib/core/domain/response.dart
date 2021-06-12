@@ -1,16 +1,18 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 
-class ListingResponse<T> extends Equatable {
+class Response extends Equatable {
   final String status;
+  final dynamic data;
+  final String message;
   final int currentPage;
   final int lastPage;
-  final List<T> data;
 
-  ListingResponse({
+  Response({
     @required this.status,
-    @required this.currentPage,
-    @required this.lastPage,
     @required this.data,
+    this.message,
+    this.currentPage,
+    this.lastPage,
   });
 }

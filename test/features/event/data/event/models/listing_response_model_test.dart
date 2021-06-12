@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ironman/core/listing_response_model.dart';
+import '../../../../../../lib/core/data/response_model.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
 import '../../../../../fixtures/fixture_reader.dart';
 
@@ -33,14 +33,14 @@ void main() {
 
   List<EventModel> eventModels = [eventModel1, eventModel2, eventModel3];
 
-  ListingResponseModel tResponseModel = ListingResponseModel(
+  ResponseModel tResponseModel = ResponseModel(
       status: 'success', currentPage: 1, lastPage: 1481, data: eventModels);
 
   test('fromJson when status is success return valid ListingResponseModel',(){
     // arrange
     final Map<String,dynamic> jsonMap = jsonDecode(fixture('event/get_events_3_per_page_ordered_by_asc.json'));
     // act
-    final result = ListingResponseModel.fromJson(jsonMap);
+    final result = ResponseModel.fromJson(jsonMap);
     // assert
     expect(result,tResponseModel);
   });
