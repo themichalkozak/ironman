@@ -11,8 +11,9 @@ class EventInitial extends EventEvent {}
 
 class GetEventsEvent extends EventEvent {
   final EventTense eventTense;
+  final int page;
 
-  GetEventsEvent({this.eventTense = EventTense.All}) : super([eventTense]);
+  GetEventsEvent({this.eventTense = EventTense.All,this.page}) : super([eventTense,page]);
 }
 
 class SearchEventsByQueryEvent extends EventEvent {

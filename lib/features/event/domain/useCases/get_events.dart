@@ -14,14 +14,16 @@ class GetEvents extends UseCase<List<Event>,GetEventsParams> {
 
   @override
   Future<Either<Failure, List<Event>>>call(GetEventsParams params) {
-    return repository.getEvents(params.eventTense);
+    return repository.getEvents(params.eventTense,params.page);
   }
 }
 
 class GetEventsParams extends Equatable {
   final EventTense eventTense;
+  final int page;
 
   GetEventsParams({
     @required this.eventTense,
-  }):super([eventTense]);
+    @required this.page
+  }):super([eventTense,page]);
 }

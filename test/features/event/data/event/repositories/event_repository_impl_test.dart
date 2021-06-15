@@ -66,14 +66,14 @@ void main() {
           'get Events when the call to remote features.event.data is successful return valid EventModel',
           () async {
         //arrange
-        when(mockEventRemoteDataSource.getEvents(any))
+        when(mockEventRemoteDataSource.getEvents(any,any))
             .thenAnswer((_) async => tEvents);
 
         //act
-        final result = await repository.getEvents(EventTense.All);
+        final result = await repository.getEvents(EventTense.All,1);
 
         //assert
-        verify(mockEventRemoteDataSource.getEvents(EventTense.All));
+        verify(mockEventRemoteDataSource.getEvents(EventTense.All,1));
         expect(result, equals(Right(tEvents)));
       });
 
@@ -82,12 +82,12 @@ void main() {
             'get Events when the call to remote features.event.data is unsuccessful return server failure',
                 () async {
               // arrange
-              when(mockEventRemoteDataSource.getEvents(any))
+              when(mockEventRemoteDataSource.getEvents(any,any))
                   .thenThrow(ServerExceptions(message: 'Error'));
               // act
-              final result = await repository.getEvents(EventTense.All);
+              final result = await repository.getEvents(EventTense.All,1);
               // assert
-              verify(mockEventRemoteDataSource.getEvents(EventTense.All));
+              verify(mockEventRemoteDataSource.getEvents(EventTense.All,1));
               expect(result, equals(Left(ServerFailure())));
             });
       });
@@ -96,7 +96,7 @@ void main() {
         test('get Events when no internet connection return no internet failure',
                 () async {
               // act
-              final result = await repository.getEvents(EventTense.All);
+              final result = await repository.getEvents(EventTense.All,1);
 
               //assert
               verifyZeroInteractions(mockEventRemoteDataSource);

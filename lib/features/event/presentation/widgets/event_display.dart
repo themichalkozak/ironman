@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
+import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/widgets/event_display_list_item.dart';
 
 class EventDisplay extends StatefulWidget {
@@ -28,7 +30,7 @@ class _EventDisplayState extends State<EventDisplay> {
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        print('NEXT PAGE');
+        BlocProvider.of<EventBloc>(context).add(GetEventsEvent());
       }
     });
   }

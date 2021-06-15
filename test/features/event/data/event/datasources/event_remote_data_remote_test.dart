@@ -50,7 +50,7 @@ void main() {
 
       // act
       // send get request to API
-      await dataSourceImpl.getEvents(EventTense.All);
+      await dataSourceImpl.getEvents(EventTense.All,1);
       // assert
       // check if this method was called
 
@@ -97,7 +97,7 @@ void main() {
           setUpMockHttpClientSuccessResponse(jsonPath, endpoint);
 
           // act
-          final result = await dataSourceImpl.getEvents(EventTense.All);
+          final result = await dataSourceImpl.getEvents(EventTense.All,1);
 
           // assert
           expect(result, equals(eventModels));
@@ -109,7 +109,56 @@ void main() {
       // act
       final call = dataSourceImpl.getEvents;
       // assert
-      expect(() => call(EventTense.All), throwsA(isA<ServerExceptions>()));
+      expect(() => call(EventTense.All,1), throwsA(isA<ServerExceptions>()));
+    });
+
+
+    EventModel eventModel4 = EventModel(
+        eventId: 140885,
+        eventTitle:
+        '1985 Abenra ETU Middle Distance Triathlon European Championships',
+        eventDate: '1985-09-01',
+        eventFinishDate: '1985-09-01',
+        eventVenue: 'Aabenraa',
+        eventCountryName: 'Denmark',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/dk.png');
+
+
+    EventModel eventModel5 = EventModel(
+        eventId: 149058,
+        eventTitle:
+        '1986 Mansfield ETU Triathlon Team Relay European Championships',
+        eventDate: '1986-01-01',
+        eventFinishDate: '1986-01-01',
+        eventVenue: 'Mansfield',
+        eventCountryName: 'Great Britain',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/gb.png');
+
+    EventModel eventModel6 = EventModel(
+        eventId: 140919,
+        eventTitle: '1986 Brasschaat ETU Middle Distance Triathlon European Championships',
+        eventDate: '1986-06-21',
+        eventFinishDate: '1986-06-21',
+        eventVenue: 'Brasschaat',
+        eventCountryName: 'Belgium',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/be.png');
+
+
+    List<EventModel> eventModels2 = [eventModel4, eventModel5, eventModel6];
+
+    test('getEvents when page is 2 and per page is 3 return Events from next page',() async {
+      // arrange
+      final int page = 2;
+      final queryParams = {'page': page.toString()};
+      final jsonPath = 'event/get_events_page_2.json';
+      final uri = Uri.https(BASE_URL,'/v1/events',queryParams);
+
+      when(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+          .thenAnswer((_) async => http.Response(fixture(jsonPath), 200));
+      final result = await dataSourceImpl.getEvents(EventTense.All, 2);
+      // assert
+      expect(result,eventModels2);
     });
   });
 

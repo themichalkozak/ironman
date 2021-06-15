@@ -44,30 +44,31 @@ void main() {
     // When getEvents has called with any arguments always return Right 'sites' object
     // contains test object
 
-    when(mockEventRepository.getEvents(any))
+    when(mockEventRepository.getEvents(any,any))
         .thenAnswer((_) async => Right(events));
 // act
     // call not-yet existent method
-    final result = await useCase(GetEventsParams(eventTense: EventTense.All));
+    final result = await useCase(GetEventsParams(eventTense: EventTense.All,page: 1));
     // useCase simply return whatever is in repository
     expect(result, Right(events));
     // verify is method has been called in eventRepository
-    verify(mockEventRepository.getEvents(EventTense.All));
+    verify(mockEventRepository.getEvents(EventTense.All,1));
     // check if only above method has been called and nothing more
     verifyNoMoreInteractions(mockEventRepository);
   });
 
   test('get events when is no internet connection should return failure ',
       () async {
-    when(mockEventRepository.getEvents(any))
+    when(mockEventRepository.getEvents(any,any))
         .thenAnswer((_) async => Left(NoInternetFailure()));
 
-        final result = await useCase(GetEventsParams(eventTense: EventTense.All));
+        final result = await useCase(GetEventsParams(eventTense: EventTense.All,page: 1));
 
         expect(result, Left(NoInternetFailure()));
 
-        verify(mockEventRepository.getEvents(EventTense.All));
+        verify(mockEventRepository.getEvents(EventTense.All,1));
 
         verifyNoMoreInteractions(mockEventRepository);
   });
+
 }

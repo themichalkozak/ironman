@@ -9,7 +9,7 @@ import 'EventDetailModel.dart';
 import 'EventModel.dart';
 
 abstract class EventRemoteDataSource {
-  Future<List<EventModel>> getEvents(EventTense eventTense);
+  Future<List<EventModel>> getEvents(EventTense eventTense,int page);
 
   Future<List<EventModel>> searchEventsByQuery(
       String query, EventTense eventTense);
@@ -23,12 +23,20 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
   EventRemoteDataSourceImpl(this.client);
 
   @override
-  Future<List<EventModel>> getEvents(EventTense eventTense) async {
+  Future<List<EventModel>> getEvents(EventTense eventTense, int page) async {
 
-    final uri = Uri.https(BASE_URL, '/v1/events');
+    print('Page: $page');
+
+    final queryParams = {'page': page.toString() };
+
+    final uri = Uri.https(BASE_URL,'/v1/events',queryParams);
+
+    print(uri);
 
     final response = await client.get(uri,
         headers: {'Content-Type': 'application/json', 'apikey': API_KEY});
+
+    print(response);
 
     if (response.statusCode != 200) {
       throw ServerExceptions(message: 'Error');

@@ -10,6 +10,7 @@ import 'bloc.dart';
 class EventBloc extends Bloc<EventEvent, EventState> {
   final GetEvents getEvents;
   final SearchEventsByQuery searchEventsByQuery;
+  int page = 1;
 
   EventBloc({@required this.getEvents, @required this.searchEventsByQuery})
       : assert(getEvents != null),
@@ -25,10 +26,13 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     if (event is GetEventsEvent) {
       yield Loading();
       final failureOrEvents =
-          await getEvents(GetEventsParams(eventTense: event.eventTense));
+          await getEvents(GetEventsParams(eventTense: event.eventTense,page: page));
       yield failureOrEvents.fold(
           (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-          (events) => Loaded(events: events));
+          (events) {
+            page++;
+            return Loaded(events: events);
+          });
     }
 
     if (event is SearchEventsByQueryEvent) {
