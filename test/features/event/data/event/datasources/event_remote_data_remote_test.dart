@@ -33,14 +33,14 @@ void main() {
       final uri = Uri.https(BASE_URL, endpoint);
 
       when(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+              headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
           .thenAnswer((_) async => http.Response(fixture(jsonPath), 200));
 
       return uri;
     }
 
-    test(
-        'get Events where is correct apikey should perform get request', () async {
+    test('get Events where is correct apikey should perform get request',
+        () async {
       // arrange
       // mock response for EventRemoteDataSourceImpl
 
@@ -50,7 +50,7 @@ void main() {
 
       // act
       // send get request to API
-      await dataSourceImpl.getEvents(EventTense.All,1);
+      await dataSourceImpl.getEvents(EventTense.All, 1);
       // assert
       // check if this method was called
 
@@ -61,7 +61,7 @@ void main() {
     EventModel eventModel1 = EventModel(
         eventId: 149007,
         eventTitle:
-        '1985 Ulster ETU Triathlon Team Relay European Championships',
+            '1985 Ulster ETU Triathlon Team Relay European Championships',
         eventDate: '1985-06-08',
         eventFinishDate: '1985-06-08',
         eventVenue: 'Ulster',
@@ -80,7 +80,7 @@ void main() {
     EventModel eventModel3 = EventModel(
         eventId: 140949,
         eventTitle:
-        '1985 Almere ETU Long Distance Triathlon European Championships',
+            '1985 Almere ETU Long Distance Triathlon European Championships',
         eventDate: '1985-08-17',
         eventFinishDate: '1985-08-17',
         eventVenue: 'Almere',
@@ -90,18 +90,18 @@ void main() {
     List<EventModel> eventModels = [eventModel1, eventModel2, eventModel3];
 
     test('get Events when apikey is correct return List of EventModel',
-            () async {
-          // arrange
-          final String jsonPath = 'event/get_events_3_per_page_ordered_by_asc.json';
-          final endpoint = '/v1/events';
-          setUpMockHttpClientSuccessResponse(jsonPath, endpoint);
+        () async {
+      // arrange
+      final String jsonPath = 'event/get_events_3_per_page_ordered_by_asc.json';
+      final endpoint = '/v1/events';
+      setUpMockHttpClientSuccessResponse(jsonPath, endpoint);
 
-          // act
-          final result = await dataSourceImpl.getEvents(EventTense.All,1);
+      // act
+      final result = await dataSourceImpl.getEvents(EventTense.All, 1);
 
-          // assert
-          expect(result, equals(eventModels));
-        });
+      // assert
+      expect(result, equals(eventModels));
+    });
 
     test('get Events when error is 404 response code or other', () async {
       // arrange
@@ -109,25 +109,23 @@ void main() {
       // act
       final call = dataSourceImpl.getEvents;
       // assert
-      expect(() => call(EventTense.All,1), throwsA(isA<ServerExceptions>()));
+      expect(() => call(EventTense.All, 1), throwsA(isA<ServerExceptions>()));
     });
-
 
     EventModel eventModel4 = EventModel(
         eventId: 140885,
         eventTitle:
-        '1985 Abenra ETU Middle Distance Triathlon European Championships',
+            '1985 Abenra ETU Middle Distance Triathlon European Championships',
         eventDate: '1985-09-01',
         eventFinishDate: '1985-09-01',
         eventVenue: 'Aabenraa',
         eventCountryName: 'Denmark',
         eventFlag: 'https://triathlon-images.imgix.net/images/icons/dk.png');
 
-
     EventModel eventModel5 = EventModel(
         eventId: 149058,
         eventTitle:
-        '1986 Mansfield ETU Triathlon Team Relay European Championships',
+            '1986 Mansfield ETU Triathlon Team Relay European Championships',
         eventDate: '1986-01-01',
         eventFinishDate: '1986-01-01',
         eventVenue: 'Mansfield',
@@ -136,62 +134,53 @@ void main() {
 
     EventModel eventModel6 = EventModel(
         eventId: 140919,
-        eventTitle: '1986 Brasschaat ETU Middle Distance Triathlon European Championships',
+        eventTitle:
+            '1986 Brasschaat ETU Middle Distance Triathlon European Championships',
         eventDate: '1986-06-21',
         eventFinishDate: '1986-06-21',
         eventVenue: 'Brasschaat',
         eventCountryName: 'Belgium',
         eventFlag: 'https://triathlon-images.imgix.net/images/icons/be.png');
 
-
     List<EventModel> eventModels2 = [eventModel4, eventModel5, eventModel6];
 
-    test('getEvents when page is 2 and per page is 3 return Events from next page',() async {
+    test(
+        'getEvents when page is 2 and per page is 3 return Events from next page',
+        () async {
       // arrange
       final int page = 2;
       final queryParams = {'page': page.toString()};
       final jsonPath = 'event/get_events_page_2.json';
-      final uri = Uri.https(BASE_URL,'/v1/events',queryParams);
+      final uri = Uri.https(BASE_URL, '/v1/events', queryParams);
 
       when(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+              headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
           .thenAnswer((_) async => http.Response(fixture(jsonPath), 200));
       final result = await dataSourceImpl.getEvents(EventTense.All, 2);
       // assert
-      expect(result,eventModels2);
+      expect(result, eventModels2);
     });
   });
 
   group('getEvents by query', () {
-    Uri setUpMockHttpClientSuccessResponse(String queryParam, String jsonPath,
-        String endpoint) {
-      final queryParams = {'query': queryParam};
+    Uri setUpMockHttpClientSuccessResponse(
+        String queryParam, String jsonPath, String endpoint, int page) {
+      final queryParams = {'query': queryParam, 'page': page.toString()};
 
       final uri = Uri.https(BASE_URL, endpoint, queryParams);
       when(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+              headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
           .thenAnswer((_) async => http.Response(fixture(jsonPath), 200));
 
       return uri;
     }
 
-    test('getEvents by query when apikey is correct called get request',
-            () async {
-          // arrange
-          final queryParam = 'poland';
-          final jsonPath = 'event/get_events_PL.json';
-          final endpoint = '/v1/search/events';
-          final uri =
-          setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint);
-          // act
-          await dataSourceImpl.searchEventsByQuery(queryParam, EventTense.All);
-          // assert
-          verify(mockHttpClient.get(uri,
-              headers: {
-                'Content-Type': 'application/json',
-                'apikey': API_KEY
-              }));
-        });
+    final page = 1;
+    final queryParam = 'poland';
+    final failedQueryParam = '-123=*';
+    final jsonPath = 'event/get_events_PL.json';
+    final endpoint = '/v1/search/events';
+    final eventTenseParam = EventTense.All;
 
     final tEventModel1 = EventModel(
         eventId: 122987,
@@ -221,51 +210,59 @@ void main() {
 
     List<EventModel> tEventModels = [tEventModel1, tEventModel2, tEventModel3];
 
+    test('getEvents by query when apikey is correct called get request',
+        () async {
+      // arrange
+
+      final uri = setUpMockHttpClientSuccessResponse(
+          queryParam, jsonPath, endpoint, page);
+      // act
+      await dataSourceImpl.searchEventsByQuery(queryParam, eventTenseParam, page);
+      // assert
+      verify(mockHttpClient.get(uri,
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
+    });
+
+
     final tResponse = ResponseModel(
         status: "success", currentPage: 1, lastPage: 15, data: tEventModels);
 
     test(
         'getEvents by query when apikey is correct return valid response model',
-            () async {
-          // arrange
-          final queryParam = 'poland';
-          final jsonPath = 'event/get_events_PL.json';
-          final endpoint = '/v1/search/events';
-          setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint);
-          // act
-          final result =
-          await dataSourceImpl.searchEventsByQuery(queryParam, EventTense.All);
+        () async {
+      // arrange
+      setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint, page);
+      // act
+      final result = await dataSourceImpl.searchEventsByQuery(
+          queryParam, eventTenseParam, page);
 
-          // assert
-          expect(result, equals(tResponse.data));
-        });
+      // assert
+      expect(result, equals(tResponse.data));
+    });
 
     test('getEvents by query when response is empty throw NoElementException',
-            () async {
-          // arrange
-          final queryParam = '-123=*';
-          final jsonPath = 'event/get_events_by_query_no_element.json';
-          final endpoint = '/v1/search/events';
-          setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint);
-          // act
-          final call =
-          dataSourceImpl.searchEventsByQuery(queryParam, EventTense.All);
+        () async {
+      // arrange
+          setUpMockHttpClientSuccessResponse(failedQueryParam, 'event/get_events_by_query_no_element.json', endpoint, page);
+      // act
+      final call =
+          dataSourceImpl.searchEventsByQuery(failedQueryParam, eventTenseParam, page);
 
-          // assert
-          expect(() => call, throwsA(isA<NoElementExceptions>()));
-        });
+      // assert
+      expect(() => call, throwsA(isA<NoElementExceptions>()));
+    });
 
     test(
         'getEvents by query when responseCode is 404 or other throw ServerException',
-            () async {
-          // arrange
-          setUpMockHttpClientFailure404();
+        () async {
+      // arrange
+      setUpMockHttpClientFailure404();
 
-          final call = dataSourceImpl.searchEventsByQuery('d', EventTense.All);
+      final call = dataSourceImpl.searchEventsByQuery(queryParam, eventTenseParam,page);
 
-          // assert
-          expect(() => call, throwsA(isA<ServerExceptions>()));
-        });
+      // assert
+      expect(() => call, throwsA(isA<ServerExceptions>()));
+    });
   });
 
   group('getEventById', () {
@@ -275,9 +272,10 @@ void main() {
     final uri = Uri.https(BASE_URL, '$endpoint/$id');
 
     test('getEventById when apiKey is correct called get request', () async {
-      when(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
-          .thenAnswer((_) async =>
+      when(mockHttpClient.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'apikey': API_KEY
+      })).thenAnswer((_) async =>
           http.Response(fixture('event/get_event_by_id_response.json'), 200));
 
       // act
@@ -288,8 +286,8 @@ void main() {
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
     });
 
-    test(
-        'getEventById when is correct apikey return valid EventModel', () async {
+    test('getEventById when is correct apikey return valid EventModel',
+        () async {
       // arrange
       final testListEventSpec = [
         EventSpecificationModel(name: 'Triathlon', id: 357, parentId: null),
@@ -298,20 +296,21 @@ void main() {
 
       final testEventDetail = EventDetailModel(
           eventId: 149007,
-          eventTitle: '1985 Ulster ETU Triathlon Team Relay European Championships',
+          eventTitle:
+              '1985 Ulster ETU Triathlon Team Relay European Championships',
           eventDate: "1985-06-08",
           eventFinishDate: "1985-06-08",
           eventVenue: 'Ulster',
           eventCountryName: 'Ireland',
           eventFlag: 'https://triathlon-images.imgix.net/images/icons/ie.png',
           eventSpecifications: testListEventSpec,
-          eventWebSite:
-          null,
+          eventWebSite: null,
           information: null);
 
-      when(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
-          .thenAnswer((_) async =>
+      when(mockHttpClient.get(uri, headers: {
+        'Content-Type': 'application/json',
+        'apikey': API_KEY
+      })).thenAnswer((_) async =>
           http.Response(fixture('event/get_event_by_id_response.json'), 200));
       // act
       final result = await dataSourceImpl.getEventById(id);
@@ -323,15 +322,15 @@ void main() {
     test('getEventById when statusCode is not 200 throw ServerException', () {
       // arrange
       when(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
-      .thenThrow(ServerExceptions(message: SERVER_FAILURE_MESSAGE));
+              headers: {'Content-Type': 'application/json', 'apikey': API_KEY}))
+          .thenThrow(ServerExceptions(message: SERVER_FAILURE_MESSAGE));
 
       // act
       final call = dataSourceImpl.getEventById(id);
 
       // assert
 
-      expect(() => call,throwsA(isA<ServerExceptions>()));
+      expect(() => call, throwsA(isA<ServerExceptions>()));
     });
   });
 }
