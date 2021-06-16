@@ -5,6 +5,7 @@ const String NO_ELEMENT_FAILURE_MESSAGE = 'Event not found';
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String NO_INTERNET_FAILURE = 'No internet Connection';
 const String NO_INITIAL_STATE_FAILURE = 'No internet Connection';
+const String NO_NEXT_PAGE_FAILURE = 'No more element';
 
 
 class Failure extends Equatable {
@@ -31,6 +32,8 @@ class Failure extends Equatable {
 }
 
 class NoInitialStateFailure extends Failure {}
+
+class NoNextPageFailure extends Failure {}
 
 class ServerFailure extends Failure {}
 

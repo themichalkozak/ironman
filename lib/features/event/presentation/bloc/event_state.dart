@@ -13,10 +13,12 @@ class Loading extends EventState {}
 
 class Loaded extends EventState {
   final List events;
+  final bool isExhausted;
 
   Loaded({
     @required this.events,
-  }):super([events]);
+    @required this.isExhausted
+  }): super([events,isExhausted]);
 }
 
 class LoadedDetail extends EventState {

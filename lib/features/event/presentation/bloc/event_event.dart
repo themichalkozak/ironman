@@ -26,3 +26,7 @@ class SearchEventsByQueryEvent extends EventEvent {
   }): super([query,eventTense]);
 
 }
+
+class SearchNextPageResultEvent extends EventEvent {
+  SearchNextPageResultEvent();
+}

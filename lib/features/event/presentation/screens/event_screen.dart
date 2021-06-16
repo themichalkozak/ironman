@@ -28,7 +28,7 @@ BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
     } else if (state is Loading) {
       return LoadingWidget();
     } else if (state is Loaded) {
-      return EventDisplay(events: state.events);
+      return EventDisplay(events: state.events,isExhausted: state.isExhausted ?? false,);
     } else if (state is Error) {
       return MessageDisplay(message: state.errorMessage);
     } else {

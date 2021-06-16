@@ -332,5 +332,6 @@ void main() {
 
       expect(() => call, throwsA(isA<ServerExceptions>()));
     });
+
   });
 }

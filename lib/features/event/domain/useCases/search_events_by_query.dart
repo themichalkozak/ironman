@@ -16,32 +16,63 @@ class SearchEventsByQuery
   @visibleForTesting
   int get page => _page;
 
+  @visibleForTesting
+  SearchEventsByQueryParams get params => _searchEventsByQueryParams;
+
   SearchEventsByQuery(this.repository);
 
   @override
-  Future<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params,[int page]) {
-    updateParams(params);
-    return repository.searchEventsByQuery(params.query, params.eventTense);
+  Future<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params,
+      [int page]) {
+    shouldResetPage(params.query);
+
+    updateParams(params.eventTense, params.query);
+
+    return repository.searchEventsByQuery(
+        params.query, params.eventTense, _page);
   }
 
   bool isInitialQuery() {
-    if(_searchEventsByQueryParams == null){
+    if (_searchEventsByQueryParams == null) {
       return false;
     }
-    if(_searchEventsByQueryParams.query == null){
+    if (_searchEventsByQueryParams.query == null) {
       return false;
     }
     return true;
   }
 
-  void updateParams(SearchEventsByQueryParams searchEventsByQueryParams) {
-    _searchEventsByQueryParams = searchEventsByQueryParams.copyWith(
-        query: searchEventsByQueryParams.query,
-        eventTense: searchEventsByQueryParams.eventTense);
+  void updateParams(EventTense eventTense, String query) {
+    if (eventTense == null || eventTense == null) {
+      return;
+    }
+
+    _searchEventsByQueryParams =
+        SearchEventsByQueryParams(eventTense: eventTense, query: query);
   }
 
   void incrementPage() {
     _page++;
+  }
+
+  void shouldResetPage(String query) {
+
+    if(_searchEventsByQueryParams == null){
+      return;
+    }
+
+    if(_searchEventsByQueryParams.query == null){
+      return;
+    }
+
+    if(_searchEventsByQueryParams.query != query){
+      resetPage();
+    }
+
+  }
+
+  void resetPage() {
+    _page = 1;
   }
 
   Future<Either<Failure, List<Event>>> fetchNextPageResult() async {
@@ -49,7 +80,7 @@ class SearchEventsByQuery
       return Left(NoInitialStateFailure());
     }
     incrementPage();
-    return call(_searchEventsByQueryParams,_page);
+    return call(_searchEventsByQueryParams, _page);
   }
 }
 

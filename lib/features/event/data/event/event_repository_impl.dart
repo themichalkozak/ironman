@@ -49,13 +49,13 @@ class EventRepositoryImpl extends EventRepository {
 
   @override
   Future<Either<Failure, List<Event>>> searchEventsByQuery(
-      String query, EventTense eventTense) async {
+      String query, EventTense eventTense,int page) async {
 
     if(!await networkInfo.isConnected){
       return Left(NoInternetFailure());
     }
     try{
-      return Right(await remoteDataSource.searchEventsByQuery(query, eventTense));
+      return Right(await remoteDataSource.searchEventsByQuery(query, eventTense,page));
     }on ServerExceptions {
       return Left(ServerFailure());
     }on NoElementExceptions catch(error) {

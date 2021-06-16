@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:http/http.dart';
 import 'package:ironman/core/error/failure.dart';
+import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/domain/useCases/get_events.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:meta/meta.dart';
@@ -25,23 +26,36 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   ) async* {
     if (event is GetEventsEvent) {
       yield Loading();
-      final failureOrEvents =
-          await getEvents(GetEventsParams(eventTense: event.eventTense));
-      yield failureOrEvents.fold(
-          (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-          (events) {
-            return Loaded(events: events);
-          });
+      final failureOrEvents = await searchEventsByQuery(
+          SearchEventsByQueryParams(eventTense: event.eventTense, query: ''));
+      yield failureOrEvents
+          .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+              (events) {
+        return Loaded(events: events);
+      });
     }
 
     if (event is SearchEventsByQueryEvent) {
       yield Loading();
+      print('Event query: ${event.query}');
       final failureOrEvents = await searchEventsByQuery(
           SearchEventsByQueryParams(
               query: event.query, eventTense: event.eventTense));
-      yield failureOrEvents.fold(
-          (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-          (events) => Loaded(events: events));
+      yield failureOrEvents
+          .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+              (events) {
+
+        return Loaded(events: events, isExhausted: events.length < PER_PAGE);
+      });
+    }
+    if (event is SearchNextPageResultEvent) {
+      yield Loading();
+      final failureOrEvents = await searchEventsByQuery.fetchNextPageResult();
+      yield failureOrEvents
+          .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+              (events) {
+        return Loaded(events: events, isExhausted: events.length < PER_PAGE);
+      });
     }
   }
 
@@ -53,6 +67,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         return failure.error ?? NO_ELEMENT_FAILURE_MESSAGE;
       case NoInternetFailure:
         return NO_INTERNET_FAILURE;
+      case NoInitialStateFailure:
+        return NO_INITIAL_STATE_FAILURE;
       default:
         return 'Unexpected Error';
     }

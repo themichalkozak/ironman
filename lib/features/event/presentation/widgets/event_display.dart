@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
+import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/widgets/event_display_list_item.dart';
 
 class EventDisplay extends StatefulWidget {
+  final bool isExhausted;
   final List<Event> events;
 
-  EventDisplay({
-    Key key,
-    @required this.events,
-  })  : assert(events != null),
+  EventDisplay({Key key, @required this.events, @required this.isExhausted})
+      : assert(events != null),
+        assert(isExhausted != null),
         super(key: key);
 
   @override
@@ -36,15 +38,23 @@ class _EventDisplayState extends State<EventDisplay> {
         child: ListView.builder(
           controller: _scrollController,
           itemBuilder: (context, index) {
-            return index == widget.events.length
+            return index >= widget.events.length && !widget.isExhausted
                 ? Container(
-              alignment: Alignment.center,
-              height: 50,
-              color: Theme.of(context).primaryColor.withOpacity(0.7),
-                child: Text('Load more events..',style: TextStyle(fontSize: 16,color: Colors.white,fontWeight: FontWeight.bold),))
+                    alignment: Alignment.center,
+                    height: 50,
+                    color: Theme.of(context).primaryColor.withOpacity(0.7),
+                    child: Text(
+                      'Load more events..',
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold),
+                    ))
                 : EventListItem(event: widget.events[index]);
           },
-          itemCount: widget.events.length + 1,
+          itemCount: widget.isExhausted
+              ? widget.events.length
+              : widget.events.length + 1,
         ));
   }
 
@@ -52,7 +62,7 @@ class _EventDisplayState extends State<EventDisplay> {
     print(_scrollController.position.extentAfter);
     if (notification is ScrollEndNotification &&
         _scrollController.position.extentAfter == 0) {
-    //  todo not implemented
+      BlocProvider.of<EventBloc>(context).add(SearchNextPageResultEvent());
     }
     return false;
   }

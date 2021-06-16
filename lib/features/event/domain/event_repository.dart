@@ -9,7 +9,7 @@ abstract class EventRepository {
       EventTense eventTense,int page);
 
   Future<Either<Failure, List<Event>>> searchEventsByQuery(
-      String query, EventTense eventTense);
+      String query, EventTense eventTense, int page);
 
   Future<Either<Failure, EventDetail>> getEventById(int id);
 }

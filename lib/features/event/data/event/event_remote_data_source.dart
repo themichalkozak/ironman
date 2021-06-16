@@ -83,6 +83,8 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
 
     final uri = Uri.https(BASE_URL, '/v1/search/events', queryParams);
 
+    print('Uri" $uri');
+
     final response = await client.get(uri,
         headers: {'Content-Type': 'application/json', 'apikey': API_KEY});
 

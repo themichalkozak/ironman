@@ -37,25 +37,33 @@ void main() {
         eventFlag: 'https://triathlon-images.imgix.net/images/icons/gb.png'),
   ];
 
-  SearchEventsByQueryParams params =
-      SearchEventsByQueryParams(query: '', eventTense: EventTense.All);
+  void mockSearchEventsByQuerySuccessResult(String searchQuery) async {
+    when(mockEventRepository.searchEventsByQuery(
+            searchQuery, EventTense.All, 1))
+        .thenAnswer((_) async => Right(events));
+  }
+
+  final eventTense = EventTense.All;
+  final page = 1;
 
   test(
       'search events by query when is not null and empty should return list Events',
       () async {
-    // 'On the fly' eventRepository implementation using Mocito Library
-    // When getEvents has called with any arguments always return Right 'sites' object
-    // contains test object
     // arrange
-    when(mockEventRepository.searchEventsByQuery(any, any))
-        .thenAnswer((_) async => Right(events));
-// act
-    // call not-yet existent method
+
+    final searchQuery = '';
+    SearchEventsByQueryParams params =
+        SearchEventsByQueryParams(query: searchQuery, eventTense: eventTense);
+
+    mockSearchEventsByQuerySuccessResult(searchQuery);
+    // act
+
     final result = await useCase(params);
     // useCase simply return whatever is in repository
     expect(result, Right(events));
     // verify is method has been called in eventRepository
-    verify(mockEventRepository.searchEventsByQuery('', EventTense.All));
+    verify(
+        mockEventRepository.searchEventsByQuery(searchQuery, eventTense, page));
     // check if only above method has been called and nothing more
     verifyNoMoreInteractions(mockEventRepository);
   });
@@ -66,12 +74,10 @@ void main() {
     // arrange
 
     final queryParam = 'England';
-    final eventTenseParam = EventTense.All;
-    final params = SearchEventsByQueryParams(
-        eventTense: eventTenseParam, query: queryParam);
+    final params =
+        SearchEventsByQueryParams(eventTense: eventTense, query: queryParam);
 
-    when(mockEventRepository.searchEventsByQuery(queryParam, eventTenseParam))
-        .thenAnswer((_) async => Right(events));
+    mockSearchEventsByQuerySuccessResult(queryParam);
 
     // act
     final result = await useCase(params);
@@ -79,108 +85,146 @@ void main() {
     // assert
     expect(result, Right(events));
 
-    verify(mockEventRepository.searchEventsByQuery(queryParam, eventTenseParam));
+    verify(
+        mockEventRepository.searchEventsByQuery(queryParam, eventTense, page));
     // check if only above method has  been called and nothing more
     verifyNoMoreInteractions(mockEventRepository);
   });
 
-  test(
-      'search events by query is not empty should return valid list events',
-          () async {
-        // arrange
+  test('fetch new page result should increment page value', () async {
+    // arrange
+    final queryParam = "Poland";
+    final eventTenseParam = EventTense.All;
 
-        final queryParam = 'England';
-        final eventTenseParam = EventTense.All;
-        final params = SearchEventsByQueryParams(
-            eventTense: eventTenseParam, query: queryParam);
+    mockSearchEventsByQuerySuccessResult(queryParam);
 
-        when(mockEventRepository.searchEventsByQuery(queryParam, eventTenseParam))
-            .thenAnswer((_) async => Right(events));
-
-        // act
-        final result = await useCase(params);
-
-        // assert
-        expect(result, Right(events));
-
-        verify(mockEventRepository.searchEventsByQuery(queryParam, eventTenseParam));
-        // check if only above method has  been called and nothing more
-        verifyNoMoreInteractions(mockEventRepository);
-      });
-
-  test(
-      'fetch new page result should increment page value',
-          () async {
-        // arrange
-            final queryParam = "Poland";
-            final eventTenseParam = EventTense.All;
-            when(mockEventRepository.searchEventsByQuery(queryParam, eventTenseParam))
-            .thenAnswer((_) async => Right(events));
-
-            final params = SearchEventsByQueryParams(
-                eventTense: eventTenseParam, query: queryParam);
-        // act
-            await useCase.call(params);
-            useCase.fetchNextPageResult();
-            expect(2,useCase.page);
-        // assert
-      });
+    final params = SearchEventsByQueryParams(
+        eventTense: eventTenseParam, query: queryParam);
+    // act
+    await useCase.call(params);
+    useCase.fetchNextPageResult();
+    expect(2, useCase.page);
+    // assert
+  });
 
   test(
       'fetch new page when isInitialState is false should throw noInitialStateFailure',
-          () async {
-        // arrange
-        final queryParam = "Poland";
-        final eventTenseParam = EventTense.All;
-        when(mockEventRepository.searchEventsByQuery(queryParam, eventTenseParam))
-            .thenAnswer((_) async => any);
-        // act
-        final result = await useCase.fetchNextPageResult();
-        expect(result,Left(NoInitialStateFailure()));
-        // assert
-      });
+      () async {
+    // arrange
+    final queryParam = "Poland";
+    mockSearchEventsByQuerySuccessResult(queryParam);
+
+    // act
+    final result = await useCase.fetchNextPageResult();
+
+    // assert
+    expect(result, Left(NoInitialStateFailure()));
+  });
+
+  void mockSearchEventsQueryFailureResult(Failure failure) {
+    when(mockEventRepository.searchEventsByQuery(any, any, any))
+        .thenAnswer((_) async => Left(failure));
+  }
+  final searchQuery = '';
+  final params = SearchEventsByQueryParams(eventTense: eventTense,query: searchQuery);
 
   test(
       'search events by query when is no internet connection should return NoInternetFailure',
       () async {
-    when(mockEventRepository.searchEventsByQuery(any, any))
-        .thenAnswer((_) async => Left(NoInternetFailure()));
+    // assert
+    mockSearchEventsQueryFailureResult(NoInternetFailure());
 
+    // act
     final result = await useCase(params);
 
     expect(result, Left(NoInternetFailure()));
 
-    verify(mockEventRepository.searchEventsByQuery(any, any));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, eventTense,page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
 
   test('search events by query when data is null return NoElementFailure',
       () async {
-    when(mockEventRepository.searchEventsByQuery(any, any))
-        .thenAnswer((_) async => Left(NoElementFailure()));
+
+    // assert
+        mockSearchEventsQueryFailureResult(NoElementFailure());
 
     final result = await useCase(params);
 
     expect(result, Left(NoElementFailure()));
 
-    verify(mockEventRepository.searchEventsByQuery(any, any));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, eventTense,page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
 
+
+
   test(
       'search events by query when is server failure should return serverFailure',
       () async {
-    when(mockEventRepository.searchEventsByQuery(any, any))
-        .thenAnswer((_) async => Left(ServerFailure()));
+
+        // assert
+        mockSearchEventsQueryFailureResult(ServerFailure());
 
     final result = await useCase(params);
 
     expect(result, Left(ServerFailure()));
 
-    verify(mockEventRepository.searchEventsByQuery(any, any));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, eventTense,page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
+
+  test(
+      'search events by query when is no initial State failure should return noInitialStateFailure',
+          () async {
+
+        // assert
+        mockSearchEventsQueryFailureResult(NoInitialStateFailure());
+
+        final result = await useCase.fetchNextPageResult();
+
+        expect(result, Left(NoInitialStateFailure()));
+
+        verifyNoMoreInteractions(mockEventRepository);
+      });
+
+  test('update Params when params is valid return valid params',() async {
+
+    // arrange
+    final searchQuery = 'Poland';
+    final eventTense = EventTense.All;
+    final params = SearchEventsByQueryParams(eventTense: eventTense,query: searchQuery);
+    mockSearchEventsByQuerySuccessResult(searchQuery);
+    // act
+    await useCase(params);
+
+    // assert
+    expect(params,useCase.params);
+  });
+
+  test('search events by query when is new query should page reset to 1',() async {
+
+    // arrange
+    final firstQuery = "Poland";
+    final secondQuery = "Denmark";
+    final eventTense = EventTense.All;
+    SearchEventsByQueryParams params = SearchEventsByQueryParams(eventTense: eventTense,query: firstQuery);
+    mockSearchEventsByQuerySuccessResult(firstQuery);
+
+    // act
+    await useCase(params);
+    expect(useCase.page,1);
+    await useCase.fetchNextPageResult();
+    expect(useCase.page,2);
+
+
+    params = SearchEventsByQueryParams(eventTense: eventTense,query: secondQuery);
+    await useCase(params);
+    expect(useCase.page,1);
+  });
+
+
 }
