@@ -5,8 +5,6 @@ import 'package:ironman/features/event/domain/entity/event_detail.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 
 abstract class EventRepository {
-  Future<Either<Failure, List<Event>>> getEvents(
-      EventTense eventTense,int page);
 
   Future<Either<Failure, List<Event>>> searchEventsByQuery(
       String query, EventTense eventTense, int page);

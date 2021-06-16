@@ -1,21 +1,17 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:http/http.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
-import 'package:ironman/features/event/domain/useCases/get_events.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
-  final GetEvents getEvents;
   final SearchEventsByQuery searchEventsByQuery;
 
-  EventBloc({@required this.getEvents, @required this.searchEventsByQuery})
-      : assert(getEvents != null),
-        assert(searchEventsByQuery != null),
+  EventBloc({@required this.searchEventsByQuery})
+      : assert(searchEventsByQuery != null),
         super(Empty());
 
   EventState get initialState => Empty();
@@ -31,7 +27,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       yield failureOrEvents
           .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
               (events) {
-        return Loaded(events: events);
+        return Loaded(events: events, isExhausted: events.length < PER_PAGE);
       });
     }
 
@@ -44,7 +40,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       yield failureOrEvents
           .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
               (events) {
-
         return Loaded(events: events, isExhausted: events.length < PER_PAGE);
       });
     }

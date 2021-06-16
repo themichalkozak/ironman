@@ -19,21 +19,6 @@ class EventRepositoryImpl extends EventRepository {
   });
 
   @override
-  Future<Either<Failure, List<Event>>> getEvents(EventTense eventTense,int page) async {
-
-    if (!await networkInfo.isConnected) {
-      return Left(NoInternetFailure());
-    }
-    try {
-      return Right(await remoteDataSource.getEvents(eventTense,page));
-    } on ServerExceptions {
-      return Left(ServerFailure());
-    } on NoElementExceptions catch(error) {
-      return Left(NoElementFailure(error: error.message));
-    }
-  }
-
-  @override
   Future<Either<Failure, EventDetail>> getEventById(int id) async {
 
     if(!await networkInfo.isConnected){
