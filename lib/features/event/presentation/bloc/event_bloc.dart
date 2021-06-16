@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:http/http.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/features/event/domain/useCases/get_events.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
@@ -10,7 +11,6 @@ import 'bloc.dart';
 class EventBloc extends Bloc<EventEvent, EventState> {
   final GetEvents getEvents;
   final SearchEventsByQuery searchEventsByQuery;
-  int page = 1;
 
   EventBloc({@required this.getEvents, @required this.searchEventsByQuery})
       : assert(getEvents != null),
@@ -26,11 +26,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     if (event is GetEventsEvent) {
       yield Loading();
       final failureOrEvents =
-          await getEvents(GetEventsParams(eventTense: event.eventTense,page: page));
+          await getEvents(GetEventsParams(eventTense: event.eventTense));
       yield failureOrEvents.fold(
           (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
           (events) {
-            page++;
             return Loaded(events: events);
           });
     }

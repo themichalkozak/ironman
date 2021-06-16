@@ -9,21 +9,20 @@ import '../event_tense.dart';
 
 class GetEvents extends UseCase<List<Event>,GetEventsParams> {
   final EventRepository repository;
+  int page = 1;
 
   GetEvents(this.repository);
 
   @override
   Future<Either<Failure, List<Event>>>call(GetEventsParams params) {
-    return repository.getEvents(params.eventTense,params.page);
+    return repository.getEvents(params.eventTense,page);
   }
 }
 
 class GetEventsParams extends Equatable {
   final EventTense eventTense;
-  final int page;
 
   GetEventsParams({
     @required this.eventTense,
-    @required this.page
-  }):super([eventTense,page]);
+  }):super([eventTense]);
 }

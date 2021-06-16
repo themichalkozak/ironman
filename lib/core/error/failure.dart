@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 const String NO_ELEMENT_FAILURE_MESSAGE = 'Event not found';
 const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String NO_INTERNET_FAILURE = 'No internet Connection';
+const String NO_INITIAL_STATE_FAILURE = 'No internet Connection';
+
 
 class Failure extends Equatable {
   final String error;
@@ -20,11 +22,15 @@ class Failure extends Equatable {
         return failure.error ?? NO_ELEMENT_FAILURE_MESSAGE;
       case NoInternetFailure:
         return NO_INTERNET_FAILURE;
+      case NoInitialStateFailure:
+        return NO_INITIAL_STATE_FAILURE;
       default:
         return 'Unexpected Error';
     }
   }
 }
+
+class NoInitialStateFailure extends Failure {}
 
 class ServerFailure extends Failure {}
 

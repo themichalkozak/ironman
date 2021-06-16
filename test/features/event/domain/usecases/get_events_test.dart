@@ -48,7 +48,7 @@ void main() {
         .thenAnswer((_) async => Right(events));
 // act
     // call not-yet existent method
-    final result = await useCase(GetEventsParams(eventTense: EventTense.All,page: 1));
+    final result = await useCase(GetEventsParams(eventTense: EventTense.All));
     // useCase simply return whatever is in repository
     expect(result, Right(events));
     // verify is method has been called in eventRepository
@@ -62,7 +62,7 @@ void main() {
     when(mockEventRepository.getEvents(any,any))
         .thenAnswer((_) async => Left(NoInternetFailure()));
 
-        final result = await useCase(GetEventsParams(eventTense: EventTense.All,page: 1));
+        final result = await useCase(GetEventsParams(eventTense: EventTense.All));
 
         expect(result, Left(NoInternetFailure()));
 
