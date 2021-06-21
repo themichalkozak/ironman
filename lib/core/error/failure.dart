@@ -39,6 +39,14 @@ class ServerFailure extends Failure {}
 
 class NoInternetFailure extends Failure {}
 
+class CacheFailure extends Failure {
+  final String error;
+
+  CacheFailure({
+    this.error
+  });
+}
+
 class NoElementFailure extends Failure {
   final String error;
 
