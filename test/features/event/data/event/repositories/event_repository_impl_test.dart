@@ -60,68 +60,86 @@ void main() {
     });
   }
 
-  group('get Events', () {
-    runTestsOnline(() {
-      test(
-          'get Events when the call to remote features.event.data is successful return valid EventModel',
-          () async {
-        //arrange
-        when(mockEventRemoteDataSource.getEvents(any))
-            .thenAnswer((_) async => tEvents);
-
-        //act
-        final result = await repository.getEvents(EventTense.All);
-
-        //assert
-        verify(mockEventRemoteDataSource.getEvents(EventTense.All));
-        expect(result, equals(Right(tEvents)));
-      });
-
-      runTestsOnline(() {
-        test(
-            'get Events when the call to remote features.event.data is unsuccessful return server failure',
-                () async {
-              // arrange
-              when(mockEventRemoteDataSource.getEvents(any))
-                  .thenThrow(ServerExceptions(message: 'Error'));
-              // act
-              final result = await repository.getEvents(EventTense.All);
-              // assert
-              verify(mockEventRemoteDataSource.getEvents(EventTense.All));
-              expect(result, equals(Left(ServerFailure())));
-            });
-      });
-
-      runTestsOffline(() {
-        test('get Events when no internet connection return no internet failure',
-                () async {
-              // act
-              final result = await repository.getEvents(EventTense.All);
-
-              //assert
-              verifyZeroInteractions(mockEventRemoteDataSource);
-              expect(result, equals(Left(NoInternetFailure())));
-            });
-      });
-    });
-  });
+  // group('get Events', () {
+  //   runTestsOnline(() {
+  //     test(
+  //         'get Events when the call to remote data is successful return valid EventModel',
+  //         () async {
+  //       //arrange
+  //       when(mockEventRemoteDataSource.getEvents(any,any))
+  //           .thenAnswer((_) async => tEvents);
+  //
+  //       //act
+  //       final result = await repository.getEvents(EventTense.All,1);
+  //
+  //       //assert
+  //       verify(mockEventRemoteDataSource.getEvents(EventTense.All,1));
+  //       expect(result, equals(Right(tEvents)));
+  //     });
+  //
+  //     runTestsOnline(() {
+  //       test(
+  //           'get Events when the call to remote features.event.data is unsuccessful return server failure',
+  //               () async {
+  //             // arrange
+  //             when(mockEventRemoteDataSource.getEvents(any,any))
+  //                 .thenThrow(ServerExceptions(message: 'Error'));
+  //             // act
+  //             final result = await repository.getEvents(EventTense.All,1);
+  //             // assert
+  //             verify(mockEventRemoteDataSource.getEvents(EventTense.All,1));
+  //             expect(result, equals(Left(ServerFailure())));
+  //           });
+  //     });
+  //
+  //     runTestsOffline(() {
+  //       test('get Events when no internet connection return no internet failure',
+  //               () async {
+  //             // act
+  //             final result = await repository.getEvents(EventTense.All,1);
+  //
+  //             //assert
+  //             verifyZeroInteractions(mockEventRemoteDataSource);
+  //             expect(result, equals(Left(NoInternetFailure())));
+  //           });
+  //     });
+  //   });
+  // });
 
 
   group('get Events by query', () {
 
+    final searchQuery = 'poland';
+    final page = 1;
+    final eventTense = EventTense.All;
+
+    runTestsOnline((){
+      test('get Events By query verify is remote data called',() async {
+        // arrange
+        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, eventTense, page))
+            .thenAnswer((_) async => tEvents );
+
+        // act
+        await repository.searchEventsByQuery(searchQuery, eventTense,page);
+
+        // assert
+        verify(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, eventTense, page));
+      });
+    });
+
     runTestsOnline((){
       test(
-          'get Events by query when the call to remote features.event.data source is successful return valid Event Model',
+          'get Events by query when the call to remote data source is successful return valid Event Model',
               () async {
             // assert
-            when(mockEventRemoteDataSource.searchEventsByQuery(any, any))
+            when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page))
                 .thenAnswer((_) async => tEvents);
 
             // act
-            final result = await repository.searchEventsByQuery('', EventTense.All);
+            final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
 
             // assert
-            verify(mockEventRemoteDataSource.searchEventsByQuery('', EventTense.All));
+            verify(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page));
             expect(result, equals(Right(tEvents)));
           });
     });
@@ -131,15 +149,15 @@ void main() {
           'get Events by query when call to remote data source is unsuccessful return ServerFailure',
               () async {
             // arrange
-            when(mockEventRemoteDataSource.searchEventsByQuery(any, any))
+            when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, eventTense,page))
                 .thenThrow(ServerExceptions(message: 'Error'));
 
             // act
-            final result = await repository.searchEventsByQuery('', EventTense.All);
+            final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
 
             // assert
             // Check if method has been called event if throw exception !
-            verify(mockEventRemoteDataSource.searchEventsByQuery('', EventTense.All));
+            verify(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page));
             expect(result, Left(ServerFailure()));
           });
     });
@@ -148,11 +166,11 @@ void main() {
       test('get Events by query when call to remote data source is empty repsonse return NoElementFailure',() async{
 
         // arrange
-        when(mockEventRemoteDataSource.searchEventsByQuery(any, any))
+        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page))
             .thenThrow(NoElementExceptions(message: 'No element'));
 
         // act
-        final result = await repository.searchEventsByQuery('', EventTense.All);
+        final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
 
         // assert
         expect(result,Left(NoElementFailure()));
@@ -164,11 +182,11 @@ void main() {
           'get Events by query when no internet connection return NoInternetFailure',
           () async {
         // arrange
-        when(mockEventRemoteDataSource.searchEventsByQuery(any, any))
+        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page))
             .thenThrow(NoInternetFailure());
 
         // act
-        final result = await repository.searchEventsByQuery('', EventTense.All);
+        final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
 
         // assert
         verifyZeroInteractions(mockEventRemoteDataSource);
@@ -244,6 +262,5 @@ void main() {
 
       });
     });
-
   });
 }

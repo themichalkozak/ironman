@@ -1,0 +1,137 @@
+{
+  "code": 200,
+  "status": "success",
+  "current_page": 2,
+  "data": [
+    {
+      "event_id": 140885,
+      "event_title": "1985 Abenra ETU Middle Distance Triathlon European Championships",
+      "event_slug": "1985_abenra_etu_middle_distance_triathlon_european_championships",
+      "event_edit_date": "2020-12-04T09:51:24+00:00",
+      "event_venue": "Aabenraa",
+      "event_country": "Denmark",
+      "event_latitude": 55.04085,
+      "event_longitude": 9.41516,
+      "event_date": "1985-09-01",
+      "event_finish_date": "1985-09-01",
+      "event_country_isoa2": "DK",
+      "event_country_noc": "DEN",
+      "event_region_id": 10,
+      "event_country_id": 153,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Continental Championship",
+          "cat_id": 340,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Long Distance Triathlon",
+          "cat_id": 356,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Middle Distance",
+          "cat_id": 373,
+          "cat_parent_id": 356
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/dk.png",
+      "event_listing": "https://www.triathlon.org/events/event/1985_abenra_etu_middle_distance_triathlon_european_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/140885"
+    },
+    {
+      "event_id": 149058,
+      "event_title": "1986 Mansfield ETU Triathlon Team Relay European Championships",
+      "event_slug": "1986_mansfield_etu_triathlon_team_relay_european_championships",
+      "event_edit_date": "1986-01-01T00:00:00+00:00",
+      "event_venue": "Mansfield",
+      "event_country": "Great Britain",
+      "event_latitude": 53.13577,
+      "event_longitude": -1.22142,
+      "event_date": "1986-01-01",
+      "event_finish_date": "1986-01-01",
+      "event_country_isoa2": "GB",
+      "event_country_noc": "GBR",
+      "event_region_id": 10,
+      "event_country_id": 292,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Continental Championship",
+          "cat_id": 340,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Relay",
+          "cat_id": 379,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/gb.png",
+      "event_listing": "https://www.triathlon.org/events/event/1986_mansfield_etu_triathlon_team_relay_european_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/149058"
+    },
+    {
+      "event_id": 140919,
+      "event_title": "1986 Brasschaat ETU Middle Distance Triathlon European Championships",
+      "event_slug": "1986_brasschaat_etu_middle_distance_triathlon_european_championships",
+      "event_edit_date": "2020-12-04T10:11:37+00:00",
+      "event_venue": "Brasschaat",
+      "event_country": "Belgium",
+      "event_latitude": 51.29227,
+      "event_longitude": 4.49419,
+      "event_date": "1986-06-21",
+      "event_finish_date": "1986-06-21",
+      "event_country_isoa2": "BE",
+      "event_country_noc": "BEL",
+      "event_region_id": 10,
+      "event_country_id": 119,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Continental Championship",
+          "cat_id": 340,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Long Distance Triathlon",
+          "cat_id": 356,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Middle Distance",
+          "cat_id": 373,
+          "cat_parent_id": 356
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/be.png",
+      "event_listing": "https://www.triathlon.org/events/event/1986_brasschaat_etu_middle_distance_triathlon_european_championships",
+      "event_api_listing": "https://api.triathlon.org/v1//events/140919"
+    }
+  ],
+  "first_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=1",
+  "from": 4,
+  "last_page": 1482,
+  "last_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=1482",
+  "next_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=3",
+  "path": "https://api.triathlon.org/v1/events",
+  "per_page": "3",
+  "prev_page_url": "https://api.triathlon.org/v1/events?per_page=3&page=1",
+  "to": 6,
+  "total": 4444
+}
