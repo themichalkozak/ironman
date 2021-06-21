@@ -10,3 +10,22 @@ abstract class EventLocalDataSource {
 
 }
 
+class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
+
+  final Box eventBox;
+
+  HiveEventLocalDataSourceImpl(this.eventBox);
+
+  @override
+  Future<List<EventDetail>> searchEventById(int id) {
+    // TODO: implement searchEventById
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Event>> searchEventsByQuery(String query, int page) {
+    // TODO: implement searchEventsByQuery
+    throw UnimplementedError();
+  }
+
+}
