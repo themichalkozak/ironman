@@ -2,6 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 
+part 'event_hive.g.dart';
+
 @HiveType(typeId: 1)
 class EventHive extends Event {
   @override
