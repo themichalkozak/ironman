@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
+import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
@@ -11,11 +12,13 @@ import '../../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
   final EventRemoteDataSource remoteDataSource;
+  final EventLocalDataSource  localDataSource;
   final NetworkInfo networkInfo;
 
   EventRepositoryImpl({
     @required this.remoteDataSource,
     @required this.networkInfo,
+    @required this.localDataSource
   });
 
   @override
