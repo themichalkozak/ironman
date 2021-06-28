@@ -16,6 +16,14 @@ class NoElementExceptions implements Exception {
   });
 }
 
+class NoInternetConnectionExceptions implements Exception {
+  final String message;
+
+  const NoInternetConnectionExceptions({
+    @required this.message
+  });
+}
+
 class CacheException implements Exception {
   final String message;
 
