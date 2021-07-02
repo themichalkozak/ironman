@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/injector_container.dart' as di;
 import 'package:ironman/core/route/app_router.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
@@ -7,10 +8,13 @@ import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';
 
 import 'features/event/presentation/screens/event_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
 
 void main() async {
    WidgetsFlutterBinding.ensureInitialized();
+   final appDocumentDir = await getApplicationDocumentsDirectory();
+   Hive.init(appDocumentDir.path);
    await di.init();
   runApp(MyApp());
 }

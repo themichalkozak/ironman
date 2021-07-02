@@ -35,15 +35,7 @@ SliverAppBar buildSecondAppBar(BuildContext context) {
       height: 40,
       child: TextField(
         onSubmitted: (value) {
-
-          if (value == null || value.isEmpty) {
-            context.read<EventBloc>().add(GetEventsEvent());
-          } else {
-              context
-                  .read<EventBloc>()
-                  .add(SearchEventsByQueryEvent(query: value));
-            }
-        print(value);
+          context.read<EventBloc>().add(SearchEventsByQueryEvent(query: value));
         },
         decoration: InputDecoration(
           border: OutlineInputBorder(

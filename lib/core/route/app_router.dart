@@ -15,7 +15,7 @@ class AppRouter {
       case '/':
         return MaterialPageRoute(
             builder: (_) => BlocProvider.value(
-                  value: _eventBloc..add(GetEventsEvent()),
+                  value: _eventBloc..add(SearchEventsByQueryEvent(query: '')),
                   child: EventScreen(),
                 ));
         break;

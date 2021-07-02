@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/presentation/widgets/bottom_loader.dart';
 import 'package:ironman/features/event/presentation/widgets/event_display_list_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EventDisplay extends StatefulWidget {
   final bool isExhausted;
@@ -33,37 +36,39 @@ class _EventDisplayState extends State<EventDisplay> {
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener(
-        onNotification: _handleScrollNotification,
-        child: ListView.builder(
-          controller: _scrollController,
-          itemBuilder: (context, index) {
-            return index >= widget.events.length && !widget.isExhausted
-                ? Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    color: Theme.of(context).primaryColor.withOpacity(0.7),
-                    child: Text(
-                      'Load more events..',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ))
-                : EventListItem(event: widget.events[index]);
-          },
-          itemCount: widget.isExhausted
-              ? widget.events.length
-              : widget.events.length + 1,
-        ));
+    return CustomScrollView(
+      slivers: [_buildSilverList(widget.events, widget.isExhausted,context)],
+    );
   }
+}
 
-  bool _handleScrollNotification(ScrollNotification notification) {
-    print(_scrollController.position.extentAfter);
-    if (notification is ScrollEndNotification &&
-        _scrollController.position.extentAfter == 0) {
-      BlocProvider.of<EventBloc>(context).add(SearchNextPageResultEvent());
+Widget _buildSilverList(List<Event> events, bool isExhausted, BuildContext bContext) {
+  return SliverList(
+      delegate: SliverChildBuilderDelegate((context, index) {
+        print('event_display | _buildSilverList | index: $index');
+    final itemIndex = index ~/ 2;
+    if (index.isEven) {
+      print('event_display | _buildSilverList | itemIndex: $itemIndex');
+      if (itemIndex >= events.length) {
+        bContext.read<EventBloc>().add(SearchNextPageResultEvent());
+        return BottomLoader();
+      }
+      return EventListItem(event: events[itemIndex]);
     }
-    return false;
-  }
+    return Divider(height: 0,color: Colors.grey,);
+  }, semanticIndexCallback: (widget, localIndex) {
+    if (localIndex.isEven) {
+      return localIndex ~/ 2;
+    }
+    return null;
+  },
+          childCount: max(
+              0,
+          (isExhausted
+              ? events.length
+              : events.length + 1)
+              * 2 -
+              1)
+      )
+  );
 }

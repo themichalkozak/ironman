@@ -14,12 +14,22 @@ class EventListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () => Navigator.of(context).pushNamed(EventDetailScreen.routeName,
-          arguments: EventDetailScreenArgument(id: event.eventId)),
-      title: Text(event.eventTitle),
-      subtitle: Text(event.eventDate),
-      trailing: Image.network(event.eventFlag),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: ListTile(
+        onTap: () => Navigator.of(context).pushNamed(
+            EventDetailScreen.routeName,
+            arguments: EventDetailScreenArgument(id: event.eventId)),
+        title: Text(event.eventTitle),
+        subtitle: Text(event.eventDate),
+        trailing: Image.network(
+          event.eventFlag,
+          errorBuilder:
+              (BuildContext context, Object exception, StackTrace stackTrace) {
+            return SizedBox();
+          },
+        ),
+      ),
     );
   }
 }

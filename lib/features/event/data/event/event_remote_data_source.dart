@@ -43,6 +43,8 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       String query, EventTense eventTense, int page) async {
     final queryParams = {'query': query, 'page': page.toString()};
 
+    List<EventModel> events = [];
+
     final uri = Uri.https(BASE_URL, '/v1/search/events', queryParams);
 
     print('Uri" $uri');
@@ -60,10 +62,8 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       throw ServerExceptions(message: responseModel.message);
     }
     if (responseModel.data == null || responseModel.data.isEmpty) {
-      throw NoElementExceptions(message: 'No elements');
+      return events;
     }
-
-    List<EventModel> events = [];
 
     responseModel.data.forEach((element) {
       events.add(EventModel.fromJson(element));
