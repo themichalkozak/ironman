@@ -1,4 +1,6 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
 import 'package:ironman/core/route/event/event_detail_screen_arguments.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';
@@ -22,12 +24,16 @@ class EventListItem extends StatelessWidget {
             arguments: EventDetailScreenArgument(id: event.eventId)),
         title: Text(event.eventTitle),
         subtitle: Text(event.eventDate),
-        trailing: Image.network(
-          event.eventFlag,
-          errorBuilder:
-              (BuildContext context, Object exception, StackTrace stackTrace) {
-            return SizedBox();
-          },
+        trailing: Container(
+          height: 20,
+          width: 20,
+          child: CachedNetworkImage(
+            imageUrl: event.eventFlag,
+            errorWidget:
+                (context, url, error) {
+              return SizedBox();
+            },
+          ),
         ),
       ),
     );
