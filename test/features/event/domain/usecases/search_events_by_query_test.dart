@@ -196,7 +196,7 @@ void main() {
     // arrange
     final searchQuery = 'Poland';
     final eventTense = EventTense.All;
-    final params = SearchEventsByQueryParams(eventTense: eventTense,query: searchQuery);
+    final params = SearchEventsByQueryParams(eventTense: eventTense,query: searchQuery,page: 1);
     mockSearchEventsByQuerySuccessResult(searchQuery);
     // act
     await useCase(params);
@@ -211,7 +211,7 @@ void main() {
     final firstQuery = "Poland";
     final secondQuery = "Denmark";
     final eventTense = EventTense.All;
-    SearchEventsByQueryParams params = SearchEventsByQueryParams(eventTense: eventTense,query: firstQuery);
+    SearchEventsByQueryParams params = SearchEventsByQueryParams(eventTense: eventTense,query: firstQuery,page: 1);
     mockSearchEventsByQuerySuccessResult(firstQuery);
 
     // act

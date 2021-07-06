@@ -5,6 +5,7 @@ import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
 import 'package:ironman/features/event/data/event/EventDetailModel.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
+import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
 import 'package:ironman/features/event/data/event/event_repository_impl.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
@@ -12,18 +13,24 @@ import 'package:mockito/mockito.dart';
 
 class MockEventRemoteDataSource extends Mock implements EventRemoteDataSource {}
 
+class MockEventLocalDataSource extends Mock implements EventLocalDataSource {}
+
 class MockNetworkInfo extends Mock implements NetworkInfo {}
 
 void main() {
   EventRepositoryImpl repository;
   MockEventRemoteDataSource mockEventRemoteDataSource;
+  MockEventLocalDataSource mockEventLocalDataSource;
   MockNetworkInfo mockNetworkInfo;
 
   setUp(() {
     mockEventRemoteDataSource = MockEventRemoteDataSource();
+    mockEventLocalDataSource = MockEventLocalDataSource();
     mockNetworkInfo = MockNetworkInfo();
+
     repository = EventRepositoryImpl(
         remoteDataSource: mockEventRemoteDataSource,
+        localDataSource: mockEventLocalDataSource,
         networkInfo: mockNetworkInfo);
   });
 
@@ -61,116 +68,148 @@ void main() {
   }
 
   group('get Events by query', () {
-
     final searchQuery = 'poland';
     final page = 1;
     final eventTense = EventTense.All;
 
-    runTestsOnline((){
-      test('get Events By query verify is remote data called',() async {
+    runTestsOnline(() {
+      test('get Events By query verify is remote data called', () async {
         // arrange
-        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, eventTense, page))
-            .thenAnswer((_) async => tEvents );
+        when(mockEventRemoteDataSource.searchEventsByQuery(
+                searchQuery, eventTense, page))
+            .thenAnswer((_) async => tEvents);
 
         // act
-        await repository.searchEventsByQuery(searchQuery, eventTense,page);
+        await repository.searchEventsByQuery(searchQuery, eventTense, page);
 
         // assert
-        verify(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, eventTense, page));
+        verify(mockEventRemoteDataSource.searchEventsByQuery(
+            searchQuery, eventTense, page));
       });
     });
 
-    runTestsOnline((){
-      test(
-          'get Events by query when the call to remote data source is successful return valid Event Model',
-              () async {
-            // assert
-            when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page))
-                .thenAnswer((_) async => tEvents);
-
-            // act
-            final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
-
-            // assert
-            verify(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page));
-            expect(result, equals(Right(tEvents)));
-          });
-    });
-
-    runTestsOnline((){
-      test(
-          'get Events by query when call to remote data source is unsuccessful return ServerFailure',
-              () async {
-            // arrange
-            when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, eventTense,page))
-                .thenThrow(ServerExceptions(message: 'Error'));
-
-            // act
-            final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
-
-            // assert
-            // Check if method has been called event if throw exception !
-            verify(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page));
-            expect(result, Left(ServerFailure()));
-          });
-    });
-
-    runTestsOnline((){
-      test('get Events by query when call to remote data source is empty repsonse return NoElementFailure',() async{
-
-        // arrange
-        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page))
-            .thenThrow(NoElementExceptions(message: 'No element'));
-
-        // act
-        final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
-
-        // assert
-        expect(result,Left(NoElementFailure()));
-      });
-    });
-
-    runTestsOffline(() {
-      test(
-          'get Events by query when no internet connection return NoInternetFailure',
+    runTestsOnline(() {
+      test('searchEventsByQuery when is internet connection should call cacheEvents fun',
           () async {
         // arrange
-        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery,eventTense,page))
-            .thenThrow(NoInternetFailure());
+        // when remoteDataSource -> correctModel
+        when(mockEventRemoteDataSource.searchEventsByQuery(
+                searchQuery, eventTense, page))
+            .thenAnswer((_) async => tEvents);
+
+        when(mockEventLocalDataSource.searchEventsByQuery(
+            any, any))
+            .thenAnswer((_) async => null);
+        // act
+        // invoke api remoteDataSource.searchQueryCall
+        await repository.searchEventsByQuery(searchQuery, eventTense, page);
+        // assert
+        // verify is remoteDataSource.searchQuert call
+        verify(mockEventRemoteDataSource.searchEventsByQuery(
+            searchQuery, eventTense, page));
+        verify(mockEventLocalDataSource.cacheEvents(tEvents, page));
+            // verify is cacheDataSource.cacheEvents call with correct params
+      });
+    });
+
+    runTestsOnline(() {
+      test(
+          'searchEventsByQuery when is internet connection return list of events',
+          () async {
+        // assert
+        when(mockEventRemoteDataSource.searchEventsByQuery(
+                searchQuery, eventTense, page))
+            .thenAnswer((_) async => tEvents);
 
         // act
-        final result = await repository.searchEventsByQuery(searchQuery,eventTense,page);
+        final result =
+            await repository.searchEventsByQuery(searchQuery, eventTense, page);
 
         // assert
-        verifyZeroInteractions(mockEventRemoteDataSource);
-        expect(result, equals(Left(NoInternetFailure())));
+        verify(mockEventRemoteDataSource.searchEventsByQuery(
+            searchQuery, eventTense, page));
+        expect(result, equals(Right(tEvents)));
+      });
+    });
+
+    runTestsOffline((){
+      test('searchEventsByQuery when is no internet connection return cached list of events',() async{
+
+        // arrange
+        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+            .thenAnswer((_) async => tEvents);
+
+        // act
+        final result = await repository.searchEventsByQuery(searchQuery, eventTense, page);
+
+        // assert
+        verify(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page));
+        expect(result,equals(Right(tEvents)));
+
+      });
+    });
+
+    // when isNotInternetConnection and is ServerException should emit ServerFailure !
+
+    runTestsOnline(() {
+      test(
+          'get Events by query when call to remote data source is unsuccessful return ServerFailure',
+          () async {
+        // arrange
+        when(mockEventRemoteDataSource.searchEventsByQuery(
+                searchQuery, eventTense, page))
+            .thenThrow(ServerExceptions(message: 'Error'));
+
+        // act
+        final result =
+            await repository.searchEventsByQuery(searchQuery, eventTense, page);
+
+        // assert
+        // Check if method has been called event if throw exception !
+        verify(mockEventRemoteDataSource.searchEventsByQuery(
+            searchQuery, eventTense, page));
+        expect(result, Left(ServerFailure()));
+      });
+    });
+
+    runTestsOffline((){
+      test('searchEventsByQuery when throw Cache Exception return cacheFailure',() async {
+
+        // arrange
+        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+            .thenThrow(CacheException(message: CACHE_FAILURE));
+        // act
+        final result = await repository.searchEventsByQuery(searchQuery, eventTense, page);
+        // assert
+        expect(result,Left(CacheFailure(error: CACHE_FAILURE)));
       });
     });
   });
 
-
-  final tEventSpecificationModel = EventSpecificationModel(name: '#name', id: 0, parentId: 0);
-  final tEventSpecificationModel2 = EventSpecificationModel(name: '#name', id: 0, parentId: 0);
-  List<EventSpecificationModel> eventsSpecModels = [tEventSpecificationModel,tEventSpecificationModel2];
+  final tEventSpecificationModel =
+      EventSpecificationModel(name: '#name', id: 0, parentId: 0);
+  final tEventSpecificationModel2 =
+      EventSpecificationModel(name: '#name', id: 0, parentId: 0);
+  List<EventSpecificationModel> eventsSpecModels = [
+    tEventSpecificationModel,
+    tEventSpecificationModel2
+  ];
 
   final tEventDetailModel = EventDetailModel(
-    eventId: 122987,
-    eventCountryName: 'Poland',
-    eventVenue: "",
-    eventFinishDate: '1992-01-01',
-    eventDate: '1992-01-01',
-    eventTitle: "1992 POL Duathlon National Championships",
-    eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png",
-    eventSpecifications: eventsSpecModels,
-    eventWebSite: null,
-    information: 'information'
-  );
+      eventId: 122987,
+      eventCountryName: 'Poland',
+      eventVenue: "",
+      eventFinishDate: '1992-01-01',
+      eventDate: '1992-01-01',
+      eventTitle: "1992 POL Duathlon National Championships",
+      eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png",
+      eventSpecifications: eventsSpecModels,
+      eventWebSite: null,
+      information: 'information');
 
-  group('get Event by id', (){
-
-    runTestsOnline((){
-      test('get Event by id when id is valid return valid Event',() async {
-
+  group('get Event by id', () {
+    runTestsOnline(() {
+      test('get Event by id when id is valid return valid Event', () async {
         // arrange
         when(mockEventRemoteDataSource.getEventById(any))
             .thenAnswer((realInvocation) async => tEventDetailModel);
@@ -180,13 +219,12 @@ void main() {
         // assert
         verify(mockEventRemoteDataSource.getEventById(0));
         expect(result, equals(Right(tEventDetailModel)));
-
       });
     });
 
-    runTestsOnline((){
-      test('get Event by id when id is invalid return NoElementFailure',() async {
-
+    runTestsOnline(() {
+      test('get Event by id when id is invalid return NoElementFailure',
+          () async {
         // arrange
         when(mockEventRemoteDataSource.getEventById(any))
             .thenThrow(ServerExceptions(message: 'No element found'));
@@ -196,13 +234,13 @@ void main() {
         // assert
         verify(mockEventRemoteDataSource.getEventById(0));
         expect(result, equals(Left(NoElementFailure())));
-
       });
     });
 
-    runTestsOffline((){
-      test('get Event by id when no internet connection return NoInternetFailure',() async {
-
+    runTestsOffline(() {
+      test(
+          'get Event by id when no internet connection return NoInternetFailure',
+          () async {
         // arrange
         when(mockEventRemoteDataSource.getEventById(any))
             .thenThrow(NoInternetFailure());
@@ -212,7 +250,6 @@ void main() {
         // assert
         verifyZeroInteractions(mockEventRemoteDataSource);
         expect(result, equals(Left(NoInternetFailure())));
-
       });
     });
   });

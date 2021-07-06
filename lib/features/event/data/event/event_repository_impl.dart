@@ -40,14 +40,20 @@ class EventRepositoryImpl extends EventRepository {
       String query, EventTense eventTense,int page) async {
 
     if(!await networkInfo.isConnected){
-      return Left(NoInternetFailure());
+      try{
+        final cachedEvents = await localDataSource.searchEventsByQuery(query, page);
+        return Right(cachedEvents);
+      } on CacheException{
+        return Left(CacheFailure());
+      }
     }
+
     try{
-      return Right(await remoteDataSource.searchEventsByQuery(query, eventTense,page));
+      final events = await remoteDataSource.searchEventsByQuery(query, eventTense,page);
+      localDataSource.cacheEvents(events, page);
+      return Right(events);
     }on ServerExceptions {
       return Left(ServerFailure());
-    }on NoElementExceptions catch(error) {
-      return Left(NoElementFailure(error: error.message));
     }
   }
 }

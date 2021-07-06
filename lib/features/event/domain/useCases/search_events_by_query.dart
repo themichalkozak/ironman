@@ -19,7 +19,6 @@ class SearchEventsByQuery
 
   @override
   Future<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params) {
-
     return repository.searchEventsByQuery(
         params.query, params.eventTense, params.page);
   }

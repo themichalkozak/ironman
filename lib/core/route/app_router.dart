@@ -5,7 +5,7 @@ import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/core/injector_container.dart' as di;
 import 'package:ironman/features/event/presentation/bloc/detail/bloc.dart';
 import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';
-import 'package:ironman/features/event/presentation/screens/event_screen.dart';
+import '../../features/event/presentation/widgets/event_screen.dart';
 
 class AppRouter {
   final EventBloc _eventBloc = di.sl<EventBloc>();
@@ -35,6 +35,7 @@ class AppRouter {
                   value: _eventBloc,
                   child: EventScreen(),
                 ));
+        break;
     }
   }
 }

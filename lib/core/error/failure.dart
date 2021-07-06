@@ -6,6 +6,7 @@ const String SERVER_FAILURE_MESSAGE = 'Server Failure';
 const String NO_INTERNET_FAILURE = 'No internet Connection';
 const String NO_INITIAL_STATE_FAILURE = 'No internet Connection';
 const String NO_NEXT_PAGE_FAILURE = 'No more element';
+const String CACHE_FAILURE = 'Cache Fail';
 
 
 class Failure extends Equatable {
@@ -25,6 +26,8 @@ class Failure extends Equatable {
         return NO_INTERNET_FAILURE;
       case NoInitialStateFailure:
         return NO_INITIAL_STATE_FAILURE;
+      case CacheFailure:
+        return CACHE_FAILURE;
       default:
         return 'Unexpected Error';
     }

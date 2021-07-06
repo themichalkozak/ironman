@@ -19,6 +19,10 @@ class Loaded extends EventState {
     @required this.events,
     @required this.isExhausted
   }): super([events,isExhausted]);
+
+
+  @override
+  String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted';
 }
 
 class LoadedDetail extends EventState {
