@@ -21,54 +21,37 @@ class EventDisplay extends StatefulWidget {
 }
 
 class _EventDisplayState extends State<EventDisplay> {
-  ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [_buildSilverList(widget.events, widget.isExhausted,context)],
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((bContext, index) {
+          print('event_display | _buildSilverList | index: $index');
+          final itemIndex = index ~/ 2;
+          if (index.isEven) {
+            print('event_display | _buildSilverList | itemIndex: $itemIndex');
+            if (itemIndex >= widget.events.length) {
+              bContext.read<EventBloc>().add(SearchNextPageResultEvent());
+              return BottomLoader();
+            }
+            return EventListItem(event: widget.events[itemIndex]);
+          }
+          return Divider(height: 0, color: Colors.grey,);
+        },
+            semanticIndexCallback: (widget, localIndex) {
+              if (localIndex.isEven) {
+                return localIndex ~/ 2;
+              }
+              return null;
+            },
+            childCount: max(
+                0,
+                (widget.isExhausted
+                    ? widget.events.length
+                    : widget.events.length + 1)
+                    * 2 -
+                    1)
+        )
     );
   }
-}
-
-Widget _buildSilverList(List<Event> events, bool isExhausted, BuildContext bContext) {
-  return SliverList(
-      delegate: SliverChildBuilderDelegate((context, index) {
-        print('event_display | _buildSilverList | index: $index');
-    final itemIndex = index ~/ 2;
-    if (index.isEven) {
-      print('event_display | _buildSilverList | itemIndex: $itemIndex');
-      if (itemIndex >= events.length) {
-        bContext.read<EventBloc>().add(SearchNextPageResultEvent());
-        return BottomLoader();
-      }
-      return EventListItem(event: events[itemIndex]);
-    }
-    return Divider(height: 0,color: Colors.grey,);
-  }, semanticIndexCallback: (widget, localIndex) {
-    if (localIndex.isEven) {
-      return localIndex ~/ 2;
-    }
-    return null;
-  },
-          childCount: max(
-              0,
-          (isExhausted
-              ? events.length
-              : events.length + 1)
-              * 2 -
-              1)
-      )
-  );
 }

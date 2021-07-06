@@ -16,39 +16,8 @@ Widget buildBody(BuildContext context) {
   return CustomScrollView(
     shrinkWrap: true,
     slivers: [
-      SliverAppBar(
-        backgroundColor: Theme.of(context).primaryColor,
-        expandedHeight: 150,
-        centerTitle: true,
-        flexibleSpace: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Container(
-            alignment: Alignment.bottomCenter,
-            child: Text('Event',style: TextStyle(color: Colors.white,fontSize: 32,fontWeight: FontWeight.bold),),
-          ),
-        ),
-      ),
-      SliverAppBar(
-        backgroundColor: Colors.white,
-        pinned: true,
-        title: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 10),
-          height: 40,
-          child: TextField(
-            onSubmitted: (value) {
-              context
-                  .read<EventBloc>()
-                  .add(SearchEventsByQueryEvent(query: value));
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(const Radius.circular(10))),
-              contentPadding: const EdgeInsets.all(12.0),
-              labelText: 'Search',
-            ),
-          ),
-        ),
-      ),
+      TitledSilverAppBar(title: 'Event'),
+      SearchBoxSilverAppBar(),
       SliverToBoxAdapter(
         child: SizedBox(
           height: 8,
@@ -62,17 +31,17 @@ Widget buildBody(BuildContext context) {
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
     if (state is Empty) {
-      return SliverToBoxAdapter(
+      return SliverFillRemaining(
           child: MessageDisplay(message: 'Start searching'));
     } else if (state is Loading) {
       return SliverFillRemaining(child: LoadingWidget());
     } else if (state is Loaded) {
       return EventDisplay(events: state.events, isExhausted: state.isExhausted);
     } else if (state is Error) {
-      return SliverToBoxAdapter(
+      return SliverFillRemaining(
           child: MessageDisplay(message: state.errorMessage));
     } else {
-      return SliverToBoxAdapter(
+      return SliverFillRemaining(
         child: Center(
           child: Text('Smth goes wrong'),
         ),
