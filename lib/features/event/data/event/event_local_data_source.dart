@@ -1,6 +1,4 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:ironman/core/error/exceptions.dart';
-import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 
@@ -28,12 +26,27 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
 
   @override
   Future<List<Event>> searchEventsByQuery(String query, int page) async {
-    return eventBox.values.toList().cast<Event>();
+    final events = eventBox.values.toList().cast<Event>();
+    return _filterByQuery(query,events);
   }
 
   @override
   Future<void> cacheEvents(List<Event> events, int page) async {
     eventBox.addAll(events);
+  }
+
+
+  Future<List<Event>> _filterByQuery(String query, List<Event> events) async {
+
+    if(events == null){
+      return [];
+    }
+
+    return events.where((Event event) =>
+        event.eventTitle.contains(query) ||
+        event.eventVenue.contains(query) ||
+        event.eventCountryName.contains(query)
+    ).toList();
   }
 
 }
