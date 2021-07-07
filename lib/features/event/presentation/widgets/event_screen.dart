@@ -35,17 +35,16 @@ BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
           child: MessageDisplay(message: 'Start searching'));
     } else if (state is Loading) {
       return SliverFillRemaining(child: LoadingWidget());
-    } else if (state is Loaded) {
-      return EventDisplay(events: state.events, isExhausted: state.isExhausted);
     } else if (state is Error) {
       return SliverFillRemaining(
           child: MessageDisplay(message: state.errorMessage));
     } else {
-      return SliverFillRemaining(
-        child: Center(
-          child: Text('Smth goes wrong'),
-        ),
-      );
+      final loadState = state as Loaded;
+      if(loadState.events.isEmpty){
+        return SliverFillRemaining(child: EmptyList());
+      }
+      return EventDisplay(events: loadState.events, isExhausted: loadState.isExhausted);
+
     }
   });
 }

@@ -52,7 +52,7 @@ class EventRepositoryImpl extends EventRepository {
       final events = await remoteDataSource.searchEventsByQuery(query, eventTense,page);
       localDataSource.cacheEvents(events, page);
       return Right(events);
-    }on ServerExceptions {
+    }on ServerExceptions catch(error) {
       return Left(ServerFailure());
     }
   }

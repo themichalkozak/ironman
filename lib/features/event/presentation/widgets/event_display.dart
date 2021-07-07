@@ -26,10 +26,8 @@ class _EventDisplayState extends State<EventDisplay> {
   Widget build(BuildContext context) {
     return SliverList(
         delegate: SliverChildBuilderDelegate((bContext, index) {
-          print('event_display | _buildSilverList | index: $index');
           final itemIndex = index ~/ 2;
           if (index.isEven) {
-            print('event_display | _buildSilverList | itemIndex: $itemIndex');
             if (itemIndex >= widget.events.length) {
               bContext.read<EventBloc>().add(SearchNextPageResultEvent());
               return BottomLoader();
