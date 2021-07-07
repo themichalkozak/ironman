@@ -80,7 +80,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
       case ServerFailure:
-        return SERVER_FAILURE_MESSAGE;
+        return failure.error ?? SERVER_FAILURE_MESSAGE;
       case NoElementFailure:
         return failure.error ?? NO_ELEMENT_FAILURE_MESSAGE;
       case NoInternetFailure:

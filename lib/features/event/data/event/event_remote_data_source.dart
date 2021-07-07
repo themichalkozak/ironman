@@ -52,6 +52,8 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     final response = await client.get(uri,
         headers: {'Content-Type': 'application/json', 'apikey': API_KEY});
 
+    print('event_remote_data_source | searchEventsByQuery | response: ${response.toString()}');
+
     if (response.statusCode != 200) {
       throw ServerExceptions(message: response.statusCode.toString());
     }

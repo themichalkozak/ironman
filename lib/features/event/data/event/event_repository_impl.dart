@@ -53,7 +53,7 @@ class EventRepositoryImpl extends EventRepository {
       localDataSource.cacheEvents(events, page);
       return Right(events);
     }on ServerExceptions catch(error) {
-      return Left(ServerFailure());
+      return Left(ServerFailure(error: error.message));
     }
   }
 }

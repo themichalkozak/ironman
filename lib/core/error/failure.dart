@@ -38,7 +38,13 @@ class NoInitialStateFailure extends Failure {}
 
 class NoNextPageFailure extends Failure {}
 
-class ServerFailure extends Failure {}
+class ServerFailure extends Failure {
+  final String error;
+
+  ServerFailure({
+    this.error
+  });
+}
 
 class NoInternetFailure extends Failure {}
 
