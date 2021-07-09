@@ -96,4 +96,11 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   Future<void> close() {
     return super.close();
   }
+
+
+  @override
+  void onChange(Change<EventState> change) {
+    print(change);
+    super.onChange(change);
+  }
 }
