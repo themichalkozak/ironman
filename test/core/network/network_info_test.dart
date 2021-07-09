@@ -15,7 +15,7 @@ void main() {
   });
 
   group('isConnected',(){
-    test('is Connected when is internernet connection return Future true', () async {
+    test('is Connected when is internet connection return Future true', () async {
 
       final tHasConnectionFuture = Future.value(true);
 

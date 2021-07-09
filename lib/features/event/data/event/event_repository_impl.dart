@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
+import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
@@ -11,11 +12,13 @@ import '../../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
   final EventRemoteDataSource remoteDataSource;
+  final EventLocalDataSource  localDataSource;
   final NetworkInfo networkInfo;
 
   EventRepositoryImpl({
     @required this.remoteDataSource,
     @required this.networkInfo,
+    @required this.localDataSource
   });
 
   @override
@@ -37,14 +40,20 @@ class EventRepositoryImpl extends EventRepository {
       String query, EventTense eventTense,int page) async {
 
     if(!await networkInfo.isConnected){
-      return Left(NoInternetFailure());
+      try{
+        final cachedEvents = await localDataSource.searchEventsByQuery(query, page);
+        return Right(cachedEvents);
+      } on CacheException{
+        return Left(CacheFailure());
+      }
     }
+
     try{
-      return Right(await remoteDataSource.searchEventsByQuery(query, eventTense,page));
-    }on ServerExceptions {
-      return Left(ServerFailure());
-    }on NoElementExceptions catch(error) {
-      return Left(NoElementFailure(error: error.message));
+      final events = await remoteDataSource.searchEventsByQuery(query, eventTense,page);
+      localDataSource.cacheEvents(events, page);
+      return Right(events);
+    }on ServerExceptions catch(error) {
+      return Left(ServerFailure(error: error.message));
     }
   }
 }

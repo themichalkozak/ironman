@@ -1,9 +1,9 @@
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/widgets/widgets.dart';
-
 
 class EventScreen extends StatelessWidget {
   @override
@@ -13,29 +13,38 @@ class EventScreen extends StatelessWidget {
 }
 
 Widget buildBody(BuildContext context) {
-  return NestedScrollView(
-      headerSliverBuilder: (BuildContext silverContext, bool innerBoxScrolled) {
-        return buildHeaderSilver(silverContext);
-      },
-      body: buildSilverBody(context));
+  return CustomScrollView(
+    shrinkWrap: true,
+    slivers: [
+      TitledSilverAppBar(title: 'Event'),
+      SearchBoxSilverAppBar(),
+      SliverToBoxAdapter(
+        child: SizedBox(
+          height: 8,
+        ),
+      ),
+      buildSilverBody(context),
+    ],
+  );
 }
-
 
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
     if (state is Empty) {
-      return MessageDisplay(message: 'Start searching');
+      return SliverFillRemaining(
+          child: MessageDisplay(message: 'Start searching'));
     } else if (state is Loading) {
-      return LoadingWidget();
-    } else if (state is Loaded) {
-      return EventDisplay(events: state.events,isExhausted: state.isExhausted ?? false,);
+      return SliverFillRemaining(child: LoadingWidget());
     } else if (state is Error) {
-      return MessageDisplay(message: state.errorMessage);
+      return SliverFillRemaining(
+          child: MessageDisplay(message: state.errorMessage));
     } else {
-      return Center(
-        child: Text('Smth goes wrong'),
-      );
+      final loadState = state as Loaded;
+      if(loadState.events.isEmpty){
+        return SliverFillRemaining(child: EmptyList());
+      }
+      return EventDisplay(events: loadState.events, isExhausted: loadState.isExhausted);
+
     }
   });
 }
-

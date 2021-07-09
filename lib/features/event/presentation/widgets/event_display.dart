@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/presentation/widgets/bottom_loader.dart';
 import 'package:ironman/features/event/presentation/widgets/event_display_list_item.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EventDisplay extends StatefulWidget {
   final bool isExhausted;
@@ -18,52 +21,35 @@ class EventDisplay extends StatefulWidget {
 }
 
 class _EventDisplayState extends State<EventDisplay> {
-  ScrollController _scrollController = ScrollController();
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    return NotificationListener(
-        onNotification: _handleScrollNotification,
-        child: ListView.builder(
-          controller: _scrollController,
-          itemBuilder: (context, index) {
-            return index >= widget.events.length && !widget.isExhausted
-                ? Container(
-                    alignment: Alignment.center,
-                    height: 50,
-                    color: Theme.of(context).primaryColor.withOpacity(0.7),
-                    child: Text(
-                      'Load more events..',
-                      style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                    ))
-                : EventListItem(event: widget.events[index]);
-          },
-          itemCount: widget.isExhausted
-              ? widget.events.length
-              : widget.events.length + 1,
-        ));
-  }
-
-  bool _handleScrollNotification(ScrollNotification notification) {
-    print(_scrollController.position.extentAfter);
-    if (notification is ScrollEndNotification &&
-        _scrollController.position.extentAfter == 0) {
-      BlocProvider.of<EventBloc>(context).add(SearchNextPageResultEvent());
-    }
-    return false;
+    return SliverList(
+        delegate: SliverChildBuilderDelegate((bContext, index) {
+          final itemIndex = index ~/ 2;
+          if (index.isEven) {
+            if (itemIndex >= widget.events.length) {
+              bContext.read<EventBloc>().add(SearchNextPageResultEvent());
+              return BottomLoader();
+            }
+            return EventListItem(event: widget.events[itemIndex]);
+          }
+          return Divider(height: 0, color: Colors.grey,);
+        },
+            semanticIndexCallback: (widget, localIndex) {
+              if (localIndex.isEven) {
+                return localIndex ~/ 2;
+              }
+              return null;
+            },
+            childCount: max(
+                0,
+                (widget.isExhausted
+                    ? widget.events.length
+                    : widget.events.length + 1)
+                    * 2 -
+                    1)
+        )
+    );
   }
 }
