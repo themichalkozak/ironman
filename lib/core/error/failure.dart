@@ -7,6 +7,7 @@ const String NO_INTERNET_FAILURE = 'No internet Connection';
 const String NO_INITIAL_STATE_FAILURE = 'No internet Connection';
 const String NO_NEXT_PAGE_FAILURE = 'No more element';
 const String CACHE_FAILURE = 'Cache Fail';
+const String TIMEOUT_FAILURE_MESSAGE = 'Timeout network connection';
 
 
 class Failure extends Equatable {
@@ -60,6 +61,14 @@ class NoElementFailure extends Failure {
   final String error;
 
   NoElementFailure({
+    this.error,
+  });
+}
+
+class TimeoutFailure extends Failure {
+  final String error;
+
+  TimeoutFailure({
     this.error,
   });
 }
