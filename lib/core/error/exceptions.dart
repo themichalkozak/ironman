@@ -31,3 +31,11 @@ class CacheException implements Exception {
     @required this.message,
   });
 }
+
+class TimeoutException implements Exception {
+  final String message;
+
+  const TimeoutException({
+    @required this.message,
+  });
+}
