@@ -12,31 +12,49 @@ class EventScreen extends StatefulWidget {
 
 class _EventScreenState extends State<EventScreen> {
 
+  ScrollController _scrollController;
+
+  @override
+  void initState() {
+    _scrollController = ScrollController();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(backgroundColor: Colors.white, body: buildBody(context,searchQueryCallback));
   }
 
-  void searchQueryCallback(){
-    print('Invoked');
+  void searchQueryCallback() =>
+      _scrollController?.animateTo(0, duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+
+  Widget buildBody(BuildContext context,Function searchQueryCallback) {
+    return CustomScrollView(
+      controller: _scrollController,
+      shrinkWrap: true,
+      slivers: [
+        TitledSilverAppBar(title: 'Event'),
+        SearchBoxSilverAppBar(callback: searchQueryCallback),
+        SliverToBoxAdapter(
+          child: SizedBox(
+            height: 8,
+          ),
+        ),
+        buildSilverBody(context),
+      ],
+    );
   }
 }
 
-Widget buildBody(BuildContext context,Function searchQueryCallback) {
-  return CustomScrollView(
-    shrinkWrap: true,
-    slivers: [
-      TitledSilverAppBar(title: 'Event'),
-      SearchBoxSilverAppBar(callback: searchQueryCallback),
-      SliverToBoxAdapter(
-        child: SizedBox(
-          height: 8,
-        ),
-      ),
-      buildSilverBody(context),
-    ],
-  );
-}
+
 
 
 

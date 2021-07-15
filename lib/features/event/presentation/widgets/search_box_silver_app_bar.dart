@@ -22,10 +22,11 @@ class SearchBoxSilverAppBar extends StatelessWidget {
         height: 40,
         child: TextField(
           onSubmitted: (value) {
+            callback();
             context
                 .read<EventBloc>()
                 .add(SearchEventsByQueryEvent(query: value));
-            callback();
+
           },
           decoration: InputDecoration(
             border: OutlineInputBorder(

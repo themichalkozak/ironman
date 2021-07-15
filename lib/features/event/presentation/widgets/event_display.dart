@@ -29,7 +29,7 @@ class _EventDisplayState extends State<EventDisplay> {
           final itemIndex = index ~/ 2;
           if (index.isEven) {
             if (itemIndex >= widget.events.length) {
-              bContext.read<EventBloc>().add(SearchNextPageResultEvent());
+              _searchNextPage(bContext);
               return BottomLoader();
             }
             return EventListItem(event: widget.events[itemIndex]);
@@ -52,4 +52,8 @@ class _EventDisplayState extends State<EventDisplay> {
         )
     );
   }
+
+  void _searchNextPage(BuildContext bContext) =>
+    bContext.read<EventBloc>().add(SearchNextPageResultEvent());
+
 }
