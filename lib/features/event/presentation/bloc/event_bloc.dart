@@ -87,6 +87,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         return NO_INTERNET_FAILURE;
       case NoInitialStateFailure:
         return NO_INITIAL_STATE_FAILURE;
+      case TimeoutFailure:
+        return failure.error ?? TIMEOUT_FAILURE_MESSAGE;
       default:
         return 'Unexpected Error';
     }

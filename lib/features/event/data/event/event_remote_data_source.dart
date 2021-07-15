@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:ironman/core/error/failure.dart';
 import '../../../../core/data/response_model.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import '../../../../core/utils/constants.dart';
@@ -49,8 +50,12 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
 
     print('Uri" $uri');
 
+
     final response = await client.get(uri,
-        headers: {'Content-Type': 'application/json', 'apikey': API_KEY});
+        headers: {'Content-Type': 'application/json', 'apikey': API_KEY})
+    .timeout(Duration(seconds: 7),onTimeout: () {
+      throw TimeoutException(message: TIMEOUT_FAILURE_MESSAGE);
+    });
 
     print('event_remote_data_source | searchEventsByQuery | response: ${response.toString()}');
 
