@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:fake_async/fake_async.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:ironman/core/error/failure.dart';
@@ -83,12 +86,12 @@ void main() {
       final uri = setUpMockHttpClientSuccessResponse(
           queryParam, jsonPath, endpoint, page);
       // act
-      await dataSourceImpl.searchEventsByQuery(queryParam, eventTenseParam, page);
+      await dataSourceImpl.searchEventsByQuery(
+          queryParam, eventTenseParam, page);
       // assert
       verify(mockHttpClient.get(uri,
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
     });
-
 
     final tResponse = ResponseModel(
         status: "success", currentPage: 1, lastPage: 15, data: tEventModels);
@@ -109,10 +112,11 @@ void main() {
     test('getEvents by query when response is empty throw NoElementException',
         () async {
       // arrange
-          setUpMockHttpClientSuccessResponse(failedQueryParam, 'event/get_events_by_query_no_element.json', endpoint, page);
+      setUpMockHttpClientSuccessResponse(failedQueryParam,
+          'event/get_events_by_query_no_element.json', endpoint, page);
       // act
-      final call =
-          dataSourceImpl.searchEventsByQuery(failedQueryParam, eventTenseParam, page);
+      final call = dataSourceImpl.searchEventsByQuery(
+          failedQueryParam, eventTenseParam, page);
 
       // assert
       expect(() => call, throwsA(isA<NoElementExceptions>()));
@@ -124,12 +128,47 @@ void main() {
       // arrange
       setUpMockHttpClientFailure404();
 
-      final call = dataSourceImpl.searchEventsByQuery(queryParam, eventTenseParam,page);
+      final call =
+          dataSourceImpl.searchEventsByQuery(queryParam, eventTenseParam, page);
 
       // assert
       expect(() => call, throwsA(isA<ServerExceptions>()));
     });
+
+    test(
+        'getEvents by query when timeout doesn\'t occured return valid response model',
+        () async {
+      // arrange
+      setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint, page);
+
+      // act
+      final result = await dataSourceImpl.searchEventsByQuery(
+          queryParam, EventTense.All, page);
+
+      // assert
+      expect(result, equals(tResponse.data));
+    });
+
+    // Trzeba sprawdzić czy dataSourceImpl po 7s wyrzuca wyjątek timeout exception
+    // Wywołać metodę mockHttpClient get
+    // odpalić delaya na 7s
+    // sprawdzić czy dataSourceImpl wyrzuca wyjątek
+
+    test('getEvents by query when timeout is occured throw timeout', () async {
+
+      final query = 'poland';
+      final eventTense = EventTense.All;
+      setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint, page);
+
+      final call = await dataSourceImpl.searchEventsByQuery(query, eventTense, page);
+      await Future.delayed(Duration(seconds: 7,microseconds: 10),(){});
+
+      expect(() => call,throwsA(isA<TimeoutException>()));
+
+    });
   });
+
+  // ******************** get Events By Id **************************** //
 
   group('getEventById', () {
     // arrange
@@ -198,6 +237,5 @@ void main() {
 
       expect(() => call, throwsA(isA<ServerExceptions>()));
     });
-
   });
 }

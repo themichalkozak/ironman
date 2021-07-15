@@ -54,6 +54,8 @@ class EventRepositoryImpl extends EventRepository {
       return Right(events);
     }on ServerExceptions catch(error) {
       return Left(ServerFailure(error: error.message));
+    } on TimeoutException catch(error){
+      return Left(TimeoutFailure(error: error.message));
     }
   }
 }
