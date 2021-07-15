@@ -57,8 +57,6 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       throw TimeoutException(message: TIMEOUT_FAILURE_MESSAGE);
     });
 
-    print('event_remote_data_source | searchEventsByQuery | response: ${response.toString()}');
-
     if (response.statusCode != 200) {
       throw ServerExceptions(message: response.statusCode.toString());
     }
@@ -75,6 +73,8 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     responseModel.data.forEach((element) {
       events.add(EventModel.fromJson(element));
     });
+
+    print('event_remote_data_source | searchEventsByQuery | events size: ${events.length}');
 
     return events;
   }
