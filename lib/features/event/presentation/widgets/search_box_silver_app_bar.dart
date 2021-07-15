@@ -4,8 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 
 class SearchBoxSilverAppBar extends StatelessWidget {
+
+  final Function callback;
+
   const SearchBoxSilverAppBar({
     Key key,
+    this.callback
   }) : super(key: key);
 
   @override
@@ -21,6 +25,7 @@ class SearchBoxSilverAppBar extends StatelessWidget {
             context
                 .read<EventBloc>()
                 .add(SearchEventsByQueryEvent(query: value));
+            callback();
           },
           decoration: InputDecoration(
             border: OutlineInputBorder(

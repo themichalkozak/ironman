@@ -5,19 +5,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/widgets/widgets.dart';
 
-class EventScreen extends StatelessWidget {
+class EventScreen extends StatefulWidget {
+  @override
+  _EventScreenState createState() => _EventScreenState();
+}
+
+class _EventScreenState extends State<EventScreen> {
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white, body: buildBody(context));
+    return Scaffold(backgroundColor: Colors.white, body: buildBody(context,searchQueryCallback));
+  }
+
+  void searchQueryCallback(){
+    print('Invoked');
   }
 }
 
-Widget buildBody(BuildContext context) {
+Widget buildBody(BuildContext context,Function searchQueryCallback) {
   return CustomScrollView(
     shrinkWrap: true,
     slivers: [
       TitledSilverAppBar(title: 'Event'),
-      SearchBoxSilverAppBar(),
+      SearchBoxSilverAppBar(callback: searchQueryCallback),
       SliverToBoxAdapter(
         child: SizedBox(
           height: 8,
@@ -27,6 +37,8 @@ Widget buildBody(BuildContext context) {
     ],
   );
 }
+
+
 
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
@@ -47,4 +59,5 @@ BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
 
     }
   });
+
 }
