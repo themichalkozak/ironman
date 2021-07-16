@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/injector_container.dart' as di;
+import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/core/route/app_router.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:path_provider/path_provider.dart';
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return BlocProvider(
+  create: (context) => di.sl<InternetCubit>(),
+    child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,
@@ -31,6 +34,7 @@ class MyApp extends StatelessWidget {
           )
         ),
         onGenerateRoute: di.sl<AppRouter>().onGenerateRoute
-    );
+    ),
+);
   }
 }

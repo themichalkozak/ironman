@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:meta/meta.dart';
@@ -42,6 +41,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         return Loaded(events: events, isExhausted: events.isEmpty);
       });
     }
+
     if (event is SearchNextPageResultEvent) {
 
       if (state is Empty) return;
