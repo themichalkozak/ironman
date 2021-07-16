@@ -1,6 +1,8 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive/hive.dart';
+import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/core/platform/network_info.dart';
 import 'package:ironman/core/route/app_router.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
@@ -24,6 +26,7 @@ Future<void> init() async {
   sl.registerLazySingleton(() => SearchEventsByQuery(sl()));
   sl.registerLazySingleton(() => GetEventById(sl()));
   // Bloc
+  sl.registerFactory<InternetCubit>(() => InternetCubit(connectivity: sl()));
   sl.registerFactory<EventBloc>(() => (EventBloc(searchEventsByQuery: sl())));
   sl.registerFactory<EventDetailBloc>(() => (EventDetailBloc(getEventById: sl())));
   // Repositories
@@ -41,6 +44,7 @@ Future<void> init() async {
   // Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
   sl.registerLazySingleton<AppRouter>(() => AppRouter());
+  sl.registerLazySingleton(() => Connectivity());
   // External
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => DataConnectionChecker());
