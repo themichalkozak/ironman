@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ironman/features/event/data/event/EventDetailModel.dart';
+import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 
 import '../../../../../fixtures/fixture_reader.dart';

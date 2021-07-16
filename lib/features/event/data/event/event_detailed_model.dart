@@ -1,32 +1,59 @@
 import 'package:flutter/foundation.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
+part 'event_detailed_model.g.dart';
+
+@HiveType(typeId: 2)
 class EventDetailModel extends EventDetail {
+
+  @HiveField(0)
+  final int eventId;
+
+  @HiveField(1)
+  final String eventTitle;
+
+  @HiveField(2)
+  final String eventDate;
+
+  @HiveField(3)
+  final String eventFinishDate;
+
+  @HiveField(4)
+  final String eventVenue;
+
+  @HiveField(5)
+  final String eventCountryName;
+
+  @HiveField(6)
+  final String eventFlag;
+
+  @HiveField(7)
+  final List<EventSpecificationModel> eventSpecifications;
+
+  @HiveField(8)
+  final String eventWebSite;
+
+  @HiveField(9)
+  final String information;
+
+
   EventDetailModel({
-    @required int eventId,
-    @required String eventTitle,
-    @required String eventDate,
-    @required String eventFinishDate,
-    @required String eventVenue,
-    @required String eventCountryName,
-    @required String eventFlag,
-    @required List<EventSpecificationModel> eventSpecifications,
-    @required String eventWebSite,
-    @required String information,
-  }) : super(
-            eventId: eventId,
-            eventTitle: eventTitle,
-            eventDate: eventDate,
-            eventFinishDate: eventFinishDate,
-            eventVenue: eventVenue,
-            eventCountryName: eventCountryName,
-            eventFlag: eventFlag,
-            eventSpecifications: eventSpecifications,
-            eventWebSite: eventWebSite,
-            information: information);
+    this.eventId,
+    this.eventTitle,
+    this.eventDate,
+    this.eventFinishDate,
+    this.eventVenue,
+    this.eventCountryName,
+    this.eventFlag,
+    this.eventSpecifications,
+    this.eventWebSite,
+    this.information,
+  });
+
+
 
   factory EventDetailModel.fromJson(Map<String, dynamic> json) {
-
     List<EventSpecificationModel> eventSpecificationModels = [];
 
     (json['event_specifications'] as List)?.forEach((json) {

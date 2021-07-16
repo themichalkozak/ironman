@@ -6,7 +6,7 @@ import '../../../../core/data/response_model.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import '../../../../core/utils/constants.dart';
 import 'package:ironman/core/error/exceptions.dart';
-import 'EventDetailModel.dart';
+import 'event_detailed_model.dart';
 import 'EventModel.dart';
 
 abstract class EventRemoteDataSource {

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import '../../../../../../lib/core/domain/response.dart';
 import '../../../../../../lib/core/data/response_model.dart';
-import 'package:ironman/features/event/data/event/EventDetailModel.dart';
+import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 
 import '../../../../../fixtures/fixture_reader.dart';
 

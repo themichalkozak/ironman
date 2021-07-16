@@ -7,7 +7,7 @@ import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import '../../../../../../lib/core/data/response_model.dart';
 import 'package:ironman/core/utils/constants.dart';
-import 'package:ironman/features/event/data/event/EventDetailModel.dart';
+import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
