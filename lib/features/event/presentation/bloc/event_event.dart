@@ -30,3 +30,7 @@ class SearchEventsByQueryEvent extends EventEvent {
 class SearchNextPageResultEvent extends EventEvent {
   SearchNextPageResultEvent();
 }
+
+class RefreshSearchEventsByQueryEvent extends EventEvent {
+  RefreshSearchEventsByQueryEvent();
+}

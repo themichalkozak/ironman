@@ -25,6 +25,7 @@ class _EventScreenState extends State<EventScreen> {
     return BlocListener<InternetCubit, InternetState>(
       listener: (context, state) {
         if (state is InternetState) {
+          context.read<EventBloc>().add(RefreshSearchEventsByQueryEvent());
           scaffold.hideCurrentSnackBar();
           displayInternetInfoSnackBar(
               scaffold, 'Internet connected', Colors.green);

@@ -21,29 +21,26 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   EventState get initialState => Empty();
 
   @override
-  Stream<EventState> mapEventToState(
-    EventEvent event,
-  ) async* {
-
+  Stream<EventState> mapEventToState(EventEvent event,) async* {
     if (event is SearchEventsByQueryEvent) {
-
-      if(state is Loaded){
-        if(!updateSearchQuery(event.query)) return;
+      if (state is Loaded) {
+        if (!updateSearchQuery(event.query)) return;
       }
 
       yield Loading();
       final failureOrEvents = await searchEventsByQuery(
           SearchEventsByQueryParams(
-              query: event.query, eventTense: event.eventTense,page: _initialPage ));
+              query: event.query,
+              eventTense: event.eventTense,
+              page: _initialPage));
       yield failureOrEvents
           .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
               (events) {
-        return Loaded(events: events, isExhausted: events.isEmpty);
-      });
+            return Loaded(events: events, isExhausted: events.isEmpty);
+          });
     }
 
     if (event is SearchNextPageResultEvent) {
-
       if (state is Empty) return;
 
       if (state is Loaded) {
@@ -52,23 +49,47 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
         final previousList = loadedState.events;
 
-        final failureOrEvents = await searchEventsByQuery(SearchEventsByQueryParams(
-            query: _query,eventTense: EventTense.All,page: _getPageFromOffset(previousList.length)
-        ));
+        final failureOrEvents = await searchEventsByQuery(
+            SearchEventsByQueryParams(
+                query: _query,
+                eventTense: EventTense.All,
+                page: _getPageFromOffset(previousList.length)
+            ));
 
         yield failureOrEvents
-            .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+            .fold((failure) =>
+            Error(errorMessage: _mapFailureToMessage(failure)),
                 (events) {
-              return Loaded(events:previousList + events , isExhausted: events.isEmpty);
+              return Loaded(
+                  events: previousList + events, isExhausted: events.isEmpty);
             });
+      }
+    }
 
+    if (event is RefreshSearchEventsByQueryEvent) {
+      if (state is Loading) {
+        return;
+      }
+      if (state is Loaded) {
+        if ((state as Loaded).events.isNotEmpty) {
+          return;
+        }
       }
 
+      print('event_bloc | RefreshSearchQuery | _query: $_query');
+
+      final failOrEvents = await searchEventsByQuery(
+          SearchEventsByQueryParams(
+              query: _query, eventTense: EventTense.All, page: _initialPage));
+
+      yield failOrEvents.fold((failure) =>
+          Error(errorMessage: _mapFailureToMessage(failure)),
+              (events) => Loaded(events: events,isExhausted: events.isEmpty));
     }
   }
 
-  bool updateSearchQuery(String newSearchQuery){
-    if(newSearchQuery == null || newSearchQuery == _query){
+  bool updateSearchQuery(String newSearchQuery) {
+    if (newSearchQuery == null || newSearchQuery == _query) {
       return false;
     }
     _query = newSearchQuery;
