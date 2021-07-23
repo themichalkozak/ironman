@@ -22,14 +22,38 @@ class EventRepositoryImpl extends EventRepository {
   });
 
   @override
-  Future<Either<Failure, EventDetail>> getEventById(int id) async {
+  Future<Either<Failure, EventDetail>> searchEventById(int id) async {
 
     if(!await networkInfo.isConnected){
-      return Left(NoInternetFailure());
+
+
+      try{
+
+        final EventDetail event = await localDataSource.searchEventById(id);
+
+        if(event == null){
+          return Left(NoElementFailure());
+        }
+
+        return Right(event);
+
+      }catch(error){
+        return Left(CacheFailure(error: error.toString()));
+      }
+
     }
 
     try{
-      return Right(await remoteDataSource.getEventById(id));
+
+      final EventDetail event = await remoteDataSource.getEventById(id);
+
+      if(event == null){
+        return Left(NoElementFailure());
+      }
+
+      localDataSource.cacheSingleEvent(event);
+      return Right(event);
+
     } on ServerExceptions{
       return Left(NoElementFailure());
     }

@@ -24,11 +24,10 @@ class _EventScreenState extends State<EventScreen> {
     final scaffold = ScaffoldMessenger.of(context);
     return BlocListener<InternetCubit, InternetState>(
       listener: (context, state) {
-        if (state is InternetState) {
-          context.read<EventBloc>().add(RefreshSearchEventsByQueryEvent());
-          scaffold.hideCurrentSnackBar();
+        if (state is InternetConnected) {
           displayInternetInfoSnackBar(
               scaffold, 'Internet connected', Colors.green);
+          context.read<EventBloc>().add(RefreshSearchEventsByQueryEvent());
         }
         if (state is InternetDisconnected) {
           displayInternetInfoSnackBar(
@@ -81,17 +80,7 @@ class _EventScreenState extends State<EventScreen> {
             height: 8,
           ),
         ),
-        buildSilverBody(context),
-        // BlocBuilder<InternetCubit,InternetState>(
-        //     builder: (context,state){
-        //       if(state is InternetConnected){
-        //         return displayNetwokInfo(context,state.connectionType.toString(), Colors.green);
-        //       }else if( state is InternetDisconnected){
-        //         return displayNetwokInfo('No connection', Colors.red);
-        //       }else {
-        //         return displayNetwokInfo('Checking internet connection', Colors.grey);
-        //       }
-        //     }),
+        buildSilverBody(context)
       ],
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
-import 'package:ironman/features/event/data/event/EventDetailModel.dart';
+import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
@@ -73,7 +73,7 @@ void main() {
     final eventTense = EventTense.All;
 
     runTestsOnline(() {
-      test('get Events By query verify is remote data called', () async {
+      test('searchEventsByQuery verify is remote data called', () async {
         // arrange
         when(mockEventRemoteDataSource.searchEventsByQuery(
                 searchQuery, eventTense, page))
@@ -153,7 +153,7 @@ void main() {
 
     runTestsOnline(() {
       test(
-          'get Events by query when call to remote data source is unsuccessful return ServerFailure',
+          'searchEventsByQuery when call to remote data source is unsuccessful return ServerFailure',
           () async {
         // arrange
         when(mockEventRemoteDataSource.searchEventsByQuery(
@@ -214,7 +214,7 @@ void main() {
         when(mockEventRemoteDataSource.getEventById(any))
             .thenAnswer((realInvocation) async => tEventDetailModel);
         // act
-        final result = await repository.getEventById(0);
+        final result = await repository.searchEventById(0);
 
         // assert
         verify(mockEventRemoteDataSource.getEventById(0));
@@ -229,7 +229,7 @@ void main() {
         when(mockEventRemoteDataSource.getEventById(any))
             .thenThrow(ServerExceptions(message: 'No element found'));
         // act
-        final result = await repository.getEventById(0);
+        final result = await repository.searchEventById(0);
 
         // assert
         verify(mockEventRemoteDataSource.getEventById(0));
@@ -237,19 +237,37 @@ void main() {
       });
     });
 
-    runTestsOffline(() {
-      test(
-          'get Event by id when no internet connection return NoInternetFailure',
-          () async {
+    runTestsOffline((){
+      test('get Event by id when is internet connection and data is available return valid cached EventDetail model',() async {
+
         // arrange
-        when(mockEventRemoteDataSource.getEventById(any))
-            .thenThrow(NoInternetFailure());
+        final id = 0;
+
+        when(mockEventLocalDataSource.searchEventById(any))
+            .thenAnswer((realInvocation) async => tEventDetailModel);
+
         // act
-        final result = await repository.getEventById(0);
+        final result = await repository.searchEventById(id);
 
         // assert
-        verifyZeroInteractions(mockEventRemoteDataSource);
-        expect(result, equals(Left(NoInternetFailure())));
+
+        expect(result,Right(tEventDetailModel));
+      });
+    });
+
+    runTestsOffline((){
+      test('get Event By id when throw CacheException return CacheFailure',() async {
+
+        // arrange
+        when(mockEventLocalDataSource.searchEventById(any)).thenThrow(CacheException(message: CACHE_FAILURE));
+
+        // act
+        final result = await repository.searchEventById(0);
+
+        // assert
+
+        expect(result,Left(CacheFailure(error: CACHE_FAILURE)));
+
       });
     });
   });

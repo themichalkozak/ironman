@@ -39,7 +39,7 @@ void main() {
     // 'On the fly' eventRepository implementation using Mocito Library
     // contains test object
 
-    when(mockEventRepository.getEventById(0))
+    when(mockEventRepository.searchEventById(0))
         .thenAnswer((_) async => Right(testEventDetail));
 // act
     // call not-yet existent method
@@ -47,7 +47,7 @@ void main() {
     // useCase simply return whatever is in repository
     expect(result, Right(testEventDetail));
     // verify is method has been called in eventRepository
-    verify(mockEventRepository.getEventById(0));
+    verify(mockEventRepository.searchEventById(0));
     // check if only above method has been called and nothing more
     verifyNoMoreInteractions(mockEventRepository);
   });
@@ -58,7 +58,7 @@ void main() {
       'get Event by id  when is no internet connection and id equals 0 should return Failure',
           () async {
         // 'On the fly' eventRepository implementation using Mocito Library
-        when(mockEventRepository.getEventById(0))
+        when(mockEventRepository.searchEventById(0))
             .thenAnswer((_) async => Left(failureNoInternetConnection));
         // act
         // call not-yet existent method
@@ -66,7 +66,7 @@ void main() {
         // useCase simply return whatever is in repository
         expect(result, Left(failureNoInternetConnection));
         // verify is method has been called in eventRepository
-        verify(mockEventRepository.getEventById(0));
+        verify(mockEventRepository.searchEventById(0));
         // check if only above method has been called and nothing more
         verifyNoMoreInteractions(mockEventRepository);
       });
@@ -77,7 +77,7 @@ void main() {
       'get Event by id when id equals -1 should return Failure',
           () async {
         // 'On the fly' eventRepository implementation using Mocito Library
-        when(mockEventRepository.getEventById(-1))
+        when(mockEventRepository.searchEventById(-1))
             .thenAnswer((_) async => Left(failureNoElement));
         // act
         // call not-yet existent method
@@ -85,7 +85,7 @@ void main() {
         // useCase simply return whatever is in repository
         expect(result, Left(failureNoElement));
         // verify is method has been called in eventRepository
-        verify(mockEventRepository.getEventById(-1));
+        verify(mockEventRepository.searchEventById(-1));
         // check if only above method has been called and nothing more
         verifyNoMoreInteractions(mockEventRepository);
       });

@@ -21,6 +21,7 @@ Future<void> init() async {
 
 
   final box = await Hive.openBox('events');
+  final singleEventsBox = await Hive.openBox('singleEvents');
   // Features
   // UseCases
   sl.registerLazySingleton(() => SearchEventsByQuery(sl()));
@@ -39,7 +40,7 @@ Future<void> init() async {
       );
       });
   // Data sources
-  sl.registerLazySingleton<EventLocalDataSource>(() => HiveEventLocalDataSourceImpl(box));
+  sl.registerLazySingleton<EventLocalDataSource>(() => HiveEventLocalDataSourceImpl(box,singleEventsBox));
   sl.registerLazySingleton<EventRemoteDataSource>(() => EventRemoteDataSourceImpl(sl()));
   // Core
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
