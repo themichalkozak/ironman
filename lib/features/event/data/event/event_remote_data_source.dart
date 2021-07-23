@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:ironman/core/error/failure.dart';
 import '../../../../core/data/response_model.dart';
-import 'package:ironman/features/event/domain/event_tense.dart';
 import '../../../../core/utils/constants.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'event_detailed_model.dart';
@@ -12,7 +11,7 @@ import 'EventModel.dart';
 abstract class EventRemoteDataSource {
 
   Future<List<EventModel>> searchEventsByQuery(
-      String query, EventTense eventTense, int page);
+      String query, int page);
 
   Future<EventDetailModel> getEventById(int id);
 }
@@ -41,7 +40,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
 
   @override
   Future<List<EventModel>> searchEventsByQuery(
-      String query, EventTense eventTense, int page) async {
+      String query, int page) async {
     final queryParams = {'query': query, 'page': page.toString()};
 
     List<EventModel> events = [];

@@ -6,7 +6,6 @@ import 'package:ironman/core/platform/network_info.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
-import 'package:ironman/features/event/domain/event_tense.dart';
 import 'event_remote_data_source.dart';
 import '../../domain/event_repository.dart';
 
@@ -61,7 +60,7 @@ class EventRepositoryImpl extends EventRepository {
 
   @override
   Future<Either<Failure, List<Event>>> searchEventsByQuery(
-      String query, EventTense eventTense,int page) async {
+      String query,int page) async {
 
     if(!await networkInfo.isConnected){
       try{
@@ -73,7 +72,7 @@ class EventRepositoryImpl extends EventRepository {
     }
 
     try{
-      final events = await remoteDataSource.searchEventsByQuery(query, eventTense,page);
+      final events = await remoteDataSource.searchEventsByQuery(query,page);
       localDataSource.cacheEvents(events, page);
       return Right(events);
     }on ServerExceptions catch(error) {

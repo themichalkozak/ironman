@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
-import 'package:ironman/features/event/domain/event_tense.dart';
+import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
@@ -31,7 +31,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       final failureOrEvents = await searchEventsByQuery(
           SearchEventsByQueryParams(
               query: event.query,
-              eventTense: event.eventTense,
               page: _initialPage));
       yield failureOrEvents
           .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
@@ -52,7 +51,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         final failureOrEvents = await searchEventsByQuery(
             SearchEventsByQueryParams(
                 query: _query,
-                eventTense: EventTense.All,
                 page: _getPageFromOffset(previousList.length)
             ));
 
@@ -80,7 +78,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       final failOrEvents = await searchEventsByQuery(
           SearchEventsByQueryParams(
-              query: _query, eventTense: EventTense.All, page: _initialPage));
+              query: _query, page: _initialPage));
 
       yield failOrEvents.fold((failure) =>
           Error(errorMessage: _mapFailureToMessage(failure)),

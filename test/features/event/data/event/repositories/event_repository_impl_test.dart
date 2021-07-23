@@ -8,7 +8,6 @@ import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
 import 'package:ironman/features/event/data/event/event_repository_impl.dart';
-import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:mockito/mockito.dart';
 
 class MockEventRemoteDataSource extends Mock implements EventRemoteDataSource {}
@@ -70,21 +69,20 @@ void main() {
   group('get Events by query', () {
     final searchQuery = 'poland';
     final page = 1;
-    final eventTense = EventTense.All;
 
     runTestsOnline(() {
       test('searchEventsByQuery verify is remote data called', () async {
         // arrange
         when(mockEventRemoteDataSource.searchEventsByQuery(
-                searchQuery, eventTense, page))
+                searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         // act
-        await repository.searchEventsByQuery(searchQuery, eventTense, page);
+        await repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         verify(mockEventRemoteDataSource.searchEventsByQuery(
-            searchQuery, eventTense, page));
+            searchQuery, page));
       });
     });
 
@@ -94,7 +92,7 @@ void main() {
         // arrange
         // when remoteDataSource -> correctModel
         when(mockEventRemoteDataSource.searchEventsByQuery(
-                searchQuery, eventTense, page))
+                searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         when(mockEventLocalDataSource.searchEventsByQuery(
@@ -102,11 +100,11 @@ void main() {
             .thenAnswer((_) async => null);
         // act
         // invoke api remoteDataSource.searchQueryCall
-        await repository.searchEventsByQuery(searchQuery, eventTense, page);
+        await repository.searchEventsByQuery(searchQuery, page);
         // assert
         // verify is remoteDataSource.searchQuert call
         verify(mockEventRemoteDataSource.searchEventsByQuery(
-            searchQuery, eventTense, page));
+            searchQuery, page));
         verify(mockEventLocalDataSource.cacheEvents(tEvents, page));
             // verify is cacheDataSource.cacheEvents call with correct params
       });
@@ -118,16 +116,16 @@ void main() {
           () async {
         // assert
         when(mockEventRemoteDataSource.searchEventsByQuery(
-                searchQuery, eventTense, page))
+                searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         // act
         final result =
-            await repository.searchEventsByQuery(searchQuery, eventTense, page);
+            await repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         verify(mockEventRemoteDataSource.searchEventsByQuery(
-            searchQuery, eventTense, page));
+            searchQuery, page));
         expect(result, equals(Right(tEvents)));
       });
     });
@@ -140,7 +138,7 @@ void main() {
             .thenAnswer((_) async => tEvents);
 
         // act
-        final result = await repository.searchEventsByQuery(searchQuery, eventTense, page);
+        final result = await repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         verify(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page));
@@ -157,17 +155,17 @@ void main() {
           () async {
         // arrange
         when(mockEventRemoteDataSource.searchEventsByQuery(
-                searchQuery, eventTense, page))
+                searchQuery, page))
             .thenThrow(ServerExceptions(message: 'Error'));
 
         // act
         final result =
-            await repository.searchEventsByQuery(searchQuery, eventTense, page);
+            await repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         // Check if method has been called event if throw exception !
         verify(mockEventRemoteDataSource.searchEventsByQuery(
-            searchQuery, eventTense, page));
+            searchQuery, page));
         expect(result, Left(ServerFailure()));
       });
     });
@@ -179,7 +177,7 @@ void main() {
         when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
             .thenThrow(CacheException(message: CACHE_FAILURE));
         // act
-        final result = await repository.searchEventsByQuery(searchQuery, eventTense, page);
+        final result = await repository.searchEventsByQuery(searchQuery, page);
         // assert
         expect(result,Left(CacheFailure(error: CACHE_FAILURE)));
       });

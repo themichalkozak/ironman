@@ -49,7 +49,6 @@ void main() {
     final failedQueryParam = '-123=*';
     final jsonPath = 'event/get_events_PL.json';
     final endpoint = '/v1/search/events';
-    final eventTenseParam = EventTense.All;
 
     final tEventModel1 = EventModel(
         eventId: 122987,
@@ -87,7 +86,7 @@ void main() {
           queryParam, jsonPath, endpoint, page);
       // act
       await dataSourceImpl.searchEventsByQuery(
-          queryParam, eventTenseParam, page);
+          queryParam, page);
       // assert
       verify(mockHttpClient.get(uri,
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
@@ -103,7 +102,7 @@ void main() {
       setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint, page);
       // act
       final result = await dataSourceImpl.searchEventsByQuery(
-          queryParam, eventTenseParam, page);
+          queryParam, page);
 
       // assert
       expect(result, equals(tResponse.data));
@@ -116,7 +115,7 @@ void main() {
           'event/get_events_by_query_no_element.json', endpoint, page);
       // act
       final call = dataSourceImpl.searchEventsByQuery(
-          failedQueryParam, eventTenseParam, page);
+          failedQueryParam, page);
 
       // assert
       expect(() => call, throwsA(isA<NoElementExceptions>()));
@@ -129,7 +128,7 @@ void main() {
       setUpMockHttpClientFailure404();
 
       final call =
-          dataSourceImpl.searchEventsByQuery(queryParam, eventTenseParam, page);
+          dataSourceImpl.searchEventsByQuery(queryParam, page);
 
       // assert
       expect(() => call, throwsA(isA<ServerExceptions>()));
@@ -143,7 +142,7 @@ void main() {
 
       // act
       final result = await dataSourceImpl.searchEventsByQuery(
-          queryParam, EventTense.All, page);
+          queryParam, page);
 
       // assert
       expect(result, equals(tResponse.data));
@@ -160,7 +159,7 @@ void main() {
       final eventTense = EventTense.All;
       setUpMockHttpClientSuccessResponse(queryParam, jsonPath, endpoint, page);
 
-      final call = await dataSourceImpl.searchEventsByQuery(query, eventTense, page);
+      final call = await dataSourceImpl.searchEventsByQuery(query, page);
       await Future.delayed(Duration(seconds: 7,microseconds: 10),(){});
 
       expect(() => call,throwsA(isA<TimeoutException>()));
