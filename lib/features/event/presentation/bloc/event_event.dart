@@ -29,6 +29,14 @@ class SearchNextPageResultEvent extends EventEvent {
   SearchNextPageResultEvent();
 }
 
+class FilterByEventTense extends EventEvent {
+  final EventTense eventTense;
+
+  FilterByEventTense({
+    @required this.eventTense,
+  });
+}
+
 class RefreshSearchEventsByQueryEvent extends EventEvent {
   RefreshSearchEventsByQueryEvent();
 }
