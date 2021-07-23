@@ -18,12 +18,10 @@ class GetEventsEvent extends EventEvent {
 
 class SearchEventsByQueryEvent extends EventEvent {
   final String query;
-  final EventTense eventTense;
 
   SearchEventsByQueryEvent({
     @required this.query,
-    this.eventTense = EventTense.All,
-  }): super([query,eventTense]);
+  }): super([query]);
 
 }
 
