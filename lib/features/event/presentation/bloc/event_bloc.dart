@@ -110,6 +110,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         return NO_INITIAL_STATE_FAILURE;
       case TimeoutFailure:
         return failure.error ?? TIMEOUT_FAILURE_MESSAGE;
+      case CacheFailure:
+        return failure.error ?? CACHE_FAILURE;
       default:
         return 'Unexpected Error';
     }
