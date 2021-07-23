@@ -6,7 +6,6 @@ part 'event_detailed_model.g.dart';
 
 @HiveType(typeId: 2)
 class EventDetailModel extends EventDetail {
-
   @HiveField(0)
   final int eventId;
 
@@ -37,7 +36,6 @@ class EventDetailModel extends EventDetail {
   @HiveField(9)
   final String information;
 
-
   EventDetailModel({
     this.eventId,
     this.eventTitle,
@@ -51,8 +49,6 @@ class EventDetailModel extends EventDetail {
     this.information,
   });
 
-
-
   factory EventDetailModel.fromJson(Map<String, dynamic> json) {
     List<EventSpecificationModel> eventSpecificationModels = [];
 
@@ -61,23 +57,35 @@ class EventDetailModel extends EventDetail {
     });
 
     return EventDetailModel(
-        eventId: json['event_id'],
-        eventTitle: json['event_title'],
-        eventDate: json['event_date'],
-        eventFinishDate: json['event_finish_date'],
-        eventVenue: json['event_venue'],
-        eventCountryName: json['event_country'],
-        eventFlag: json['event_flag'],
-        eventSpecifications: eventSpecificationModels,
-        eventWebSite: json['eventId'] ?? '',
-        information: json['eventId']) ?? 'No information';
+            eventId: json['event_id'],
+            eventTitle: json['event_title'],
+            eventDate: json['event_date'],
+            eventFinishDate: json['event_finish_date'],
+            eventVenue: json['event_venue'],
+            eventCountryName: json['event_country'],
+            eventFlag: json['event_flag'],
+            eventSpecifications: eventSpecificationModels,
+            eventWebSite: json['eventId'] ?? '',
+            information: json['eventId']) ??
+        'No information';
   }
 }
 
+@HiveType(typeId: 3)
 class EventSpecificationModel extends EventSpecification {
-  EventSpecificationModel(
-      {@required String name, @required int id, @required int parentId})
-      : super(name, id, parentId);
+
+  @HiveField(0)
+  final String name;
+  @HiveField(1)
+  final int id;
+  @HiveField(2)
+  final int parentId;
+
+  EventSpecificationModel({
+    @required this.name,
+    @required this.id,
+    @required this.parentId,
+  }) : super(name, id, parentId);
 
   factory EventSpecificationModel.fromJson(Map<String, dynamic> json) {
     return EventSpecificationModel(

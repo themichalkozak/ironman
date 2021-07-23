@@ -1,28 +1,58 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/error/exceptions.dart';
+import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
 
 abstract class EventLocalDataSource {
+  final Box eventBox;
+  final Box singleEventsBox;
+
+  const EventLocalDataSource({
+    @required this.eventBox,
+    @required this.singleEventsBox,
+  });
+
   Future<List<Event>> searchEventsByQuery(String query, int page);
 
-  Future<List<EventDetail>> searchEventById(int id);
+  Future<EventDetail> searchEventById(int id);
 
   Future<void> cacheEvents(List<Event> events, int page);
+
+  Future<void> cacheSingleEvent(EventDetail events);
 }
 
 class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   final Box eventBox;
+  final Box singleEventsBox;
 
-  HiveEventLocalDataSourceImpl(this.eventBox);
+  HiveEventLocalDataSourceImpl(this.eventBox,this.singleEventsBox);
 
   @override
-  Future<List<EventDetail>> searchEventById(int id) {
-    // TODO: implement searchEventById
-    throw UnimplementedError();
+  Future<EventDetail> searchEventById(int id) async {
+
+    final result = singleEventsBox.get(id);
+
+    if(result == null){
+      throw CacheException(message: NO_ELEMENT_FAILURE_MESSAGE);
+    }
+
+    return singleEventsBox.get(id);
   }
+
+  @override
+  Future<void> cacheSingleEvent(EventDetail event) async {
+    _saveSingleEvent(event);
+  }
+
+
+  Future<void> _saveSingleEvent(EventDetail event) async {
+    await singleEventsBox.put(event.eventId, event);
+  }
+
+
 
   @override
   Future<List<Event>> searchEventsByQuery(String query, int page) async {
@@ -114,4 +144,5 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   Future<void> _saveItem(Event event) async {
     await eventBox.put(event.eventId, event);
   }
+
 }

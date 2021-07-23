@@ -14,7 +14,7 @@ class GetEventById extends UseCase<Event, GetEventByIdParams> {
 
   @override
   Future<Either<Failure, EventDetail>> call(GetEventByIdParams params) {
-    return repository.getEventById(params.id);
+    return repository.searchEventById(params.id);
   }
 }
 

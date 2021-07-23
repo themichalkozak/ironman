@@ -5,6 +5,7 @@ import 'package:ironman/core/injector_container.dart' as di;
 import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/core/route/app_router.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
+import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 import 'package:path_provider/path_provider.dart';
 
 
@@ -13,6 +14,8 @@ void main() async {
    final appDocumentDir = await getApplicationDocumentsDirectory();
    Hive.init(appDocumentDir.path);
    Hive.registerAdapter(EventModelAdapter());
+   Hive.registerAdapter(EventDetailModelAdapter());
+   Hive.registerAdapter(EventSpecificationModelAdapter());
    await di.init();
   runApp(MyApp());
 }
