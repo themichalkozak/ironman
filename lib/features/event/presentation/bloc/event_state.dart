@@ -20,9 +20,26 @@ class Loaded extends EventState {
   Loaded({
     @required this.events,
     @required this.isExhausted,
-    @required this.eventTense
+    this.eventTense = EventTense.All
   }): super([events,isExhausted,eventTense]);
 
+  Loaded copyWith({
+    List events,
+    bool isExhausted,
+    EventTense eventTense,
+  }) {
+    if ((events == null || identical(events, this.events)) &&
+        (isExhausted == null || identical(isExhausted, this.isExhausted)) &&
+        (eventTense == null || identical(eventTense, this.eventTense))) {
+      return this;
+    }
+
+    return new Loaded(
+      events: events ?? this.events,
+      isExhausted: isExhausted ?? this.isExhausted,
+      eventTense: eventTense ?? this.eventTense,
+    );
+  }
 
   @override
   String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted | eventTense" $eventTense';

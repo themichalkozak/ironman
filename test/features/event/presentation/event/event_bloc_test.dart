@@ -2,10 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
+import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
-import 'package:ironman/features/event/presentation/bloc/event_bloc.dart';
-import 'package:ironman/features/event/presentation/bloc/event_event.dart';
-import 'package:ironman/features/event/presentation/bloc/event_state.dart';
+import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:mockito/mockito.dart';
 import 'package:bloc_test/bloc_test.dart';
 
@@ -32,15 +31,13 @@ void main() {
 
   test('should assert if null', () {
     expect(
-      () => EventBloc(searchEventsByQuery: null),
+          () => EventBloc(searchEventsByQuery: null),
       throwsA(isAssertionError),
     );
   });
 
   group('getEvents by query', () {
     final String query = 'poland';
-
-
 
     final tEventModelPast1 = Event(
         eventId: 122987,
@@ -74,7 +71,7 @@ void main() {
         eventTitle: "1992 POL Triathlon National Championships",
         eventVenue: "",
         eventCountryName: "Poland",
-        eventDate: "2021-08-30",
+        eventDate: "2031-08-30",
         eventFinishDate: "2021-08-30",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
 
@@ -83,46 +80,96 @@ void main() {
         eventTitle: "1992 POL Triathlon National Championships",
         eventVenue: "",
         eventCountryName: "Poland",
-        eventDate: "2022-08-30",
+        eventDate: "2032-08-30",
         eventFinishDate: "2022-08-30",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
 
-    List<Event> tEvents = [tEventModelPast1, tEventModelPast2, tEventModelPast3,tEventModelUpcoming1,tEventModelUpcoming2];
+    List<Event> tEvents = [
+      tEventModelPast1,
+      tEventModelPast2,
+      tEventModelPast3,
+      tEventModelUpcoming1,
+      tEventModelUpcoming2
+    ];
 
-    List<Event> tPastEvents = [tEventModelPast1,tEventModelPast2,tEventModelPast3];
+    List<Event> tPastEvents = [
+      tEventModelPast1,
+      tEventModelPast2,
+      tEventModelPast3
+    ];
+
+    List<Event> tUpCommingEvents = [tEventModelUpcoming1, tEventModelUpcoming2];
 
     final queryParam = 'poland';
 
     // helper methods
 
     void mockSuccessSearchQueryEvents() {
-      when(mockSearchEventsByQuery(SearchEventsByQueryParams(
-          page: 1, query: 'poland')))
+      when(mockSearchEventsByQuery(
+          SearchEventsByQueryParams(page: 1, query: 'poland')))
           .thenAnswer((_) async => Right(tEvents));
     }
 
     blocTest(
         'getEvents by query where query param is poland return [Loading(),Loaded(tEvents)]',
         build: () {
-          when(mockSearchEventsByQuery(SearchEventsByQueryParams(
-                  page: 1, query: 'poland')))
+          when(mockSearchEventsByQuery(
+              SearchEventsByQueryParams(page: 1, query: 'poland')))
               .thenAnswer((_) async => Right(tEvents));
           return bloc;
         },
-        act: (bloc) => bloc.add(SearchEventsByQueryEvent(
-            query: queryParam)),
+        act: (bloc) => bloc.add(SearchEventsByQueryEvent(query: queryParam)),
         // isExhauseted is true b/c list is less PER_PAGE = 10;
-        expect: () => [Loading(), Loaded(events: tEvents, isExhausted: false)]);
+        expect: () =>
+        [
+          Loading(),
+          Loaded(
+              events: tEvents,
+              isExhausted: false,
+              eventTense: EventTense.All)
+        ]);
 
     blocTest(
-        'get Events by query where event tense is past return all events before today',
+        'get Events by query where event tense is past return events before today',
         build: () {
           mockSuccessSearchQueryEvents();
+          bloc.add(SearchEventsByQueryEvent(query: query));
+          return bloc;
         },
-        act: (bloc) => {
-          bloc.add(SearchEventsByQueryEvent(query: query)),
+        act: (bloc) =>
+        {
+          bloc.add(FilterByEventTense(eventTense: EventTense.Past)),
         },
-    expect: () => [Loading(),Loaded(events: tPastEvents, isExhausted: false)]);
+        skip: 2,
+        expect: () =>
+        [
+          Loading(),
+          Loaded(
+              events: tPastEvents,
+              isExhausted: false,
+              eventTense: EventTense.Past)
+        ]);
+
+    blocTest(
+        'get events by query when event tense is upcoming return events after today',
+        build: () {
+          mockSuccessSearchQueryEvents();
+          bloc.add(SearchEventsByQueryEvent(query: queryParam));
+          return bloc;
+        },
+        act: (bloc) =>
+        {
+          bloc.add(FilterByEventTense(eventTense: EventTense.Upcoming)),
+        },
+        skip: 2,
+        expect: () =>
+        [
+          Loading(),
+          Loaded(
+              events: tUpCommingEvents,
+              isExhausted: tUpCommingEvents.isEmpty,
+              eventTense: EventTense.Upcoming)
+        ]);
 
     blocTest(
         'getEvents by query where is ServerFailure emit [Loading(),Error()]',
@@ -131,8 +178,19 @@ void main() {
               .thenAnswer((_) async => Left(ServerFailure()));
           return bloc;
         },
-        act: (bloc) => bloc.add(
-            SearchEventsByQueryEvent(query: ''),
-        expect: () => [Loading(), Error(errorMessage: SERVER_FAILURE_MESSAGE)]));
+        act: (bloc) =>
+            bloc.add(SearchEventsByQueryEvent(query: ''),
+                expect: () =>
+                [Loading(), Error(errorMessage: SERVER_FAILURE_MESSAGE)]));
+
+    blocTest('should reset filtering when is new searchQuery',
+        build: () {
+        mockSuccessSearchQueryEvents();
+        bloc.add(SearchEventsByQueryEvent(query: query));
+        bloc.add(FilterByEventTense(eventTense: EventTense.Past));
+        return bloc;
+    },skip: 4,
+    act: (bloc) => {bloc.add(SearchEventsByQueryEvent(query: query))},
+    expect: () => [Loading(),Loaded(events: tEvents,eventTense: EventTense.All,isExhausted: tEvents.isEmpty)]);
   });
 }

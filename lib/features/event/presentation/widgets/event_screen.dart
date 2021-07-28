@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
+import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/presentation/widgets/widgets.dart';
 
@@ -75,6 +76,7 @@ class _EventScreenState extends State<EventScreen> {
       slivers: [
         TitledSilverAppBar(title: 'Event'),
         SearchBoxSilverAppBar(callback: searchQueryCallback),
+        silverChipEvent(context),
         SliverToBoxAdapter(
           child: SizedBox(
             height: 8,
@@ -99,6 +101,42 @@ Widget displayNetwokInfo(BuildContext context, String message, Color color) {
     ),
   );
 }
+
+Widget silverChipEvent(BuildContext context) {
+  return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
+    if (state is Loaded) {
+      return SliverToBoxAdapter(
+        child: Row(
+          children: [
+            _buildFilterChip(EventTense.All,state.eventTense, context),
+            _buildFilterChip(EventTense.Upcoming,state.eventTense, context),
+            _buildFilterChip(EventTense.Past,state.eventTense, context),
+          ],
+        ),
+      );
+    } else {
+      return SliverToBoxAdapter(child: SizedBox());
+    }
+  });
+}
+
+Widget _buildFilterChip(EventTense current, EventTense selectedFiltr, BuildContext context){
+  return FilterChip(selectedColor: Theme.of(context).primaryColor,label: Text(_convertEventTenseToString(current)), onSelected: (bool selected) {
+
+    if(selected){
+      print('event_screen | FilterChips | selected: $selected');
+      context.read<EventBloc>().add(FilterByEventTense(eventTense: current));
+      print('event_screen | FilterChips | eventTense: $current | onSelect: $selectedFiltr');
+    }
+  });
+}
+
+String _convertEventTenseToString(EventTense eventTense){
+  return eventTense.toString().split(".")[1];
+}
+
+bool isHighlighted(EventTense selected, EventTense current) =>
+    selected == current;
 
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
