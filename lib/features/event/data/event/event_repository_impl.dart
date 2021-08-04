@@ -59,26 +59,35 @@ class EventRepositoryImpl extends EventRepository {
   }
 
   @override
-  Future<Either<Failure, List<Event>>> searchEventsByQuery(
-      String query,int page) async {
+  Stream<Either<Failure, List<Event>>> searchEventsByQuery(
+      String query,int page) async* {
 
     if(!await networkInfo.isConnected){
       try{
         final cachedEvents = await localDataSource.searchEventsByQuery(query, page);
-        return Right(cachedEvents);
+        yield Right(cachedEvents);
       } on CacheException{
-        return Left(CacheFailure());
+        yield Left(CacheFailure());
       }
+      return;
     }
 
     try{
+      final result = await localDataSource.searchEventsByQuery(query, page);
+      yield Right(result);
       final events = await remoteDataSource.searchEventsByQuery(query,page);
-      localDataSource.cacheEvents(events, page);
-      return Right(events);
+      await localDataSource.cacheEvents(events, page);
+      final updatedResult = await localDataSource.searchEventsByQuery(query, page);
+      yield Right(updatedResult);
+
     }on ServerExceptions catch(error) {
-      return Left(ServerFailure(error: error.message));
+      yield Left(ServerFailure(error: error.message));
     } on TimeoutException catch(error){
-      return Left(TimeoutFailure(error: error.message));
+      yield Left(TimeoutFailure(error: error.message));
+    }on CacheException catch(error){
+      yield Left(CacheFailure(error: error.message));
     }
   }
+
+
 }

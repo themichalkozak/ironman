@@ -7,7 +7,7 @@ import 'package:ironman/features/event/domain/entity/event.dart';
 import '../event_repository.dart';
 
 class SearchEventsByQuery
-    extends UseCase<List<Event>, SearchEventsByQueryParams> {
+    extends UseCaseStream<List<Event>, SearchEventsByQueryParams> {
   final EventRepository repository;
   SearchEventsByQueryParams _searchEventsByQueryParams;
 
@@ -17,7 +17,7 @@ class SearchEventsByQuery
   SearchEventsByQuery(this.repository);
 
   @override
-  Future<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params) {
+  Stream<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params) {
     return repository.searchEventsByQuery(
         params.query, params.page);
   }

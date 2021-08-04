@@ -28,14 +28,13 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   final Box eventBox;
   final Box singleEventsBox;
 
-  HiveEventLocalDataSourceImpl(this.eventBox,this.singleEventsBox);
+  HiveEventLocalDataSourceImpl(this.eventBox, this.singleEventsBox);
 
   @override
   Future<EventDetail> searchEventById(int id) async {
-
     final result = singleEventsBox.get(id);
 
-    if(result == null){
+    if (result == null) {
       throw CacheException(message: NO_ELEMENT_FAILURE_MESSAGE);
     }
 
@@ -47,12 +46,9 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
     _saveSingleEvent(event);
   }
 
-
   Future<void> _saveSingleEvent(EventDetail event) async {
     await singleEventsBox.put(event.eventId, event);
   }
-
-
 
   @override
   Future<List<Event>> searchEventsByQuery(String query, int page) async {
@@ -64,7 +60,7 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   @override
   Future<void> cacheEvents(List<Event> events, int page) async {
     events.toList().cast<Event>().forEach((Event event) async {
-      _saveItem(event);
+       _saveItem(event);
     });
   }
 
@@ -76,7 +72,7 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
       return [];
     }
 
-    if(events.isEmpty){
+    if (events.isEmpty) {
       return [];
     }
 
@@ -96,14 +92,12 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   }
 
   @visibleForTesting
-  Future<List<Event>> setupPagination(
-      List<Event> events, int page, int perPage) async {
-
+  List<Event> setupPagination(List<Event> events, int page, int perPage) {
     if (events == null) {
       return [];
     }
 
-    if(events.isEmpty){
+    if (events.isEmpty) {
       return [];
     }
 
@@ -114,14 +108,13 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
       indexEnd = events.length;
     }
 
-    if(indexStart > events.length){
+    if (indexStart > events.length) {
       return [];
     }
 
     if (indexStart < 0) {
       throw CacheException(message: 'index out of range');
     }
-
 
     final list = events.getRange(indexStart, indexEnd).toList();
 
@@ -141,8 +134,7 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
     return events.getRange(indexStart, indexEnd).toList();
   }
 
-  Future<void> _saveItem(Event event) async {
-    await eventBox.put(event.eventId, event);
+  Future<void> _saveItem(Event event) {
+    return eventBox.put(event.eventId, event);
   }
-
 }

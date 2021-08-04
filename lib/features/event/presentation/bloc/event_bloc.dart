@@ -62,14 +62,22 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
 
       yield Loading();
-      final failureOrEvents = await searchEventsByQuery(
-          SearchEventsByQueryParams(query: event.query, page: _initialPage));
-      yield failureOrEvents
-          .fold((failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-              (events) {
-        _resetEventTenseFilter();
-        return Loaded(events: events, isExhausted: events.isEmpty);
-      });
+
+      final failOrEvents = searchEventsByQuery(
+          SearchEventsByQueryParams(query: _query, page: _initialPage));
+
+      _resetEventTenseFilter();
+      
+      await for(var event in failOrEvents){
+        print('event_bloc | mapEventToState | event" $event');
+        yield event.fold(
+                (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+                (events) => Loaded(
+                events: events,
+                isExhausted: events.isEmpty,
+                eventTense: _eventTense));
+      }
+
     }
 
     if (event is SearchNextPageResultEvent) {
@@ -81,18 +89,18 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
         final previousList = loadedState.events;
 
-        final failureOrEvents = await searchEventsByQuery(
-            SearchEventsByQueryParams(
-                query: _query, page: _getPageFromOffset(previousList.length)));
+        final failOrEvents = searchEventsByQuery(
+            SearchEventsByQueryParams(query: _query, page: _getPageFromOffset(previousList.length)));
 
-        yield failureOrEvents.fold(
-            (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-            (events) {
-          return Loaded(
-              events: _filterByEventTense(previousList + events, _eventTense),
-              isExhausted: events.isEmpty,
-              eventTense: _eventTense);
-        });
+        await for(var event in failOrEvents){
+          print('event_bloc | mapEventToState | event" $event');
+          yield event.fold(
+                  (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+                  (events) => Loaded(
+                  events: previousList + events,
+                  isExhausted: events.isEmpty,
+                  eventTense: _eventTense));
+        }
       }
     }
 
@@ -108,15 +116,20 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       print('event_bloc | RefreshSearchQuery | _query: $_query');
 
-      final failOrEvents = await searchEventsByQuery(
+      final failOrEvents = searchEventsByQuery(
           SearchEventsByQueryParams(query: _query, page: _initialPage));
 
-      yield failOrEvents.fold(
-          (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-          (events) => Loaded(
-              events: _filterByEventTense(events, _eventTense),
-              isExhausted: events.isEmpty,
-              eventTense: _eventTense));
+
+      await for(var event in failOrEvents){
+        print('event_bloc | mapEventToState | event" $event');
+        yield event.fold(
+                (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+                (events) => Loaded(
+                events: events,
+                isExhausted: events.isEmpty,
+                eventTense: _eventTense));
+      }
+
     }
 
     if (event is FilterByEventTense) {
