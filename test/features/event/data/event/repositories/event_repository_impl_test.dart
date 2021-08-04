@@ -43,7 +43,19 @@ void main() {
     eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png",
   );
 
+  final tEventModelUpdated = EventModel(
+    eventId: 122987,
+    eventCountryName: 'Poland',
+    eventVenue: "",
+    eventFinishDate: '1992-01-02',
+    eventDate: '1992-01-01',
+    eventTitle: "1992 POL Duathlon National Championships",
+    eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png",
+  );
+
   final tEvents = [tEventModel];
+  final tEventsUpdated = [tEventModelUpdated];
+
 
   // This refactoring allows to avoid repeats write when to return true or false networkInfo !
   void runTestsOnline(Function body) {
@@ -71,14 +83,14 @@ void main() {
     final page = 1;
 
     runTestsOnline(() {
-      test('searchEventsByQuery verify is remote data called', () async {
+      test('searchEventsByQuery verify is remote data called', () async* {
         // arrange
         when(mockEventRemoteDataSource.searchEventsByQuery(
                 searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         // act
-        await repository.searchEventsByQuery(searchQuery, page);
+        repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         verify(mockEventRemoteDataSource.searchEventsByQuery(
@@ -88,7 +100,7 @@ void main() {
 
     runTestsOnline(() {
       test('searchEventsByQuery when is internet connection should call cacheEvents fun',
-          () async {
+          () async* {
         // arrange
         // when remoteDataSource -> correctModel
         when(mockEventRemoteDataSource.searchEventsByQuery(
@@ -100,7 +112,7 @@ void main() {
             .thenAnswer((_) async => null);
         // act
         // invoke api remoteDataSource.searchQueryCall
-        await repository.searchEventsByQuery(searchQuery, page);
+        repository.searchEventsByQuery(searchQuery, page);
         // assert
         // verify is remoteDataSource.searchQuert call
         verify(mockEventRemoteDataSource.searchEventsByQuery(
@@ -113,36 +125,39 @@ void main() {
     runTestsOnline(() {
       test(
           'searchEventsByQuery when is internet connection return list of events',
-          () async {
+          (){
         // assert
         when(mockEventRemoteDataSource.searchEventsByQuery(
                 searchQuery, page))
+            .thenAnswer((_) async => tEventsUpdated);
+
+        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         // act
         final result =
-            await repository.searchEventsByQuery(searchQuery, page);
+            repository.searchEventsByQuery(searchQuery, page);
 
         // assert
-        verify(mockEventRemoteDataSource.searchEventsByQuery(
-            searchQuery, page));
-        expect(result, equals(Right(tEvents)));
+        // verify(mockEventRemoteDataSource.searchEventsByQuery(
+        //     searchQuery, page));
+        expect(result, emitsInOrder([Right(tEvents),Right(tEvents),emitsDone]));
       });
     });
 
     runTestsOffline((){
-      test('searchEventsByQuery when is no internet connection return cached list of events',() async{
+      test('searchEventsByQuery when is no internet connection return cached list of events',() async*{
 
         // arrange
         when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         // act
-        final result = await repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         verify(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page));
-        expect(result,equals(Right(tEvents)));
+        expect(result,emitsInOrder([Right(tEvents),emitsDone]));
 
       });
     });
@@ -152,7 +167,7 @@ void main() {
     runTestsOnline(() {
       test(
           'searchEventsByQuery when call to remote data source is unsuccessful return ServerFailure',
-          () async {
+          () async* {
         // arrange
         when(mockEventRemoteDataSource.searchEventsByQuery(
                 searchQuery, page))
@@ -160,26 +175,26 @@ void main() {
 
         // act
         final result =
-            await repository.searchEventsByQuery(searchQuery, page);
+            repository.searchEventsByQuery(searchQuery, page);
 
         // assert
         // Check if method has been called event if throw exception !
         verify(mockEventRemoteDataSource.searchEventsByQuery(
             searchQuery, page));
-        expect(result, Left(ServerFailure()));
+        expect(result, emitsInOrder([Left(ServerFailure())]));
       });
     });
 
     runTestsOffline((){
-      test('searchEventsByQuery when throw Cache Exception return cacheFailure',() async {
+      test('searchEventsByQuery when throw Cache Exception return cacheFailure',() async* {
 
         // arrange
         when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
             .thenThrow(CacheException(message: CACHE_FAILURE));
         // act
-        final result = await repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEventsByQuery(searchQuery, page);
         // assert
-        expect(result,Left(CacheFailure(error: CACHE_FAILURE)));
+        expect(result, emitsInOrder([Left(CacheFailure(error: CACHE_FAILURE))]));
       });
     });
   });

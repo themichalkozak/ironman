@@ -114,39 +114,4 @@ void main() {
     return _events;
   }
 
-  // test('_setupPagination when page is 1 return list with index 0-9 ', () async {
-  //   final _events = _getTestEvents(40);
-  //   final _paginatedEvents = _getTestEvents(10);
-  //   final page = 1;
-  //   final perPage = 10;
-  //   final result =
-  //       await eventLocalDataSource.setupPagination(_events, page, perPage);
-  //   expect(result, _paginatedEvents);
-  // });
-  //
-  // test('_setupPagination when page is 2 return index 10 - 20 ', () async {
-  //   final _events = _getTestEvents(40);
-  //   final _paginatedEvents = _getTestEvents(10, startIndex: 10);
-  //   final page = 2;
-  //   final perPage = 10;
-  //   final result =
-  //       await eventLocalDataSource.setupPagination(_events, page, perPage);
-  //   expect(result, _paginatedEvents);
-  // });
-  //
-  // // 0 - 20
-  // // 21 - 41
-  // // 42 - 62
-  //
-  // test(
-  //     '_setupPagination when page is 3 and perPage is 21 return index 64 - 85 ',
-  //     () async {
-  //   final _events = _getTestEvents(120);
-  //   final _paginatedEvents = _getTestEvents(21, startIndex: 42);
-  //   final page = 3;
-  //   final perPage = 21;
-  //   final result =
-  //       await eventLocalDataSource.setupPagination(_events, page, perPage);
-  //   expect(result, _paginatedEvents);
-  // });
 }

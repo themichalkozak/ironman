@@ -36,10 +36,11 @@ void main() {
         eventFlag: 'https://triathlon-images.imgix.net/images/icons/gb.png'),
   ];
 
-  void mockSearchEventsByQuerySuccessResult(String searchQuery) async {
-    when(mockEventRepository.searchEventsByQuery(
-            searchQuery, 1))
-        .thenAnswer((_) async => Right(events));
+  mockSearchEventsByQuerySuccessResult(String searchQuery) async {
+    when(mockEventRepository.searchEventsByQuery(searchQuery, 1))
+        .thenAnswer((_) async* {
+      yield Right(events);
+    });
   }
 
   final page = 1;
@@ -56,96 +57,67 @@ void main() {
     mockSearchEventsByQuerySuccessResult(searchQuery);
     // act
 
-    final result = await useCase(params);
+    final result = useCase(params);
     // useCase simply return whatever is in repository
-    expect(result, Right(events));
+    expect(result, emitsInOrder([Right(events)]));
     // verify is method has been called in eventRepository
-    verify(
-        mockEventRepository.searchEventsByQuery(searchQuery, page));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
     // check if only above method has been called and nothing more
     verifyNoMoreInteractions(mockEventRepository);
   });
 
-  test(
-      'search events by query when is not empty should return valid list events',
-      () async {
-    // arrange
-
-    final queryParam = 'England';
-    final params =
-        SearchEventsByQueryParams(page: page, query: queryParam);
-
-    mockSearchEventsByQuerySuccessResult(queryParam);
-
-    // act
-    final result = await useCase(params);
-
-    // assert
-    expect(result, Right(events));
-
-    verify(
-        mockEventRepository.searchEventsByQuery(queryParam, page));
-    // check if only above method has  been called and nothing more
-    verifyNoMoreInteractions(mockEventRepository);
-  });
-
-
-
-
-  void mockSearchEventsQueryFailureResult(Failure failure) {
+  void mockSearchEventsQueryFailureResult(Failure failure) async {
     when(mockEventRepository.searchEventsByQuery(any, any))
-        .thenAnswer((_) async => Left(failure));
+        .thenAnswer((_) async* {
+      yield Left(failure);
+    });
   }
+
   final searchQuery = '';
-  final params = SearchEventsByQueryParams(page: page,query: searchQuery);
+  final params = SearchEventsByQueryParams(page: page, query: searchQuery);
 
   test(
       'search events by query when is no internet connection should return NoInternetFailure',
-      () async {
+      (){
     // assert
     mockSearchEventsQueryFailureResult(NoInternetFailure());
 
     // act
-    final result = await useCase(params);
+    final result = useCase(params);
 
-    expect(result, Left(NoInternetFailure()));
+    expect(result, emitsInOrder([Left(NoInternetFailure())]));
 
-    verify(mockEventRepository.searchEventsByQuery(searchQuery,page));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
 
   test('search events by query when data is null return NoElementFailure',
-      () async {
-
+      () {
     // assert
-        mockSearchEventsQueryFailureResult(NoElementFailure());
+    mockSearchEventsQueryFailureResult(NoElementFailure());
 
-    final result = await useCase(params);
+    final result = useCase(params);
 
-    expect(result, Left(NoElementFailure()));
+    expect(result, emitsInOrder([Left(NoElementFailure())]));
 
-    verify(mockEventRepository.searchEventsByQuery(searchQuery,page));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
-
-
 
   test(
       'search events by query when is server failure should return serverFailure',
-      () async {
+      () {
+    // assert
+    mockSearchEventsQueryFailureResult(ServerFailure());
 
-        // assert
-        mockSearchEventsQueryFailureResult(ServerFailure());
+    final result = useCase(params);
 
-    final result = await useCase(params);
+    expect(result, emitsInOrder([Left(ServerFailure())]));
 
-    expect(result, Left(ServerFailure()));
-
-    verify(mockEventRepository.searchEventsByQuery(searchQuery,page));
+    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
-
 }
