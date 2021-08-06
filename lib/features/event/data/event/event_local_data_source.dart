@@ -53,12 +53,9 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   @override
   Future<List<Event>> searchEventsByQuery(String query, int page) async {
     List<Event> events = eventBox.values.toList().cast<Event>();
-    print('event_local_data_source | searchEventsByQuery | events: $events');
     events = _sortByDate(events);
-    print('event_local_data_source | searchEventsByQuery | Sorted events: $events');
     events = _filterByQuery(query, events);
-    print('event_local_data_source | searchEventsByQuery | Filtered events: $events');
-    return _setupPagination(events, page, PER_PAGE);
+     return _setupPagination(events, page, PER_PAGE);
   }
 
   @override
@@ -70,7 +67,7 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
 
   List<Event> _filterByQuery(String query, List<Event> events) {
     print(
-        'local_data_source | _filterByQuery | query: $query list size: ${events.length}');
+        'local_data_source | _filterByQuery | query: $query | list size: ${events.length}');
 
     if (events == null) {
       return [];
@@ -89,8 +86,6 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
             event.eventCountryName.toLowerCase().contains(_queryLowerCase))
         .toList();
 
-    print(
-        'local_data_source | _filterByQuery | query: $query filtered List size: ${events.length}');
 
     return _filteredEvents;
   }
@@ -98,7 +93,6 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   @visibleForTesting
   List<Event> _setupPagination(List<Event> events, int page, int perPage) {
     if (events == null) {
-      print('event_local_data_source | _setupPagination | return empty list -> null');
       return [];
     }
 
@@ -123,14 +117,11 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
 
     final list = events.getRange(indexStart, indexEnd).toList();
 
-    list.forEach((element) {
-      print(' event_local_data_source | _setupPagination | ID: ${element.eventId}');
-    });
 
     print('event_local_data_source | _setUpPagination \n '
         ' params:'
         ' events.lengths: ${events.length}'
-        ' pagEvents: ${list.length}'
+        ' events: ${list.length}'
         ' | indexStart:  $indexStart'
         ' | indexEnd: $indexEnd'
         ' | page: $page'

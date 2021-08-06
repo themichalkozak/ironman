@@ -29,6 +29,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   EventState get initialState => Empty();
 
   List<Event> _filterByEventTense(List<Event> events, EventTense eventTense) {
+
     final now = DateTime.now();
 
     switch (eventTense) {
@@ -52,10 +53,15 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   }
 
   List<Event> _getPastEvents(DateTime now, List<Event> events) {
-    return events
+    print('event_bloc | events.length: ${events.length} | now: $now ');
+    List<Event> filtredEvents =
+    events
         .where((Event event) =>
             _convertStringToDateTime(event.eventDate).isBefore(now))
         .toList();
+
+    print('event_bloc | filtred events.length: ${filtredEvents.length}');
+    return filtredEvents;
   }
 
   @override
@@ -74,7 +80,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       _resetEventTenseFilter();
 
       await for (var event in failOrEvents) {
-        print('event_bloc | mapEventToState | event" $event');
         yield event.fold(
             (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
             (events) => Loaded(
@@ -93,17 +98,32 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
         final previousList = loadedState.events;
 
+        print('event_bloc | mapEventToState | fetchNextPageResult | previous list lenght: ${previousList.length}');
+
+        for(Event event in previousList){
+          print(event.eventDate);
+        }
+
         final failOrEvents = searchEventsByQuery(SearchEventsByQueryParams(
             query: _query, page: _getPageFromOffset(previousList.length)));
 
+        List<Event> eventsToDisplay = [];
         await for (var event in failOrEvents) {
-          print('event_bloc | mapEventToState | event" $event');
           yield event.fold(
               (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-              (events) => Loaded(
-                  events: previousList + events,
-                  isExhausted: events.isEmpty,
-                  eventTense: _eventTense));
+              (events) {
+                eventsToDisplay = events;
+                return Loaded(
+                  events: _filterByEventTense(previousList + events,_eventTense),
+                  isExhausted: events.length < PER_PAGE,
+                  eventTense: _eventTense);
+              });
+        }
+
+        print('event_bloc | fetchNextPageResult |');
+
+        for(Event event in eventsToDisplay){
+          print(event.eventDate);
         }
       }
     }
@@ -124,7 +144,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
           SearchEventsByQueryParams(query: _query, page: _initialPage));
 
       await for (var event in failOrEvents) {
-        print('event_bloc | mapEventToState | event" $event');
         yield event.fold(
             (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
             (events) => Loaded(

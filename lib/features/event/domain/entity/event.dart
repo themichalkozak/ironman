@@ -30,4 +30,12 @@ class Event extends Equatable {
         eventCountryName,
         eventFlag
       ];
+
+  @override
+  String toString() =>
+      "Id: $eventId \n "
+      "event title $eventTitle \n "
+          "event date: $eventDate \n"
+          "event venue: $eventVenue \n "
+          "event country: $eventCountryName";
 }
