@@ -63,9 +63,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     EventEvent event,
   ) async* {
     if (event is SearchEventsByQueryEvent) {
-      if (state is Loaded) {
+
         if (!updateSearchQuery(event.query)) return;
-      }
 
       yield Loading();
 
@@ -143,14 +142,11 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
 
       if (state is Loaded) {
-        final cState = (state as Loaded);
-
-        final List<Event> currentList = cState.events;
 
         yield Loading();
 
         final failOrEvents = searchLocalEventsByQuery(SearchEventsByQueryParams(
-            query: _query, page: _getPageFromOffset(currentList.length)));
+            query: _query, page: _initialPage));
 
         await for (var event in failOrEvents){
           yield event.fold(
