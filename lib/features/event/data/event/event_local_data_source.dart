@@ -52,9 +52,13 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
 
   @override
   Future<List<Event>> searchEventsByQuery(String query, int page) async {
-    final events = eventBox.values.toList().cast<Event>();
-    List<Event> _filteredQuery = await _filterByQuery(query, events);
-    return setupPagination(_filteredQuery, page, PER_PAGE);
+    List<Event> events = eventBox.values.toList().cast<Event>();
+    print('event_local_data_source | searchEventsByQuery | events: $events');
+    events = _sortByDate(events);
+    print('event_local_data_source | searchEventsByQuery | Sorted events: $events');
+    events = _filterByQuery(query, events);
+    print('event_local_data_source | searchEventsByQuery | Filtered events: $events');
+    return _setupPagination(events, page, PER_PAGE);
   }
 
   @override
@@ -64,7 +68,7 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
     });
   }
 
-  Future<List<Event>> _filterByQuery(String query, List<Event> events) async {
+  List<Event> _filterByQuery(String query, List<Event> events) {
     print(
         'local_data_source | _filterByQuery | query: $query list size: ${events.length}');
 
@@ -92,8 +96,9 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   }
 
   @visibleForTesting
-  List<Event> setupPagination(List<Event> events, int page, int perPage) {
+  List<Event> _setupPagination(List<Event> events, int page, int perPage) {
     if (events == null) {
+      print('event_local_data_source | _setupPagination | return empty list -> null');
       return [];
     }
 
@@ -119,7 +124,7 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
     final list = events.getRange(indexStart, indexEnd).toList();
 
     list.forEach((element) {
-      print('ID: ${element.eventId}');
+      print(' event_local_data_source | _setupPagination | ID: ${element.eventId}');
     });
 
     print('event_local_data_source | _setUpPagination \n '
@@ -136,5 +141,10 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
 
   Future<void> _saveItem(Event event) {
     return eventBox.put(event.eventId, event);
+  }
+
+  List<Event> _sortByDate(List<Event> events) {
+    events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
+    return events;
   }
 }

@@ -11,95 +11,95 @@ import '../../domain/event_repository.dart';
 
 class EventRepositoryImpl extends EventRepository {
   final EventRemoteDataSource remoteDataSource;
-  final EventLocalDataSource  localDataSource;
+  final EventLocalDataSource localDataSource;
   final NetworkInfo networkInfo;
 
-  EventRepositoryImpl({
-    @required this.remoteDataSource,
-    @required this.networkInfo,
-    @required this.localDataSource
-  });
+  EventRepositoryImpl(
+      {@required this.remoteDataSource,
+      @required this.networkInfo,
+      @required this.localDataSource});
 
   @override
   Future<Either<Failure, EventDetail>> searchEventById(int id) async {
-
-    if(!await networkInfo.isConnected){
-
-
-      try{
-
+    if (!await networkInfo.isConnected) {
+      try {
         final EventDetail event = await localDataSource.searchEventById(id);
 
-        if(event == null){
+        if (event == null) {
           return Left(NoElementFailure());
         }
 
         return Right(event);
-
-      }catch(error){
+      } catch (error) {
         return Left(CacheFailure(error: error.toString()));
       }
-
     }
 
-    try{
-
+    try {
       final EventDetail event = await remoteDataSource.getEventById(id);
 
-      if(event == null){
+      if (event == null) {
         return Left(NoElementFailure());
       }
 
       localDataSource.cacheSingleEvent(event);
       return Right(event);
-
-    } on ServerExceptions{
+    } on ServerExceptions {
       return Left(NoElementFailure());
     }
   }
 
   @override
   Stream<Either<Failure, List<Event>>> searchEventsByQuery(
-      String query,int page) async* {
-
-    if(!await networkInfo.isConnected){
-      try{
-        final cachedEvents = await localDataSource.searchEventsByQuery(query, page);
+      String query, int page) async* {
+    if (!await networkInfo.isConnected) {
+      try {
+        final cachedEvents =
+            await _readCache(query, page);
         yield Right(cachedEvents);
-      } on CacheException{
+      } on CacheException {
         yield Left(CacheFailure());
       }
       return;
     }
 
-    try{
-      final result = await localDataSource.searchEventsByQuery(query, page);
+    try {
+      final result = await _readCache(query, page);
       yield Right(result);
-      final events = await remoteDataSource.searchEventsByQuery(query,page);
-      await localDataSource.cacheEvents(events, page);
-      final updatedResult = await localDataSource.searchEventsByQuery(query, page);
+      final events = await _apiCall(query, page);
+      await _cacheEvents(events, page);
+      final updatedResult = await _readCache(query, page);
       yield Right(updatedResult);
 
     }on ServerExceptions catch(error) {
       yield Left(ServerFailure(error: error.message));
-    } on TimeoutException catch(error){
+    } on TimeoutException catch (error) {
       yield Left(TimeoutFailure(error: error.message));
-    }on CacheException catch(error){
+    } on CacheException catch (error) {
       yield Left(CacheFailure(error: error.message));
     }
   }
 
   @override
-  Stream<Either<Failure, List<Event>>> searchLocalEventsByQuery(String query, int page) async* {
-    try{
-      final cachedEvents = await localDataSource.searchEventsByQuery(query, page);
+  Stream<Either<Failure, List<Event>>> searchLocalEventsByQuery(
+      String query, int page) async* {
+    try {
+      final cachedEvents = await _readCache(query, page);
       yield Right(cachedEvents);
-    } on CacheException{
+    } on CacheException {
       yield Left(CacheFailure());
     }
   }
 
+  Future<List<Event>> _readCache(String query, int page) async {
+    return localDataSource.searchEventsByQuery(query, page);
+  }
 
+  Future<List<Event>> _apiCall(String query, int page) {
+    return remoteDataSource.searchEventsByQuery(query, page);
+  }
 
-
+  Future<void> _cacheEvents(List<Event> events, int page) {
+    return localDataSource.cacheEvents(events, page);
+  }
 }
