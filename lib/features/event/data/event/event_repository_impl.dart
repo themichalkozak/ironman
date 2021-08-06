@@ -89,5 +89,17 @@ class EventRepositoryImpl extends EventRepository {
     }
   }
 
+  @override
+  Stream<Either<Failure, List<Event>>> searchLocalEventsByQuery(String query, int page) async* {
+    try{
+      final cachedEvents = await localDataSource.searchEventsByQuery(query, page);
+      yield Right(cachedEvents);
+    } on CacheException{
+      yield Left(CacheFailure());
+    }
+  }
+
+
+
 
 }

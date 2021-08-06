@@ -8,5 +8,8 @@ abstract class EventRepository {
   Stream<Either<Failure, List<Event>>> searchEventsByQuery(
       String query, int page);
 
+  Stream<Either<Failure, List<Event>>> searchLocalEventsByQuery(
+      String query, int page);
+
   Future<Either<Failure, EventDetail>> searchEventById(int id);
 }

@@ -7,17 +7,23 @@ import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
+import 'package:ironman/features/event/domain/useCases/search_local_events_by_query.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   final SearchEventsByQuery searchEventsByQuery;
+  final SearchLocalEventsByQuery searchLocalEventsByQuery;
+
   String _query = '';
   final int _initialPage = 1;
   EventTense _eventTense = EventTense.All;
 
-  EventBloc({@required this.searchEventsByQuery})
+  EventBloc(
+      {@required this.searchEventsByQuery,
+      @required this.searchLocalEventsByQuery})
       : assert(searchEventsByQuery != null),
+        assert(searchLocalEventsByQuery != null),
         super(Empty());
 
   EventState get initialState => Empty();
@@ -67,17 +73,16 @@ class EventBloc extends Bloc<EventEvent, EventState> {
           SearchEventsByQueryParams(query: _query, page: _initialPage));
 
       _resetEventTenseFilter();
-      
-      await for(var event in failOrEvents){
+
+      await for (var event in failOrEvents) {
         print('event_bloc | mapEventToState | event" $event');
         yield event.fold(
-                (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-                (events) => Loaded(
+            (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+            (events) => Loaded(
                 events: events,
                 isExhausted: events.isEmpty,
                 eventTense: _eventTense));
       }
-
     }
 
     if (event is SearchNextPageResultEvent) {
@@ -89,14 +94,14 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
         final previousList = loadedState.events;
 
-        final failOrEvents = searchEventsByQuery(
-            SearchEventsByQueryParams(query: _query, page: _getPageFromOffset(previousList.length)));
+        final failOrEvents = searchEventsByQuery(SearchEventsByQueryParams(
+            query: _query, page: _getPageFromOffset(previousList.length)));
 
-        await for(var event in failOrEvents){
+        await for (var event in failOrEvents) {
           print('event_bloc | mapEventToState | event" $event');
           yield event.fold(
-                  (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-                  (events) => Loaded(
+              (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+              (events) => Loaded(
                   events: previousList + events,
                   isExhausted: events.isEmpty,
                   eventTense: _eventTense));
@@ -119,17 +124,15 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       final failOrEvents = searchEventsByQuery(
           SearchEventsByQueryParams(query: _query, page: _initialPage));
 
-
-      await for(var event in failOrEvents){
+      await for (var event in failOrEvents) {
         print('event_bloc | mapEventToState | event" $event');
         yield event.fold(
-                (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-                (events) => Loaded(
+            (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+            (events) => Loaded(
                 events: events,
                 isExhausted: events.isEmpty,
                 eventTense: _eventTense));
       }
-
     }
 
     if (event is FilterByEventTense) {
@@ -146,13 +149,17 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
         yield Loading();
 
-        final filteredList =
-            _filterByEventTense(currentList, updatedEventTense);
+        final failOrEvents = searchLocalEventsByQuery(SearchEventsByQueryParams(
+            query: _query, page: _getPageFromOffset(currentList.length)));
 
-        yield Loaded(
-            events: filteredList,
-            eventTense: _eventTense,
-            isExhausted: filteredList.isEmpty);
+        await for (var event in failOrEvents){
+          yield event.fold(
+                  (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+                  (events) => Loaded(
+                  events: _filterByEventTense(events, _eventTense),
+                  isExhausted: events.isEmpty,
+                  eventTense: _eventTense));
+        }
       }
     }
   }
@@ -170,7 +177,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   }
 
   bool _updateEventTenseFilter(EventTense eventTense) {
-    if (eventTense == null && (eventTense == _eventTense)) {
+    if (eventTense == null || eventTense == _eventTense) {
       print('Event Tense is equals as current or null');
       return false;
     }
