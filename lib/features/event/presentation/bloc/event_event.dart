@@ -29,10 +29,10 @@ class SearchNextPageResultEvent extends EventEvent {
   SearchNextPageResultEvent();
 }
 
-class FilterByEventTense extends EventEvent {
+class FilterByEventTenseEvent extends EventEvent {
   final EventTense eventTense;
 
-  FilterByEventTense({
+  FilterByEventTenseEvent({
     @required this.eventTense,
   });
 }

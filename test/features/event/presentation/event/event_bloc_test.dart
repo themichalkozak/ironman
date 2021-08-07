@@ -144,7 +144,7 @@ void main() {
           return bloc;
         },
         act: (bloc) => {
-              bloc.add(FilterByEventTense(eventTense: EventTense.Past)),
+              bloc.add(FilterByEventTenseEvent(eventTense: EventTense.Past)),
             },
         skip: 2,
         expect: () => [
@@ -163,7 +163,7 @@ void main() {
           return bloc;
         },
         act: (bloc) => {
-              bloc.add(FilterByEventTense(eventTense: EventTense.Upcoming)),
+              bloc.add(FilterByEventTenseEvent(eventTense: EventTense.Upcoming)),
             },
         skip: 2,
         expect: () => [
@@ -190,7 +190,7 @@ void main() {
         build: () {
           mockSuccessSearchQueryEvents();
           bloc.add(SearchEventsByQueryEvent(query: query));
-          bloc.add(FilterByEventTense(eventTense: EventTense.Past));
+          bloc.add(FilterByEventTenseEvent(eventTense: EventTense.Past));
           return bloc;
         },
         skip: 4,

@@ -125,7 +125,7 @@ Widget _buildFilterChip(EventTense current, EventTense selectedFiltr, BuildConte
 
     if(selected){
       print('event_screen | FilterChips | selected: $selected');
-      context.read<EventBloc>().add(FilterByEventTense(eventTense: current));
+      context.read<EventBloc>().add(FilterByEventTenseEvent(eventTense: current));
       print('event_screen | FilterChips | eventTense: $current | onSelect: $selectedFiltr');
     }
   });

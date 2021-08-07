@@ -153,7 +153,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
     }
 
-    if (event is FilterByEventTense) {
+    if (event is FilterByEventTenseEvent) {
       final EventTense updatedEventTense = event.eventTense;
 
       if (!_updateEventTenseFilter(updatedEventTense)) {
@@ -179,6 +179,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     }
   }
 
+
   bool updateSearchQuery(String newSearchQuery) {
     if (newSearchQuery == null || newSearchQuery == _query) {
       return false;
@@ -203,6 +204,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   void _resetEventTenseFilter() {
     _eventTense = EventTense.All;
   }
+
 
   int _getPageFromOffset(int offset) => offset ~/ PER_PAGE + 1;
 
