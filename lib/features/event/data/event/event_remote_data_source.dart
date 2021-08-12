@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:dartz/dartz_unsafe.dart';
 import 'package:http/http.dart' as http;
 import 'package:ironman/core/error/failure.dart';
+import 'package:ironman/core/utils/date_format.dart';
 import '../../../../core/data/response_model.dart';
 import '../../../../core/utils/constants.dart';
 import 'package:ironman/core/error/exceptions.dart';
@@ -12,6 +14,8 @@ abstract class EventRemoteDataSource {
   Future<List<EventModel>> searchEventsByQuery(String query, int page);
 
   Future<EventDetailModel> getEventById(int id);
+
+  Future<List<EventModel>> searchUpcomingEventsByQuery(String query, int page, String dateTime);
 }
 
 class EventRemoteDataSourceImpl extends EventRemoteDataSource {
@@ -57,10 +61,11 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
 
     if (responseModel.status == 'fail') {
       print(
-          'event_remote_data_source | searchEventsByQuery | message: ${responseModel.message}');
+          'event_remote_data_source | searchEventsByQuery | message: ${responseModel
+              .message}');
       throw ServerExceptions(
           message:
-              'Error code: ${response.statusCode} \n ${responseModel.message}');
+          'Error code: ${response.statusCode} \n ${responseModel.message}');
     }
     if (responseModel.data == null || responseModel.data.isEmpty) {
       return events;
@@ -71,8 +76,44 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     });
 
     print(
-        'event_remote_data_source | searchEventsByQuery | events size: ${events.length}');
+        'event_remote_data_source | searchEventsByQuery | events size: ${events
+            .length}');
 
     return events;
   }
+
+  @override
+  Future<List<EventModel>> searchUpcomingEventsByQuery(String query,
+      int page, String dateTime) async {
+
+    final queryParams = {
+      'query': query,
+      'page': page.toString(),
+      'start_date': dateTime
+    };
+
+    final uri = Uri.https(BASE_URL, '/v1/search/events', queryParams);
+
+    print('Uri: $uri');
+
+    final response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'apikey': API_KEY
+    }).timeout(Duration(seconds: 7), onTimeout: () {
+      throw TimeoutException(message: TIMEOUT_FAILURE_MESSAGE);
+    });
+
+
+  final responseModel = ResponseModel.fromJson(json.decode(response.body));
+
+    List<EventModel> events = [];
+
+    responseModel.data.forEach((element) {
+      events.add(EventModel.fromJson(element));
+    });
+
+    return events;
+  }
+
 }
+
