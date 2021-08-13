@@ -29,7 +29,10 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     final uri = Uri.https(BASE_URL, '$endpoint/$id');
 
     final response = await client.get(uri,
-        headers: {'Content-Type': 'application/json', 'apikey': API_KEY});
+        headers: {'Content-Type': 'application/json', 'apikey': API_KEY})
+        .timeout(Duration(seconds: 7), onTimeout: () {
+      throw TimeoutException(message: TIMEOUT_FAILURE_MESSAGE);
+    });
 
     final responseModel = ResponseModel.fromJson(json.decode(response.body));
 
@@ -42,6 +45,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
 
   @override
   Future<List<EventModel>> searchEventsByQuery(String query, int page) async {
+
     final queryParams = {'query': query, 'page': page.toString()};
 
     List<EventModel> events = [];
@@ -67,6 +71,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
           message:
           'Error code: ${response.statusCode} \n ${responseModel.message}');
     }
+
     if (responseModel.data == null || responseModel.data.isEmpty) {
       return events;
     }
@@ -92,7 +97,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       'start_date': dateTime
     };
 
-    final uri = Uri.https(BASE_URL, '/v1/search/events', queryParams);
+    final uri = Uri.https(BASE_URL,'/v1/search/events', queryParams);
 
     print('Uri: $uri');
 
@@ -107,6 +112,19 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
   final responseModel = ResponseModel.fromJson(json.decode(response.body));
 
     List<EventModel> events = [];
+
+    if (responseModel.status == 'fail') {
+      print(
+          'event_remote_data_source | searchEventsByQuery | message: ${responseModel
+              .message}');
+      throw ServerExceptions(
+          message:
+          'Error code: ${response.statusCode} \n ${responseModel.message}');
+    }
+
+    if (responseModel.data == null || responseModel.data.isEmpty) {
+      return events;
+    }
 
     responseModel.data.forEach((element) {
       events.add(EventModel.fromJson(element));
