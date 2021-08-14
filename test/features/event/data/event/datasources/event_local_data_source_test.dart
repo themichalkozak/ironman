@@ -28,7 +28,6 @@ void main() {
 
   group('get Events',(){
 
-
     final tEventModel1 = EventModel(
         eventId: 122987,
         eventTitle: "1992 POL Duathlon National Championships",

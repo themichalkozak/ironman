@@ -12,4 +12,7 @@ abstract class EventRepository {
       String query, int page);
 
   Future<Either<Failure, EventDetail>> searchEventById(int id);
+
+  Stream<Either<Failure, List<Event>>> searchUpcomingEventsByQuery(
+      String query, int page,DateTime dateTime);
 }
