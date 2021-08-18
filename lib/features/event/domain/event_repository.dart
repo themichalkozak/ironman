@@ -14,5 +14,5 @@ abstract class EventRepository {
   Future<Either<Failure, EventDetail>> searchEventById(int id);
 
   Stream<Either<Failure, List<Event>>> searchUpcomingEventsByQuery(
-      String query, int page,DateTime dateTime);
+      String query, int page,[DateTime dateTime]);
 }

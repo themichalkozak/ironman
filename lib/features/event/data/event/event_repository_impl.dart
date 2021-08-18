@@ -91,7 +91,12 @@ class EventRepositoryImpl extends EventRepository {
 
   @override
   Stream<Either<Failure, List<Event>>> searchUpcomingEventsByQuery(
-      String query, int page, DateTime dateTime) async* {
+      String query, int page, [DateTime dateTime]) async* {
+
+    if(dateTime == null){
+      dateTime = DateTime.now();
+    }
+
     if (!await networkInfo.isConnected) {
       try {
         final cache =

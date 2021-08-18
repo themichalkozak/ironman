@@ -165,7 +165,7 @@ void main() {
         // act
         final result = repository.searchEventsByQuery(searchQuery, page);
         // assert
-        expect(result, emitsInOrder([Right(tEvents),Left(TimeoutFailure())]));
+        expect(result, emitsInOrder([Right(tEvents), Left(TimeoutFailure())]));
       });
     });
   });
@@ -412,10 +412,13 @@ void main() {
           'search upcoming events when occurred ServerException return ServerFailure',
           () async {
         // assert
+        when(mockEventLocalDataSource.searchEventsByQuery(
+                queryParam, page, dateTime))
+            .thenAnswer((_) async => tUpdatedFilteredEventModels);
+
         when(mockEventRemoteDataSource.searchUpcomingEventsByQuery(
                 queryParam, page, formattedDateTime))
-            .thenThrow(
-                (_) => TimeoutException(message: TIMEOUT_FAILURE_MESSAGE));
+            .thenThrow(TimeoutException(message: TIMEOUT_FAILURE_MESSAGE));
 
         // act
         final result =
@@ -424,7 +427,7 @@ void main() {
         expect(
             result,
             emitsInOrder(
-                [Left(ServerFailure(error: TIMEOUT_FAILURE_MESSAGE))]));
+                [Right(tUpdatedFilteredEventModels),Left(TimeoutFailure(error: TIMEOUT_FAILURE_MESSAGE))]));
       });
     });
 

@@ -8,12 +8,14 @@ import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:ironman/features/event/domain/useCases/search_local_events_by_query.dart';
+import 'package:ironman/features/event/domain/useCases/search_upcoming_events_by_query.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   final SearchEventsByQuery searchEventsByQuery;
   final SearchLocalEventsByQuery searchLocalEventsByQuery;
+  final SearchUpcomingEventsByQuery searchUpcomingEventsByQuery;
 
   String _query = '';
   final int _initialPage = 1;
@@ -21,15 +23,16 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   EventBloc(
       {@required this.searchEventsByQuery,
-      @required this.searchLocalEventsByQuery})
+      @required this.searchLocalEventsByQuery,
+      @required this.searchUpcomingEventsByQuery})
       : assert(searchEventsByQuery != null),
         assert(searchLocalEventsByQuery != null),
+        assert(searchUpcomingEventsByQuery != null),
         super(Empty());
 
   EventState get initialState => Empty();
 
   List<Event> _filterByEventTense(List<Event> events, EventTense eventTense) {
-
     final now = DateTime.now();
 
     switch (eventTense) {
@@ -54,8 +57,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   List<Event> _getPastEvents(DateTime now, List<Event> events) {
     print('event_bloc | events.length: ${events.length} | now: $now ');
-    List<Event> filtredEvents =
-    events
+    List<Event> filtredEvents = events
         .where((Event event) =>
             _convertStringToDateTime(event.eventDate).isBefore(now))
         .toList();
@@ -69,8 +71,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     EventEvent event,
   ) async* {
     if (event is SearchEventsByQueryEvent) {
-
-        if (!updateSearchQuery(event.query)) return;
+      if (!updateSearchQuery(event.query)) return;
 
       yield Loading();
 
@@ -98,9 +99,10 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
         final previousList = loadedState.events;
 
-        print('event_bloc | mapEventToState | fetchNextPageResult | previous list lenght: ${previousList.length}');
+        print(
+            'event_bloc | mapEventToState | fetchNextPageResult | previous list lenght: ${previousList.length}');
 
-        for(Event event in previousList){
+        for (Event event in previousList) {
           print(event.eventDate);
         }
 
@@ -112,17 +114,17 @@ class EventBloc extends Bloc<EventEvent, EventState> {
           yield event.fold(
               (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
               (events) {
-                eventsToDisplay = events;
-                return Loaded(
-                  events: _filterByEventTense(previousList + events,_eventTense),
-                  isExhausted: events.length < PER_PAGE,
-                  eventTense: _eventTense);
-              });
+            eventsToDisplay = events;
+            return Loaded(
+                events: _filterByEventTense(previousList + events, _eventTense),
+                isExhausted: events.length < PER_PAGE,
+                eventTense: _eventTense);
+          });
         }
 
         print('event_bloc | fetchNextPageResult |');
 
-        for(Event event in eventsToDisplay){
+        for (Event event in eventsToDisplay) {
           print(event.eventDate);
         }
       }
@@ -161,24 +163,38 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
 
       if (state is Loaded) {
-
         yield Loading();
 
-        final failOrEvents = searchLocalEventsByQuery(SearchEventsByQueryParams(
-            query: _query, page: _initialPage));
+        if (_eventTense != EventTense.Upcoming) {
+          final failOrEvents = searchLocalEventsByQuery(
+              SearchEventsByQueryParams(query: _query, page: _initialPage));
 
-        await for (var event in failOrEvents){
+          await for (var event in failOrEvents) {
+            yield event.fold(
+                (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+                (events) => Loaded(
+                    events: _filterByEventTense(events, _eventTense),
+                    isExhausted: events.isEmpty,
+                    eventTense: _eventTense));
+          }
+          return;
+        }
+
+        final failOrEvents = searchUpcomingEventsByQuery(
+          SearchEventsByQueryParams(query: _query,page: _initialPage));
+
+        await for(var event in failOrEvents){
           yield event.fold(
                   (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
                   (events) => Loaded(
-                  events: _filterByEventTense(events, _eventTense),
-                  isExhausted: events.isEmpty,
-                  eventTense: _eventTense));
+                    events: events,
+                    isExhausted: events.isEmpty,
+                    eventTense: _eventTense
+                  ));
         }
       }
     }
   }
-
 
   bool updateSearchQuery(String newSearchQuery) {
     if (newSearchQuery == null || newSearchQuery == _query) {
@@ -201,10 +217,20 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     return true;
   }
 
+  void searchNewQuery(String query){
+    // updateQuery(query)
+    // clearlist
+    add(SearchEventsByQueryEvent(query: query));
+  }
+
+  void nextPage(){
+    // updatePage()
+    add(SearchEventsByQueryEvent());
+  }
+
   void _resetEventTenseFilter() {
     _eventTense = EventTense.All;
   }
-
 
   int _getPageFromOffset(int offset) => offset ~/ PER_PAGE + 1;
 
