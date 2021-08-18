@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
+import 'package:ironman/core/utils/date_format.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
@@ -41,8 +42,7 @@ class EventRepositoryImpl extends EventRepository {
       if (event == null) {
         return Left(NoElementFailure());
       }
-
-      localDataSource.cacheSingleEvent(event);
+      _cacheSingleEvent(event);
       return Right(event);
     } on ServerExceptions {
       return Left(NoElementFailure());
@@ -54,8 +54,7 @@ class EventRepositoryImpl extends EventRepository {
       String query, int page) async* {
     if (!await networkInfo.isConnected) {
       try {
-        final cachedEvents =
-            await _readCache(query, page);
+        final cachedEvents = await _readCache(query, page);
         yield Right(cachedEvents);
       } on CacheException {
         yield Left(CacheFailure());
@@ -70,8 +69,7 @@ class EventRepositoryImpl extends EventRepository {
       await _cacheEvents(events, page);
       final updatedResult = await _readCache(query, page);
       yield Right(updatedResult);
-
-    }on ServerExceptions catch(error) {
+    } on ServerExceptions catch (error) {
       yield Left(ServerFailure(error: error.message));
     } on TimeoutException catch (error) {
       yield Left(TimeoutFailure(error: error.message));
@@ -91,8 +89,49 @@ class EventRepositoryImpl extends EventRepository {
     }
   }
 
-  Future<List<Event>> _readCache(String query, int page) async {
-    return localDataSource.searchEventsByQuery(query, page);
+  @override
+  Stream<Either<Failure, List<Event>>> searchUpcomingEventsByQuery(
+      String query, int page, [DateTime dateTime]) async* {
+
+    if(dateTime == null){
+      dateTime = DateTime.now();
+    }
+
+    if (!await networkInfo.isConnected) {
+      try {
+        final cache =
+            await localDataSource.searchEventsByQuery(query, page, dateTime);
+        yield Right(cache);
+      } on CacheException {
+        yield Left(CacheFailure());
+      }
+      return;
+    }
+
+    try {
+      final cache = await _readCache(query, page, dateTime);
+      yield Right(cache);
+      final formattedDateTime = formatStartDate(dateTime);
+      final result =
+          await _apiCallUpcomingEvents(query, page, formattedDateTime);
+      yield Right(result);
+    } on ServerExceptions {
+      yield Left(ServerFailure());
+    } on TimeoutException {
+      yield Left(TimeoutFailure());
+    } on CacheException {
+      yield Left(CacheFailure());
+    }
+  }
+
+  Future<List<Event>> _apiCallUpcomingEvents(
+      String query, int page, String dateTime) {
+    return remoteDataSource.searchUpcomingEventsByQuery(query, page, dateTime);
+  }
+
+  Future<List<Event>> _readCache(String query, int page,
+      [DateTime dateTime]) async {
+    return localDataSource.searchEventsByQuery(query, page, dateTime);
   }
 
   Future<List<Event>> _apiCall(String query, int page) {
@@ -101,5 +140,9 @@ class EventRepositoryImpl extends EventRepository {
 
   Future<void> _cacheEvents(List<Event> events, int page) {
     return localDataSource.cacheEvents(events, page);
+  }
+
+  Future<void> _cacheSingleEvent(Event event) {
+    return localDataSource.cacheSingleEvent(event);
   }
 }

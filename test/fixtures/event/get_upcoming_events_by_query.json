@@ -1,0 +1,391 @@
+{
+  "code": 200,
+  "status": "success",
+  "current_page": 1,
+  "data": [
+    {
+      "event_id": 154373,
+      "event_title": "2021 Europe Triathlon Junior Cup Riga",
+      "event_slug": "2021_europe_triathlon_junior_cup_riga",
+      "event_edit_date": "2021-08-10T09:32:54+00:00",
+      "event_venue": "Riga",
+      "event_country": "Latvia",
+      "event_latitude": 57.01326,
+      "event_longitude": 24.14999,
+      "event_date": "2021-08-08",
+      "event_finish_date": "2021-08-08",
+      "event_country_isoa2": "LV",
+      "event_country_noc": "LAT",
+      "event_region_id": 10,
+      "event_country_id": 202,
+      "event_region_name": "Europe",
+      "event_status": "Scheduled",
+      "event_categories": [
+        {
+          "cat_name": "Junior Continental Cup",
+          "cat_id": 342,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Sprint",
+          "cat_id": 376,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/lv.png",
+      "event_listing": "https://www.triathlon.org/events/event/2021_europe_triathlon_junior_cup_riga",
+      "event_api_listing": "https://api.triathlon.org/v1//events/154373",
+      "timestamp": 1628380800,
+      "sport": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        }
+      ],
+      "specification": [
+        {
+          "cat_name": "Sprint",
+          "cat_id": 376,
+          "cat_parent_id": 357
+        }
+      ],
+      "federation_event": false,
+      "web_gallery": false,
+      "hr_gallery": false,
+      "has_ag_prog": false,
+      "event_redirect": false,
+      "media_centre": true,
+      "event_on_ott": false,
+      "event_postponed_to_2021": false,
+      "event_postponed_to_2022": false,
+      "event_postponed": false,
+      "event_cancelled": false,
+      "event_new_date": false,
+      "hide_from_events": false,
+      "hide_from_results": false,
+      "_highlightResult": {
+        "event_title": {
+          "value": "2021 Europe Triathlon Junior Cup Riga",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_venue": {
+          "value": "Riga",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_country": {
+          "value": "Latvia",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_categories": [
+          {
+            "cat_name": {
+              "value": "Junior Continental Cup",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "sport": [
+          {
+            "cat_name": {
+              "value": "Triathlon",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "specification": [
+          {
+            "cat_name": {
+              "value": "Sprint",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "event_id": 153772,
+      "event_title": "Groupe Copley 2021 World Triathlon Championship Series Montreal",
+      "event_slug": "2021_world_triathlon_montreal",
+      "event_edit_date": "2021-08-09T15:37:02+00:00",
+      "event_venue": "Montreal",
+      "event_country": "Canada",
+      "event_latitude": 45.50169,
+      "event_longitude": -73.56726,
+      "event_date": "2021-08-13",
+      "event_finish_date": "2021-08-15",
+      "event_country_isoa2": "CA",
+      "event_country_noc": "CAN",
+      "event_region_id": 11,
+      "event_country_id": 135,
+      "event_region_name": "Americas",
+      "event_website": "https://montreal.triathlon.org/",
+      "event_status": "Rescheduled",
+      "event_categories": [
+        {
+          "cat_name": "World Triathlon Championship Series",
+          "cat_id": 351,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Super Sprint",
+          "cat_id": 378,
+          "cat_parent_id": 357
+        },
+        {
+          "cat_name": "Mixed Relay",
+          "cat_id": 380,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/ca.png",
+      "event_listing": "https://www.triathlon.org/events/event/2021_world_triathlon_montreal",
+      "event_api_listing": "https://api.triathlon.org/v1//events/153772",
+      "timestamp": 1628812800,
+      "sport": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        }
+      ],
+      "specification": [
+        {
+          "cat_name": "Super Sprint",
+          "cat_id": 378,
+          "cat_parent_id": 357
+        },
+        {
+          "cat_name": "Mixed Relay",
+          "cat_id": 380,
+          "cat_parent_id": 357
+        }
+      ],
+      "federation_event": false,
+      "web_gallery": false,
+      "hr_gallery": false,
+      "has_ag_prog": true,
+      "event_redirect": true,
+      "media_centre": true,
+      "event_on_ott": false,
+      "event_postponed_to_2021": false,
+      "event_postponed_to_2022": false,
+      "event_postponed": false,
+      "event_cancelled": false,
+      "event_new_date": true,
+      "hide_from_events": false,
+      "hide_from_results": false,
+      "_highlightResult": {
+        "event_title": {
+          "value": "Groupe Copley 2021 World Triathlon Championship Series Montreal",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_venue": {
+          "value": "Montreal",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_country": {
+          "value": "Canada",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_categories": [
+          {
+            "cat_name": {
+              "value": "World Triathlon Championship Series",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "sport": [
+          {
+            "cat_name": {
+              "value": "Triathlon",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "specification": [
+          {
+            "cat_name": {
+              "value": "Super Sprint",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          },
+          {
+            "cat_name": {
+              "value": "Mixed Relay",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ]
+      }
+    },
+    {
+      "event_id": 154883,
+      "event_title": "2021 Europe Triathlon Junior Cup Izvorani",
+      "event_slug": "2021_europe_triathlon_junior_cup_bucharest",
+      "event_edit_date": "2021-08-11T07:27:55+00:00",
+      "event_venue": "Izvorani",
+      "event_country": "Romania",
+      "event_latitude": 44.69535,
+      "event_longitude": 26.12095,
+      "event_date": "2021-08-14",
+      "event_finish_date": "2021-08-15",
+      "event_country_isoa2": "RO",
+      "event_country_noc": "ROU",
+      "event_region_id": 10,
+      "event_country_id": 250,
+      "event_region_name": "Europe",
+      "event_status": "Rescheduled",
+      "event_categories": [
+        {
+          "cat_name": "Junior Continental Cup",
+          "cat_id": 342,
+          "cat_parent_id": null
+        }
+      ],
+      "event_specifications": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        },
+        {
+          "cat_name": "Sprint",
+          "cat_id": 376,
+          "cat_parent_id": 357
+        },
+        {
+          "cat_name": "Mixed Relay",
+          "cat_id": 380,
+          "cat_parent_id": 357
+        }
+      ],
+      "event_flag": "https://triathlon-images.imgix.net/images/icons/ro.png",
+      "event_listing": "https://www.triathlon.org/events/event/2021_europe_triathlon_junior_cup_bucharest",
+      "event_api_listing": "https://api.triathlon.org/v1//events/154883",
+      "timestamp": 1628899200,
+      "sport": [
+        {
+          "cat_name": "Triathlon",
+          "cat_id": 357,
+          "cat_parent_id": null
+        }
+      ],
+      "specification": [
+        {
+          "cat_name": "Sprint",
+          "cat_id": 376,
+          "cat_parent_id": 357
+        },
+        {
+          "cat_name": "Mixed Relay",
+          "cat_id": 380,
+          "cat_parent_id": 357
+        }
+      ],
+      "federation_event": false,
+      "web_gallery": false,
+      "hr_gallery": false,
+      "has_ag_prog": false,
+      "event_redirect": false,
+      "media_centre": true,
+      "event_on_ott": false,
+      "event_postponed_to_2021": false,
+      "event_postponed_to_2022": false,
+      "event_postponed": false,
+      "event_cancelled": false,
+      "event_new_date": true,
+      "hide_from_events": false,
+      "hide_from_results": false,
+      "_highlightResult": {
+        "event_title": {
+          "value": "2021 Europe Triathlon Junior Cup Izvorani",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_venue": {
+          "value": "Izvorani",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_country": {
+          "value": "Romania",
+          "matchLevel": "none",
+          "matchedWords": []
+        },
+        "event_categories": [
+          {
+            "cat_name": {
+              "value": "Junior Continental Cup",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "sport": [
+          {
+            "cat_name": {
+              "value": "Triathlon",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ],
+        "specification": [
+          {
+            "cat_name": {
+              "value": "Sprint",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          },
+          {
+            "cat_name": {
+              "value": "Mixed Relay",
+              "matchLevel": "none",
+              "matchedWords": []
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "first_page_url": "https://api.triathlon.org/v1/search?per_page=3&collection=events&page=1",
+  "from": 1,
+  "last_page": 29,
+  "last_page_url": "https://api.triathlon.org/v1/search?per_page=3&collection=events&page=29",
+  "next_page_url": "https://api.triathlon.org/v1/search?per_page=3&collection=events&page=2",
+  "path": "https://api.triathlon.org/v1/search",
+  "per_page": "3",
+  "prev_page_url": null,
+  "to": 3,
+  "total": 87
+}

@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
+import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
@@ -24,28 +25,93 @@ void main() {
         eventBox,singleEventBox);
   });
 
-  // poprawnie się otwiera
-  // Czy dobrze zapisuje
-  // throw NoElementException when id / list is not found
-  // czy dobrze działa z pagination <brzegowe przypadki !>
-  // zwraca CacheException
 
-  final testListEventSpec = [EventSpecification('Triathlon',357,null)];
+  group('get Events',(){
 
-  final testEventDetail = EventDetail(
-      eventId: 149007,
-      eventTitle: '1985 Ulster ETU Triathlon Team Relay European Championships',
-      eventDate: "1985-06-08",
-      eventFinishDate: "1985-06-08",
-      eventVenue: 'Ulster',
-      eventCountryName: 'Ireland',
-      eventFlag: 'https://triathlon-images.imgix.net/images/icons/ie.png',
-      eventSpecifications: testListEventSpec,
-      eventWebSite:
-      null,
-      information: null);
+    final tEventModel1 = EventModel(
+        eventId: 122987,
+        eventTitle: "1992 POL Duathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "Poland",
+        eventDate: "1992-01-01",
+        eventFinishDate: "1992-01-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
+
+    final tEventModel2 = EventModel(
+        eventId: 122986,
+        eventTitle: "1992 POL Middle Distance Triathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "Poland",
+        eventDate: "1992-01-01",
+        eventFinishDate: "1992-01-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
+    final tEventModel3 = EventModel(
+        eventId: 122985,
+        eventTitle: "1992 POL Triathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "Poland",
+        eventDate: "1992-01-01",
+        eventFinishDate: "1992-01-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
+
+
+    final tEventModel4 = EventModel(
+        eventId: 122985,
+        eventTitle: "1992 England Triathlon National Championships",
+        eventVenue: "",
+        eventCountryName: "England",
+        eventDate: "2021-09-01",
+        eventFinishDate: "2021-09-01",
+        eventFlag: "https://triathlon-images.imgix.net/images/icons/gb.png");
+
+    List<EventModel> tEventModels = [tEventModel1, tEventModel2, tEventModel3,tEventModel4];
+    List<EventModel> tFilteredEventModels = [tEventModel4];
+
+    String query = '';
+    int page = 1;
+    DateTime dateTime = DateTime(2021,8,7);
+
+    test('searchEventsByQuery return List of Events',() async {
+      // arrange
+      when(eventBox.values).thenAnswer((_) => tEventModels);
+
+      // act
+      final result = await eventLocalDataSource.searchEventsByQuery(query, page);
+
+      // assert
+      expect(result,tEventModels);
+    });
+
+    test('searchUpcomingEventsByQuery return List of Events after now ',() async {
+
+      // arrange
+      when(eventBox.values).thenAnswer((_) => tEventModels);
+
+      // act
+      final result = await eventLocalDataSource.searchEventsByQuery(query, page,dateTime);
+
+      // assert
+      expect(result,tFilteredEventModels);
+    });
+
+  });
 
   group('single Event',(){
+
+    final testListEventSpec = [EventSpecification('Triathlon',357,null)];
+
+    final testEventDetail = EventDetail(
+        eventId: 149007,
+        eventTitle: '1985 Ulster ETU Triathlon Team Relay European Championships',
+        eventDate: "1985-06-08",
+        eventFinishDate: "1985-06-08",
+        eventVenue: 'Ulster',
+        eventCountryName: 'Ireland',
+        eventFlag: 'https://triathlon-images.imgix.net/images/icons/ie.png',
+        eventSpecifications: testListEventSpec,
+        eventWebSite:
+        null,
+        information: null);
 
     test('cache single event when model is register should call save box method',(){
       eventLocalDataSource.cacheSingleEvent(testEventDetail);
@@ -80,38 +146,7 @@ void main() {
       expect(() => call, throwsA(isA<CacheException>()));
 
     });
-
-
-
-
-
   });
 
-
-  // 10 < 10 nie przejdzie 9 będzie osatnim indexem
-  List<Event> _getTestEvents(int size, {int startIndex = 0}) {
-    List<Event> _events = [];
-
-    for (int i = 0; i < size; i++) {
-      _events.add(Event(
-          eventId: startIndex,
-          eventTitle: 'EventTitle',
-          eventDate: '21/03/2020',
-          eventFinishDate: '21/03/2020',
-          eventVenue: 'Krakow',
-          eventCountryName: 'Poland',
-          eventFlag:
-              'https:\/\/f9ca11ef49c28681fc01-0acbf57e00c47a50e70a1acb89e86c89.ssl.cf1.rackcdn.com\/images\/icons\/au.png'));
-      startIndex++;
-    }
-
-    print('get_TestEvents | size: $size | startIndex: $startIndex');
-    print('\nEvent Id\'s');
-    _events.forEach((element) {
-      print(element.eventId);
-    });
-
-    return _events;
-  }
 
 }

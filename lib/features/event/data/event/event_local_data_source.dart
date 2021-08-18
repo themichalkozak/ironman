@@ -15,7 +15,7 @@ abstract class EventLocalDataSource {
     @required this.singleEventsBox,
   });
 
-  Future<List<Event>> searchEventsByQuery(String query, int page);
+  Future<List<Event>> searchEventsByQuery(String query, int page, [DateTime dateTime]);
 
   Future<EventDetail> searchEventById(int id);
 
@@ -51,10 +51,15 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   }
 
   @override
-  Future<List<Event>> searchEventsByQuery(String query, int page) async {
+  Future<List<Event>> searchEventsByQuery(String query, int page,[DateTime dateTime]) async {
     List<Event> events = eventBox.values.toList().cast<Event>();
     events = _sortByDate(events);
     events = _filterByQuery(query, events);
+
+    if(dateTime != null){
+      events = _filterByDate(events, dateTime);
+    }
+
      return _setupPagination(events, page, PER_PAGE);
   }
 
@@ -137,5 +142,12 @@ class HiveEventLocalDataSourceImpl extends EventLocalDataSource {
   List<Event> _sortByDate(List<Event> events) {
     events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
     return events;
+  }
+
+  List<Event> _filterByDate(List<Event> events, DateTime dateTime){
+    return events.where((element) {
+      DateTime eventDateTime = DateTime.tryParse(element.eventDate);
+      return eventDateTime.isAfter(dateTime);
+    }).toList();
   }
 }
