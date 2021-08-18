@@ -28,7 +28,7 @@ void main() {
 
   group('get Events',(){
 
-    final tEventModel1 = EventModel(
+    final tEventModel1 = EventDto(
         eventId: 122987,
         eventTitle: "1992 POL Duathlon National Championships",
         eventVenue: "",
@@ -37,7 +37,7 @@ void main() {
         eventFinishDate: "1992-01-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
 
-    final tEventModel2 = EventModel(
+    final tEventModel2 = EventDto(
         eventId: 122986,
         eventTitle: "1992 POL Middle Distance Triathlon National Championships",
         eventVenue: "",
@@ -45,7 +45,7 @@ void main() {
         eventDate: "1992-01-01",
         eventFinishDate: "1992-01-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
-    final tEventModel3 = EventModel(
+    final tEventModel3 = EventDto(
         eventId: 122985,
         eventTitle: "1992 POL Triathlon National Championships",
         eventVenue: "",
@@ -55,7 +55,7 @@ void main() {
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
 
 
-    final tEventModel4 = EventModel(
+    final tEventModel4 = EventDto(
         eventId: 122985,
         eventTitle: "1992 England Triathlon National Championships",
         eventVenue: "",
@@ -64,8 +64,8 @@ void main() {
         eventFinishDate: "2021-09-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/gb.png");
 
-    List<EventModel> tEventModels = [tEventModel1, tEventModel2, tEventModel3,tEventModel4];
-    List<EventModel> tFilteredEventModels = [tEventModel4];
+    List<EventDto> tEventModels = [tEventModel1, tEventModel2, tEventModel3,tEventModel4];
+    List<EventDto> tFilteredEventModels = [tEventModel4];
 
     String query = '';
     int page = 1;

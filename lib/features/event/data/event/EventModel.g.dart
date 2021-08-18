@@ -6,17 +6,17 @@ part of 'EventModel.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class EventModelAdapter extends TypeAdapter<EventModel> {
+class EventModelAdapter extends TypeAdapter<EventDto> {
   @override
   final int typeId = 1;
 
   @override
-  EventModel read(BinaryReader reader) {
+  EventDto read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return EventModel(
+    return EventDto(
       eventId: fields[0] as int,
       eventTitle: fields[1] as String,
       eventDate: fields[2] as String,
@@ -28,7 +28,7 @@ class EventModelAdapter extends TypeAdapter<EventModel> {
   }
 
   @override
-  void write(BinaryWriter writer, EventModel obj) {
+  void write(BinaryWriter writer, EventDto obj) {
     writer
       ..writeByte(7)
       ..writeByte(0)

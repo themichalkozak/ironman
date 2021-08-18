@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:ironman/core/error/exceptions.dart';
-import '../../../../../../lib/core/data/response_model.dart';
+import '../../../../../../lib/core/data/generic_response.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
@@ -40,7 +40,7 @@ void main() {
       'page': page.toString()
     };
 
-    final tEventModel1 = EventModel(
+    final tEventModel1 = EventDto(
         eventId: 122987,
         eventTitle: "1992 POL Duathlon National Championships",
         eventVenue: "",
@@ -49,7 +49,7 @@ void main() {
         eventFinishDate: "1992-01-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
 
-    final tEventModel2 = EventModel(
+    final tEventModel2 = EventDto(
         eventId: 122986,
         eventTitle: "1992 POL Middle Distance Triathlon National Championships",
         eventVenue: "",
@@ -57,7 +57,7 @@ void main() {
         eventDate: "1992-01-01",
         eventFinishDate: "1992-01-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
-    final tEventModel3 = EventModel(
+    final tEventModel3 = EventDto(
         eventId: 122985,
         eventTitle: "1992 POL Triathlon National Championships",
         eventVenue: "",
@@ -66,7 +66,7 @@ void main() {
         eventFinishDate: "1992-01-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png");
 
-    List<EventModel> tEventModels = [tEventModel1, tEventModel2, tEventModel3];
+    List<EventDto> tEventModels = [tEventModel1, tEventModel2, tEventModel3];
 
     test('getEvents by query when apikey is correct called get request',
         () async {
@@ -227,7 +227,7 @@ void main() {
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
     });
 
-    final tUpcomingEvent = EventModel(
+    final tUpcomingEvent = EventDto(
         eventId: 154373,
         eventTitle: "2021 Europe Triathlon Junior Cup Riga",
         eventVenue: "Riga",
@@ -236,7 +236,7 @@ void main() {
         eventFinishDate: "2021-08-08",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/lv.png");
 
-    final tUpcomingEvent2 = EventModel(
+    final tUpcomingEvent2 = EventDto(
         eventId: 153772,
         eventTitle:
             "Groupe Copley 2021 World Triathlon Championship Series Montreal",
@@ -246,7 +246,7 @@ void main() {
         eventFinishDate: "2021-08-15",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/ca.png");
 
-    final tUpcomingEvent3 = EventModel(
+    final tUpcomingEvent3 = EventDto(
         eventId: 154883,
         eventTitle: "2021 Europe Triathlon Junior Cup Izvorani",
         eventVenue: "Izvorani",
@@ -255,7 +255,7 @@ void main() {
         eventFinishDate: "2021-08-15",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/ro.png");
 
-    List<EventModel> tUpcomingEvents = [
+    List<EventDto> tUpcomingEvents = [
       tUpcomingEvent,
       tUpcomingEvent2,
       tUpcomingEvent3

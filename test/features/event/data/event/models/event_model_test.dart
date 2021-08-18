@@ -9,7 +9,7 @@ import '../../../../../fixtures/fixture_reader.dart';
 
 void main() {
 
-  final tEventModel = EventModel(
+  final tEventModel = EventDto(
     eventId: 122987,
     eventCountryName: 'Poland',
     eventVenue: "",
@@ -29,7 +29,7 @@ void main() {
       final Map<String,dynamic> jsonMap = 
           json.decode(fixture('/event/get_events_single_event.json'));
       // act
-      final result = EventModel.fromJson(jsonMap);
+      final result = EventDto.fromJson(jsonMap);
       // assert
       expect(result,tEventModel);
     });

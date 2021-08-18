@@ -4,18 +4,18 @@ import 'package:dartz/dartz_unsafe.dart';
 import 'package:http/http.dart' as http;
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/date_format.dart';
-import '../../../../core/data/response_model.dart';
+import '../../../../core/data/generic_response.dart';
 import '../../../../core/utils/constants.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'event_detailed_model.dart';
 import 'EventModel.dart';
 
 abstract class EventRemoteDataSource {
-  Future<List<EventModel>> searchEventsByQuery(String query, int page);
+  Future<List<EventDto>> searchEventsByQuery(String query, int page);
 
   Future<EventDetailModel> getEventById(int id);
 
-  Future<List<EventModel>> searchUpcomingEventsByQuery(String query, int page, String dateTime);
+  Future<List<EventDto>> searchUpcomingEventsByQuery(String query, int page, String dateTime);
 }
 
 class EventRemoteDataSourceImpl extends EventRemoteDataSource {
@@ -34,7 +34,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       throw TimeoutException(message: TIMEOUT_FAILURE_MESSAGE);
     });
 
-    final responseModel = ResponseModel.fromJson(json.decode(response.body));
+    final responseModel = GenericResponse.fromJson(json.decode(response.body));
 
     if (responseModel.status == 'fail') {
       throw ServerExceptions(message: responseModel.message);
@@ -44,11 +44,11 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
   }
 
   @override
-  Future<List<EventModel>> searchEventsByQuery(String query, int page) async {
+  Future<List<EventDto>> searchEventsByQuery(String query, int page) async {
 
     final queryParams = {'query': query, 'page': page.toString()};
 
-    List<EventModel> events = [];
+    List<EventDto> events = [];
 
     final uri = Uri.https(BASE_URL, '/v1/search/events', queryParams);
 
@@ -61,7 +61,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
       throw TimeoutException(message: TIMEOUT_FAILURE_MESSAGE);
     });
 
-    final responseModel = ResponseModel.fromJson(json.decode(response.body));
+    final responseModel = GenericResponse.fromJson(json.decode(response.body));
 
     if (responseModel.status == 'fail') {
       print(
@@ -77,7 +77,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     }
 
     responseModel.data.forEach((element) {
-      events.add(EventModel.fromJson(element));
+      events.add(EventDto.fromJson(element));
     });
 
     print(
@@ -88,7 +88,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
   }
 
   @override
-  Future<List<EventModel>> searchUpcomingEventsByQuery(String query,
+  Future<List<EventDto>> searchUpcomingEventsByQuery(String query,
       int page, String dateTime) async {
 
     final queryParams = {
@@ -109,9 +109,9 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     });
 
 
-  final responseModel = ResponseModel.fromJson(json.decode(response.body));
+  final responseModel = GenericResponse.fromJson(json.decode(response.body));
 
-    List<EventModel> events = [];
+    List<EventDto> events = [];
 
     if (responseModel.status == 'fail') {
       print(
@@ -127,7 +127,7 @@ class EventRemoteDataSourceImpl extends EventRemoteDataSource {
     }
 
     responseModel.data.forEach((element) {
-      events.add(EventModel.fromJson(element));
+      events.add(EventDto.fromJson(element));
     });
 
     return events;

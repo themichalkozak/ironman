@@ -1,11 +1,10 @@
-import 'package:ironman/features/event/domain/entity/event.dart';
-import 'package:ironman/features/event/domain/entity/event_detail.dart';
+import 'package:ironman/features/event/framework/datasource/network/model/models.dart';
 
 abstract class EventApiService {
 
-  Future<List<Event>> searchEventsByQuery(String query, int page);
+  Future<List<EventDto>> searchEventsByQuery(String query, int page);
 
-  Future<EventDetail> getEventById(int id);
+  Future<EventDetailDto> getEventById(int id);
 
-  Future<List<Event>> searchUpcomingEventsByQuery(String query, int page, String dateTime);
+  Future<List<EventDto>> searchUpcomingEventsByQuery(String query, int page, String dateTime);
 }
