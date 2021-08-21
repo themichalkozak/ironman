@@ -1,4 +1,4 @@
-import 'package:ironman/features/event/businnes/domain/utils/domain_mapper.dart';
+import 'package:ironman/features/event/business/domain/utils/domain_mapper.dart';
 import 'package:ironman/features/event/data/event/EventModel.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 

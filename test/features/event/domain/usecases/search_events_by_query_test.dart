@@ -110,11 +110,11 @@ void main() {
       'search events by query when is server failure should return serverFailure',
       () {
     // assert
-    mockSearchEventsQueryFailureResult(ServerFailure());
+    mockSearchEventsQueryFailureResult(NetworkFailure());
 
     final result = useCase(params);
 
-    expect(result, emitsInOrder([Left(ServerFailure())]));
+    expect(result, emitsInOrder([Left(NetworkFailure())]));
 
     verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
 

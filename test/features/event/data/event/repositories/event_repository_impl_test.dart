@@ -133,7 +133,7 @@ void main() {
         // act
         final result = repository.searchEventsByQuery(searchQuery, page);
 
-        expect(result, emitsInOrder([Right(tEvents), Left(ServerFailure())]));
+        expect(result, emitsInOrder([Right(tEvents), Left(NetworkFailure())]));
       });
     });
 

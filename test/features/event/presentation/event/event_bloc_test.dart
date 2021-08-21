@@ -178,7 +178,7 @@ void main() {
         'getEvents by query where is ServerFailure emit [Loading(),Error()]',
         build: () {
           when(mockSearchEventsByQuery(any)).thenAnswer((_) async* {
-            yield Left(ServerFailure());
+            yield Left(NetworkFailure());
           });
           return bloc;
         },

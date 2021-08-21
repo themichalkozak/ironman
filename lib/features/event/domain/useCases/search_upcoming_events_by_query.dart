@@ -8,20 +8,33 @@ import 'package:ironman/features/event/domain/entity/event.dart';
 import '../event_repository.dart';
 
 class SearchUpcomingEventsByQuery
-    extends UseCaseStream<List<Event>, SearchEventsByQueryParams> {
+    extends UseCaseStream<List<Event>, SearchUpcomingEventsByQueryParams> {
   final EventRepository repository;
-  SearchEventsByQueryParams _searchEventsByQueryParams;
+  SearchUpcomingEventsByQueryParams _searchEventsByQueryParams;
 
   @visibleForTesting
-  SearchEventsByQueryParams get params => _searchEventsByQueryParams;
+  SearchUpcomingEventsByQueryParams get params => _searchEventsByQueryParams;
 
   SearchUpcomingEventsByQuery(this.repository);
 
   @override
-  Stream<Either<Failure, List<Event>>> call(SearchEventsByQueryParams params) {
+  Stream<Either<Failure, List<Event>>> call(SearchUpcomingEventsByQueryParams params) {
     return repository.searchUpcomingEventsByQuery(
         params.query, params.page);
   }
+
+}
+
+class SearchUpcomingEventsByQueryParams extends Equatable {
+  final String query;
+  final int page;
+
+  SearchUpcomingEventsByQueryParams({
+    this.query,
+    @required this.page
+  }): assert(query != null),
+        assert(page != null),
+        super([query,page]);
 
 }
 

@@ -1,0 +1,1 @@
+const NETWORK_TIMEOUT_ERROR = 'Network timeout error';

@@ -7,10 +7,10 @@ import 'package:ironman/features/event/framework/datasource/network/abstraction/
 import 'package:ironman/features/event/framework/datasource/network/model/models.dart';
 import 'package:ironman/features/event/framework/datasource/network/utils/Constants.dart';
 
-class EventRemoteDataSourceImpl extends EventApiService {
+class EventApiServiceImpl extends EventApiService {
   final http.Client client;
 
-  EventRemoteDataSourceImpl(this.client);
+  EventApiServiceImpl(this.client);
 
   @override
   Future<EventDetailDto> getEventById(int id) async {
@@ -40,7 +40,7 @@ class EventRemoteDataSourceImpl extends EventApiService {
     final uri = Uri.https(BASE_URL, SEARCH_EVENTS_BY_QUERY_ENDPOINT, queryParams);
 
     final response = await client.get(uri, headers: {
-      CONTENT_TYPE_HEADER_VALUE: CONTENT_TYPE_HEADER_VALUE,
+      CONTENT_TYPE_HEADER_KEY: CONTENT_TYPE_HEADER_VALUE,
       API_KEY: API_KEY_VALUE
     });
 

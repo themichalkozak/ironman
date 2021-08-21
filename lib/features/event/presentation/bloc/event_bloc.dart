@@ -4,11 +4,12 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
+import 'package:ironman/features/event/business/interactors/SearchEventsByQuery.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
-import 'package:ironman/features/event/domain/useCases/search_events_by_query.dart';
 import 'package:ironman/features/event/domain/useCases/search_local_events_by_query.dart';
 import 'package:ironman/features/event/domain/useCases/search_upcoming_events_by_query.dart';
+import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
@@ -32,39 +33,39 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   EventState get initialState => Empty();
 
-  List<Event> _filterByEventTense(List<Event> events, EventTense eventTense) {
-    final now = DateTime.now();
+  // List<Event> _filterByEventTense(List<Event> events, EventTense eventTense) {
+  //   final now = DateTime.now();
+  //
+  //   switch (eventTense) {
+  //     case EventTense.All:
+  //       return events;
+  //
+  //     case EventTense.Upcoming:
+  //       return _getUpcomingEvents(now, events);
+  //
+  //     case EventTense.Past:
+  //       return _getPastEvents(now, events);
+  //   }
+  //   return [];
+  // }
 
-    switch (eventTense) {
-      case EventTense.All:
-        return events;
-
-      case EventTense.Upcoming:
-        return _getUpcomingEvents(now, events);
-
-      case EventTense.Past:
-        return _getPastEvents(now, events);
-    }
-    return [];
-  }
-
-  List<Event> _getUpcomingEvents(DateTime now, List<Event> events) {
-    return events
-        .where((Event event) =>
-            _convertStringToDateTime(event.eventDate).isAfter(now))
-        .toList();
-  }
-
-  List<Event> _getPastEvents(DateTime now, List<Event> events) {
-    print('event_bloc | events.length: ${events.length} | now: $now ');
-    List<Event> filtredEvents = events
-        .where((Event event) =>
-            _convertStringToDateTime(event.eventDate).isBefore(now))
-        .toList();
-
-    print('event_bloc | filtred events.length: ${filtredEvents.length}');
-    return filtredEvents;
-  }
+  // List<Event> _getUpcomingEvents(DateTime now, List<Event> events) {
+  //   return events
+  //       .where((Event event) =>
+  //           _convertStringToDateTime(event.eventDate).isAfter(now))
+  //       .toList();
+  // }
+  //
+  // List<Event> _getPastEvents(DateTime now, List<Event> events) {
+  //   print('event_bloc | events.length: ${events.length} | now: $now ');
+  //   List<Event> filtredEvents = events
+  //       .where((Event event) =>
+  //           _convertStringToDateTime(event.eventDate).isBefore(now))
+  //       .toList();
+  //
+  //   print('event_bloc | filtred events.length: ${filtredEvents.length}');
+  //   return filtredEvents;
+  // }
 
   @override
   Stream<EventState> mapEventToState(
@@ -76,7 +77,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       yield Loading();
 
       final failOrEvents = searchEventsByQuery(
-          SearchEventsByQueryParams(query: _query, page: _initialPage));
+          SearchEventsByQueryParams(query: _query, page: _initialPage,filterAndOrder: ORDER_BY_DATE_ASC));
 
       _resetEventTenseFilter();
 
@@ -90,110 +91,110 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       }
     }
 
-    if (event is SearchNextPageResultEvent) {
-      if (state is Empty) return;
+    // if (event is SearchNextPageResultEvent) {
+    //   if (state is Empty) return;
+    //
+    //   if (state is Loaded) {
+    //     final loadedState = state as Loaded;
+    //     if (loadedState.isExhausted) return;
+    //
+    //     final previousList = loadedState.events;
+    //
+    //     print(
+    //         'event_bloc | mapEventToState | fetchNextPageResult | previous list lenght: ${previousList.length}');
+    //
+    //     for (Event event in previousList) {
+    //       print(event.eventDate);
+    //     }
+    //
+    //     final failOrEvents = searchEventsByQuery(SearchEventsByQueryParams(
+    //         query: _query, page: _getPageFromOffset(previousList.length)));
+    //
+    //     List<Event> eventsToDisplay = [];
+    //     await for (var event in failOrEvents) {
+    //       yield event.fold(
+    //           (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+    //           (events) {
+    //         eventsToDisplay = events;
+    //         return Loaded(
+    //             events: _filterByEventTense(previousList + events, _eventTense),
+    //             isExhausted: events.length < PER_PAGE,
+    //             eventTense: _eventTense);
+    //       });
+    //     }
+    //
+    //     print('event_bloc | fetchNextPageResult |');
+    //
+    //     for (Event event in eventsToDisplay) {
+    //       print(event.eventDate);
+    //     }
+    //   }
+    // }
 
-      if (state is Loaded) {
-        final loadedState = state as Loaded;
-        if (loadedState.isExhausted) return;
+    // if (event is RefreshSearchEventsByQueryEvent) {
+    //   if (state is Loading) {
+    //     return;
+    //   }
+    //   if (state is Loaded) {
+    //     if ((state as Loaded).events.isNotEmpty) {
+    //       return;
+    //     }
+    //   }
+    //
+    //   print('event_bloc | RefreshSearchQuery | _query: $_query');
+    //
+    //   final failOrEvents = searchEventsByQuery(
+    //       SearchEventsByQueryParams(query: _query, page: _initialPage));
+    //
+    //   await for (var event in failOrEvents) {
+    //     yield event.fold(
+    //         (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+    //         (events) => Loaded(
+    //             events: events,
+    //             isExhausted: events.isEmpty,
+    //             eventTense: _eventTense));
+    //   }
+    // }
 
-        final previousList = loadedState.events;
-
-        print(
-            'event_bloc | mapEventToState | fetchNextPageResult | previous list lenght: ${previousList.length}');
-
-        for (Event event in previousList) {
-          print(event.eventDate);
-        }
-
-        final failOrEvents = searchEventsByQuery(SearchEventsByQueryParams(
-            query: _query, page: _getPageFromOffset(previousList.length)));
-
-        List<Event> eventsToDisplay = [];
-        await for (var event in failOrEvents) {
-          yield event.fold(
-              (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-              (events) {
-            eventsToDisplay = events;
-            return Loaded(
-                events: _filterByEventTense(previousList + events, _eventTense),
-                isExhausted: events.length < PER_PAGE,
-                eventTense: _eventTense);
-          });
-        }
-
-        print('event_bloc | fetchNextPageResult |');
-
-        for (Event event in eventsToDisplay) {
-          print(event.eventDate);
-        }
-      }
-    }
-
-    if (event is RefreshSearchEventsByQueryEvent) {
-      if (state is Loading) {
-        return;
-      }
-      if (state is Loaded) {
-        if ((state as Loaded).events.isNotEmpty) {
-          return;
-        }
-      }
-
-      print('event_bloc | RefreshSearchQuery | _query: $_query');
-
-      final failOrEvents = searchEventsByQuery(
-          SearchEventsByQueryParams(query: _query, page: _initialPage));
-
-      await for (var event in failOrEvents) {
-        yield event.fold(
-            (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-            (events) => Loaded(
-                events: events,
-                isExhausted: events.isEmpty,
-                eventTense: _eventTense));
-      }
-    }
-
-    if (event is FilterByEventTenseEvent) {
-      final EventTense updatedEventTense = event.eventTense;
-
-      if (!_updateEventTenseFilter(updatedEventTense)) {
-        return;
-      }
-
-      if (state is Loaded) {
-        yield Loading();
-
-        if (_eventTense != EventTense.Upcoming) {
-          final failOrEvents = searchLocalEventsByQuery(
-              SearchEventsByQueryParams(query: _query, page: _initialPage));
-
-          await for (var event in failOrEvents) {
-            yield event.fold(
-                (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-                (events) => Loaded(
-                    events: _filterByEventTense(events, _eventTense),
-                    isExhausted: events.isEmpty,
-                    eventTense: _eventTense));
-          }
-          return;
-        }
-
-        final failOrEvents = searchUpcomingEventsByQuery(
-          SearchEventsByQueryParams(query: _query,page: _initialPage));
-
-        await for(var event in failOrEvents){
-          yield event.fold(
-                  (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
-                  (events) => Loaded(
-                    events: events,
-                    isExhausted: events.isEmpty,
-                    eventTense: _eventTense
-                  ));
-        }
-      }
-    }
+    // if (event is FilterByEventTenseEvent) {
+    //   final EventTense updatedEventTense = event.eventTense;
+    //
+    //   if (!_updateEventTenseFilter(updatedEventTense)) {
+    //     return;
+    //   }
+    //
+    //   if (state is Loaded) {
+    //     yield Loading();
+    //
+    //     if (_eventTense != EventTense.Upcoming) {
+    //       final failOrEvents = searchLocalEventsByQuery(
+    //           SearchLocalEventsByQuery(query: _query, page: _initialPage);
+    //
+    //       await for (var event in failOrEvents) {
+    //         yield event.fold(
+    //             (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+    //             (events) => Loaded(
+    //                 events: _filterByEventTense(events, _eventTense),
+    //                 isExhausted: events.isEmpty,
+    //                 eventTense: _eventTense));
+    //       }
+    //       return;
+    //     }
+    //
+    //     final failOrEvents = searchUpcomingEventsByQuery(
+    //       SearchEventsByQueryParams(query: _query,page: _initialPage));
+    //
+    //     await for(var event in failOrEvents){
+    //       yield event.fold(
+    //               (failure) => Error(errorMessage: _mapFailureToMessage(failure)),
+    //               (events) => Loaded(
+    //                 events: events,
+    //                 isExhausted: events.isEmpty,
+    //                 eventTense: _eventTense
+    //               ));
+    //     }
+    //   }
+    // }
   }
 
   bool updateSearchQuery(String newSearchQuery) {
@@ -236,7 +237,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   String _mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
-      case ServerFailure:
+      case NetworkFailure:
         return failure.error ?? SERVER_FAILURE_MESSAGE;
       case NoElementFailure:
         return failure.error ?? NO_ELEMENT_FAILURE_MESSAGE;

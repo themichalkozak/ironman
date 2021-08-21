@@ -19,7 +19,7 @@ class Failure extends Equatable {
 
   static String mapFailureToMessage(Failure failure) {
     switch (failure.runtimeType) {
-      case ServerFailure:
+      case NetworkFailure:
         return SERVER_FAILURE_MESSAGE;
       case NoElementFailure:
         return failure.error ?? NO_ELEMENT_FAILURE_MESSAGE;
@@ -35,14 +35,20 @@ class Failure extends Equatable {
   }
 }
 
+class GenericFailure extends Failure{
+  final String error;
+
+  GenericFailure(this.error);
+}
+
 class NoInitialStateFailure extends Failure {}
 
 class NoNextPageFailure extends Failure {}
 
-class ServerFailure extends Failure {
+class NetworkFailure extends Failure {
   final String error;
 
-  ServerFailure({
+  NetworkFailure({
     this.error
   });
 }

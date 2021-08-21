@@ -70,7 +70,7 @@ class EventRepositoryImpl extends EventRepository {
       final updatedResult = await _readCache(query, page);
       yield Right(updatedResult);
     } on ServerExceptions catch (error) {
-      yield Left(ServerFailure(error: error.message));
+      yield Left(NetworkFailure(error: error.message));
     } on TimeoutException catch (error) {
       yield Left(TimeoutFailure(error: error.message));
     } on CacheException catch (error) {
@@ -116,7 +116,7 @@ class EventRepositoryImpl extends EventRepository {
           await _apiCallUpcomingEvents(query, page, formattedDateTime);
       yield Right(result);
     } on ServerExceptions {
-      yield Left(ServerFailure());
+      yield Left(NetworkFailure());
     } on TimeoutException {
       yield Left(TimeoutFailure());
     } on CacheException {

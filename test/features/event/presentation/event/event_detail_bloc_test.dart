@@ -69,7 +69,7 @@ void main() {
   blocTest('getEventById where is serverFailure emit[Loading(),Error()]',
       build: () {
         when(mockGetEventById(any))
-            .thenAnswer((_) async => Left(ServerFailure()));
+            .thenAnswer((_) async => Left(NetworkFailure()));
         return bloc;
       },
       act: (bloc) => bloc.add(GetEventByIdEvent(id: 0)),

@@ -1,26 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'EventModel.dart';
+part of 'event_cache_entity.dart';
 
 // **************************************************************************
 // TypeAdapterGenerator
 // **************************************************************************
 
-class EventDtoAdapter extends TypeAdapter<EventDto> {
+class EventCacheEntityAdapter extends TypeAdapter<EventCacheEntity> {
   @override
   final int typeId = 1;
 
   @override
-  EventDto read(BinaryReader reader) {
+  EventCacheEntity read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return EventDto(
+    return EventCacheEntity(
       eventId: fields[0] as int,
       eventTitle: fields[1] as String,
-      eventDate: fields[2] as String,
-      eventFinishDate: fields[3] as String,
+      eventDate: fields[2] as DateTime,
+      eventFinishDate: fields[3] as DateTime,
       eventVenue: fields[4] as String,
       eventCountryName: fields[5] as String,
       eventFlag: fields[6] as String,
@@ -28,7 +28,7 @@ class EventDtoAdapter extends TypeAdapter<EventDto> {
   }
 
   @override
-  void write(BinaryWriter writer, EventDto obj) {
+  void write(BinaryWriter writer, EventCacheEntity obj) {
     writer
       ..writeByte(7)
       ..writeByte(0)
@@ -53,7 +53,7 @@ class EventDtoAdapter extends TypeAdapter<EventDto> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is EventDtoAdapter &&
+      other is EventCacheEntityAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
