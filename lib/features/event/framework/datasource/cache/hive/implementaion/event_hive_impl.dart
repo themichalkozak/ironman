@@ -32,9 +32,9 @@ class EventHiveImpl extends EventHive {
       String query, String filterAndOrder, int page) async {
 
     switch (filterAndOrder) {
-      case ORDER_BY_DESC_FUTURE_DATE:
+      case ORDER_BY_ASC_FUTURE_DATE:
         {
-          return searchEventsFilterByFutureDateDESC(query, page);
+          return searchEventsFilterByFutureDateASC(query, page);
         }
       case ORDER_BY_ASC_PAST_DATE:
         {
@@ -72,7 +72,7 @@ class EventHiveImpl extends EventHive {
   }
 
   @override
-  Future<List<EventCacheEntity>> searchEventsFilterByFutureDateDESC(
+  Future<List<EventCacheEntity>> searchEventsFilterByFutureDateASC(
       String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE, DateTime dateTime}) async {
     if (dateTime == null) {
@@ -81,7 +81,10 @@ class EventHiveImpl extends EventHive {
     List<EventCacheEntity> events = await getAllEvents();
     events = _filterByQuery(query, events);
     events = _filterByFutureDate(events,dateTime: dateTime);
-    events = _orderByDateDESC(events);
+
+    print('event_hive_impl | searchEventsFilterByFutureDateDESC | query: $query | list size: ${events.length}');
+
+    events = _orderByDateASC(events);
     events = _setupPagination(events, page, pageSize);
     return events;
   }
@@ -113,7 +116,7 @@ class EventHiveImpl extends EventHive {
 
   List<EventCacheEntity> _orderByDateDESC(List<EventCacheEntity> events){
     events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
-    return events.reversed;
+    return events.reversed.toList();
   }
 
   List<EventCacheEntity> _filterByPastDate(List<EventCacheEntity> events,

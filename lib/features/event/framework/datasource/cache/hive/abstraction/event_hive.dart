@@ -11,7 +11,7 @@ const String EVENT_FILTER_PAST_DATE = 'past_date';
 const String EVENT_FILTER_QUERY = 'query';
 
 const String ORDER_BY_ASC_PAST_DATE = EVENT_ORDER_ASC + EVENT_FILTER_PAST_DATE;
-const String ORDER_BY_DESC_FUTURE_DATE = EVENT_ORDER_DESC + EVENT_FILTER_FUTURE_DATE;
+const String ORDER_BY_ASC_FUTURE_DATE = EVENT_ORDER_ASC + EVENT_FILTER_FUTURE_DATE;
 const String ORDER_BY_DATE_ASC = EVENT_ORDER_ASC + EVENT_FILTER_QUERY;
 
 abstract class EventHive {
@@ -30,7 +30,7 @@ abstract class EventHive {
   Future<List<EventCacheEntity>> searchEventsOrderByDateDESC(String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE});
 
-  Future<List<EventCacheEntity>> searchEventsFilterByFutureDateDESC(String query, int page,
+  Future<List<EventCacheEntity>> searchEventsFilterByFutureDateASC(String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE,DateTime dateTime});
 
   Future<List<EventCacheEntity>> searchEventsFilterByPastDateASC(String query, int page,

@@ -3,14 +3,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:ironman/core/data/generic_response.dart';
 import 'package:ironman/core/error/exceptions.dart';
+import 'package:ironman/features/event/business/domain/utils/date_util.dart';
+import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/datasource/network/abstraction/event_api_service.dart';
 import 'package:ironman/features/event/framework/datasource/network/model/models.dart';
 import 'package:ironman/features/event/framework/datasource/network/utils/Constants.dart';
 
 class EventApiServiceImpl extends EventApiService {
   final http.Client client;
+  DateUtils dateUtils;
 
-  EventApiServiceImpl(this.client);
+  EventApiServiceImpl(this.client,this.dateUtils);
 
   @override
   Future<EventDetailDto> getEventById(int id) async {
@@ -69,7 +72,9 @@ class EventApiServiceImpl extends EventApiService {
     final queryParams = {
       QUERY_PARAM_NAME : query,
       PAGE_PARAM_NAME: page.toString(),
-      START_DATE_PARAM: dateTime
+      START_DATE_PARAM: dateTime,
+      ORDER_PARAM_NAME: ORDER_ASC_PARAM
+
     };
 
     final uri = Uri.https(BASE_URL,'/v1/search/events', queryParams);
@@ -78,7 +83,7 @@ class EventApiServiceImpl extends EventApiService {
 
     final response = await client.get(uri, headers: {
       'Content-Type': 'application/json',
-      'apikey': API_KEY
+      'apikey': API_KEY_VALUE
     });
 
 
@@ -98,7 +103,34 @@ class EventApiServiceImpl extends EventApiService {
 
     List<EventDto> eventsDto = GenericResponse.mapDtoFromJson(responseModel.data);
 
+    print('event_api_service_impl | eventsDto: $eventsDto');
+
     return eventsDto;
+  }
+
+  @override
+  Future<List<EventDto>> searchFilteredEvents(String query, int page, String filterAndOrder,[DateTime dateTime]) {
+
+    if(dateTime == null){
+      dateTime = DateTime.now();
+    }
+
+    String formattedDateTime = dateUtils.startDateToString(dateTime);
+
+    switch(filterAndOrder){
+      case ORDER_BY_DATE_ASC: {
+        return searchEventsByQuery(query, page);
+      }
+      // https://api.triathlon.org/v1/events?order=desc&start_date=2021-07-08
+      case ORDER_BY_ASC_PAST_DATE: {
+        // Todo implement
+        return searchEventsByQuery(query, page);
+      }
+      case ORDER_BY_ASC_FUTURE_DATE: {
+        return searchUpcomingEventsByQuery(query, page, formattedDateTime);
+      }
+      default: {return searchEventsByQuery(query, page);}
+    }
   }
 
 }

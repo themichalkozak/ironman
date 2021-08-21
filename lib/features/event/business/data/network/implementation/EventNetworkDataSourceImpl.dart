@@ -16,13 +16,8 @@ class EventNetworkDataSourceImpl extends EventNetworkDataSource {
   }
 
   @override
-  Future<List<Event>> searchEventsByQuery(String query, int page) async {
-    return eventApiService.searchEventsByQuery(query, page);
-  }
-
-  @override
-  Future<List<Event>> searchUpcomingEventsByQuery(String query, int page, String startDateTime) {
-    return eventApiService.searchUpcomingEventsByQuery(query, page, startDateTime);
+  Future<List<Event>> searchEvents(String query, int page,String filterAndOrder) async {
+    return eventApiService.searchFilteredEvents(query, page, filterAndOrder);
   }
 
 }

@@ -34,7 +34,7 @@ class SearchEventsByQuery
     try {
       final result = await _readCache(params.query, params.page,params.filterAndOrder);
       yield Right(result);
-      final events = await _apiCall(params.query, params.page);
+      final events = await _apiCall(params.query, params.page,params.filterAndOrder);
       await _cacheEvents(events, params.page);
       final updatedResult = await _readCache(params.query, params.page,params.filterAndOrder);
       yield Right(updatedResult);
@@ -53,8 +53,8 @@ class SearchEventsByQuery
         query, page, filterAndOrder);
   }
 
-  Future<List<Event>> _apiCall(String query, int page) {
-    return eventNetworkDataSource.searchEventsByQuery(query, page);
+  Future<List<Event>> _apiCall(String query, int page,String filterAndOrder) {
+    return eventNetworkDataSource.searchEvents(query, page,filterAndOrder);
   }
 
   Future<void> _cacheEvents(List<Event> events, int page) {

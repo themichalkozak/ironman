@@ -5,6 +5,10 @@ const int PER_PAGE = 10;
 const String QUERY_PARAM_NAME = 'query';
 const String PAGE_PARAM_NAME = 'page';
 const String START_DATE_PARAM = 'start_date';
+const String ORDER_PARAM_NAME = 'order';
+
+const String ORDER_ASC_PARAM = "asc";
+const String ORDER_DESC_PARAM = "asc";
 
 const String SEARCH_EVENTS_BY_QUERY_ENDPOINT = '/v1/search/events';
 

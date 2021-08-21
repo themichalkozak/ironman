@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
-import 'package:ironman/features/event/business/interactors/SearchEventsByQuery.dart';
+import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
 import 'package:ironman/features/event/domain/useCases/search_local_events_by_query.dart';
@@ -77,7 +77,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       yield Loading();
 
       final failOrEvents = searchEventsByQuery(
-          SearchEventsByQueryParams(query: _query, page: _initialPage,filterAndOrder: ORDER_BY_DATE_ASC));
+          SearchEventsByQueryParams(query: _query, page: _initialPage,filterAndOrder: ORDER_BY_ASC_FUTURE_DATE));
 
       _resetEventTenseFilter();
 

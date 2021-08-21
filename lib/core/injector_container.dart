@@ -10,7 +10,7 @@ import 'package:ironman/features/event/business/data/cache/implementation/event_
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
 import 'package:ironman/features/event/business/data/network/implementation/EventNetworkDataSourceImpl.dart';
 import 'package:ironman/features/event/business/domain/utils/date_util.dart';
-import 'package:ironman/features/event/business/interactors/SearchEventsByQuery.dart';
+import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
 import 'package:ironman/features/event/domain/useCases/get_event_by_id.dart';
 import 'package:ironman/features/event/domain/useCases/search_local_events_by_query.dart';
@@ -57,7 +57,7 @@ Future<void> init() async {
       });
   // Data sources
   sl.registerLazySingleton<EventHive>(() => EventHiveImpl(box, singleEventsBox));
-  sl.registerLazySingleton<EventApiService>(() => EventApiServiceImpl(sl()));
+  sl.registerLazySingleton<EventApiService>(() => EventApiServiceImpl(sl(),sl()));
   sl.registerLazySingleton<EventDaoService>(() => EventDaoServiceImpl(sl(),sl()));
   sl.registerLazySingleton<EventCacheDataSource>(() => EventCacheDataSourceImpl(sl()));
   sl.registerLazySingleton<EventNetworkDataSource>(() => EventNetworkDataSourceImpl(sl()));
