@@ -47,7 +47,7 @@ class EventDaoServiceImpl extends EventDaoService {
 
   @override
   Future<List<Event>> searchEventsFilterByPastDateASC(String query, int page, {int pageSize = EVENT_PAGINATION_PAGE_SIZE, DateTime dateTime}) async {
-    List<EventCacheEntity> list = await eventHive.searchEventsFilterByPastDateASC(query, page);
+    List<EventCacheEntity> list = await eventHive.searchEventsFilterByPastDateDESC(query, page);
     return cacheMapper.entityListToDomainList(list);
   }
 

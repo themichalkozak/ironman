@@ -8,5 +8,7 @@ abstract class EventApiService {
 
   Future<List<EventDto>> searchUpcomingEventsByQuery(String query, int page, String dateTime);
 
+  Future<List<EventDto>> searchPastEvents(String query, int page, String dateTime);
+
   Future<List<EventDto>> searchFilteredEvents(String query, int page, String filterAndOrder);
 }

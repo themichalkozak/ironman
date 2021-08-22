@@ -109,6 +109,46 @@ class EventApiServiceImpl extends EventApiService {
   }
 
   @override
+  Future<List<EventDto>> searchPastEvents(String query, int page, String dateTime) async {
+
+    final queryParams = {
+      QUERY_PARAM_NAME : query,
+      PAGE_PARAM_NAME: page.toString(),
+      START_DATE_PARAM: dateTime,
+      ORDER_PARAM_NAME: ORDER_DESC_PARAM
+
+    };
+
+    final uri = Uri.https(BASE_URL,'/v1/search/events', queryParams);
+
+    print('Uri: $uri');
+
+    final response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'apikey': API_KEY_VALUE
+    });
+
+
+    final responseModel = GenericResponse.fromJson(json.decode(response.body));
+
+
+    if (responseModel.status == 'fail') {
+
+      throw ServerExceptions(
+          message:
+          'Error code: ${response.statusCode} \n ${responseModel.message}');
+    }
+
+    if (responseModel.data == null || responseModel.data.isEmpty) {
+      return [];
+    }
+
+    List<EventDto> eventsDto = GenericResponse.mapDtoFromJson(responseModel.data);
+
+    return eventsDto;
+  }
+
+  @override
   Future<List<EventDto>> searchFilteredEvents(String query, int page, String filterAndOrder,[DateTime dateTime]) {
 
     if(dateTime == null){
@@ -122,14 +162,15 @@ class EventApiServiceImpl extends EventApiService {
         return searchEventsByQuery(query, page);
       }
       // https://api.triathlon.org/v1/events?order=desc&start_date=2021-07-08
-      case ORDER_BY_ASC_PAST_DATE: {
-        // Todo implement
-        return searchEventsByQuery(query, page);
+      case ORDER_BY_DESC_PAST_DATE: {
+        return searchPastEvents(query, page,formattedDateTime);
       }
       case ORDER_BY_ASC_FUTURE_DATE: {
         return searchUpcomingEventsByQuery(query, page, formattedDateTime);
       }
-      default: {return searchEventsByQuery(query, page);}
+      default: {
+        return searchEventsByQuery(query, page);
+      }
     }
   }
 

@@ -36,9 +36,9 @@ class EventHiveImpl extends EventHive {
         {
           return searchEventsFilterByFutureDateASC(query, page);
         }
-      case ORDER_BY_ASC_PAST_DATE:
+      case ORDER_BY_DESC_PAST_DATE:
         {
-          return searchEventsFilterByPastDateASC(query, page);
+          return searchEventsFilterByPastDateDESC(query, page);
         }
       case ORDER_BY_DATE_ASC:
         {
@@ -90,7 +90,7 @@ class EventHiveImpl extends EventHive {
   }
 
   @override
-  Future<List<EventCacheEntity>> searchEventsFilterByPastDateASC(
+  Future<List<EventCacheEntity>> searchEventsFilterByPastDateDESC(
       String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE, DateTime dateTime}) async {
     if (dateTime == null) {
@@ -99,7 +99,7 @@ class EventHiveImpl extends EventHive {
     List<EventCacheEntity> events = await getAllEvents();
     events = _filterByQuery(query, events);
     events = _filterByPastDate(events,dateTime: dateTime);
-    events = _orderByDateASC(events);
+    events = _orderByDateDESC(events);
     events = _setupPagination(events, page, pageSize);
     return events;
   }
