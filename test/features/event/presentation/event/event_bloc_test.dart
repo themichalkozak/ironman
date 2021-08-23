@@ -122,7 +122,7 @@ void main() {
           return bloc;
         },
         act: (bloc) {
-          bloc.add(SearchEventsByQueryEvent(query: queryParam));
+          bloc.add(SearchNewQuery(query: queryParam));
           verify(mockSearchEventsByQuery.call(SearchEventsByQueryParams(page: 1,query: 'poland')));
           return bloc;
         },
@@ -132,7 +132,7 @@ void main() {
               Loaded(
                   events: tEvents,
                   isExhausted: false,
-                  eventTense: EventTense.All)
+                  orderAndFilter: String.All)
             ]
     );
 
@@ -140,11 +140,11 @@ void main() {
         'get Events by query where event tense is past return events before today',
         build: () {
           mockSuccessSearchQueryEvents();
-          bloc.add(SearchEventsByQueryEvent(query: query));
+          bloc.add(SearchNewQuery(query: query));
           return bloc;
         },
         act: (bloc) => {
-              bloc.add(FilterByEventTenseEvent(eventTense: EventTense.Past)),
+              bloc.add(FilterByEventTenseEvent(eventTense: String.Past)),
             },
         skip: 2,
         expect: () => [
@@ -152,18 +152,18 @@ void main() {
               Loaded(
                   events: tPastEvents,
                   isExhausted: false,
-                  eventTense: EventTense.Past)
+                  orderAndFilter: String.Past)
             ]);
 
     blocTest(
         'get events by query when event tense is upcoming return events after today',
         build: () {
           mockSuccessSearchQueryEvents();
-          bloc.add(SearchEventsByQueryEvent(query: queryParam));
+          bloc.add(SearchNewQuery(query: queryParam));
           return bloc;
         },
         act: (bloc) => {
-              bloc.add(FilterByEventTenseEvent(eventTense: EventTense.Upcoming)),
+              bloc.add(FilterByEventTenseEvent(eventTense: String.Upcoming)),
             },
         skip: 2,
         expect: () => [
@@ -171,7 +171,7 @@ void main() {
               Loaded(
                   events: tUpCommingEvents,
                   isExhausted: tUpCommingEvents.isEmpty,
-                  eventTense: EventTense.Upcoming)
+                  orderAndFilter: String.Upcoming)
             ]);
 
     blocTest(
@@ -182,24 +182,24 @@ void main() {
           });
           return bloc;
         },
-        act: (bloc) => bloc.add(SearchEventsByQueryEvent(query: ''),
+        act: (bloc) => bloc.add(SearchNewQuery(query: ''),
             expect: () =>
                 [Loading(), Error(errorMessage: SERVER_FAILURE_MESSAGE)]));
 
     blocTest('should reset filtering when is new searchQuery',
         build: () {
           mockSuccessSearchQueryEvents();
-          bloc.add(SearchEventsByQueryEvent(query: query));
-          bloc.add(FilterByEventTenseEvent(eventTense: EventTense.Past));
+          bloc.add(SearchNewQuery(query: query));
+          bloc.add(FilterByEventTenseEvent(eventTense: String.Past));
           return bloc;
         },
         skip: 4,
-        act: (bloc) => {bloc.add(SearchEventsByQueryEvent(query: query))},
+        act: (bloc) => {bloc.add(SearchNewQuery(query: query))},
         expect: () => [
               Loading(),
               Loaded(
                   events: tEvents,
-                  eventTense: EventTense.All,
+                  orderAndFilter: String.All,
                   isExhausted: tEvents.isEmpty)
             ]);
   });

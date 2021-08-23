@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
-import 'package:ironman/features/event/presentation/bloc/bloc.dart';
-import 'package:ironman/features/event/presentation/widgets/bottom_loader.dart';
-import 'package:ironman/features/event/presentation/widgets/event_display_list_item.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/bottom_loader.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/widgets.dart';
 
 class EventDisplay extends StatefulWidget {
   final bool isExhausted;
@@ -29,7 +29,8 @@ class _EventDisplayState extends State<EventDisplay> {
           final itemIndex = index ~/ 2;
           if (index.isEven) {
             if (itemIndex >= widget.events.length) {
-              _searchNextPage(bContext);
+              print('event_display searchNextPage');
+             _searchNextPage(context);
               return BottomLoader();
             }
             return EventListItem(event: widget.events[itemIndex]);
@@ -53,7 +54,9 @@ class _EventDisplayState extends State<EventDisplay> {
     );
   }
 
-  void _searchNextPage(BuildContext bContext) =>
+  void _searchNextPage(BuildContext bContext) {
+    print('event_display | _searchNextPage invoke');
     bContext.read<EventBloc>().add(SearchNextPageResultEvent());
+  }
 
 }

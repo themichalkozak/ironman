@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
-import 'package:ironman/features/event/domain/event_tense.dart';
-import 'package:ironman/features/event/presentation/bloc/bloc.dart';
-import 'package:ironman/features/event/presentation/widgets/widgets.dart';
+import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
+import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/widgets.dart';
 
 class EventScreen extends StatefulWidget {
   @override
@@ -22,6 +22,7 @@ class _EventScreenState extends State<EventScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('event_screen | build() ');
     final scaffold = ScaffoldMessenger.of(context);
     return BlocListener<InternetCubit, InternetState>(
       listener: (context, state) {
@@ -57,8 +58,11 @@ class _EventScreenState extends State<EventScreen> {
     ));
   }
 
-  void searchQueryCallback() => _scrollController?.animateTo(0,
-      duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+  void searchQueryCallback() {
+    print('event_screen | searchQueryCallback()');
+    _scrollController?.animateTo(0,
+        duration: Duration(milliseconds: 500), curve: Curves.fastOutSlowIn);
+  }
 
   @override
   void dispose() {
@@ -106,12 +110,20 @@ Widget silverChipEvent(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
     if (state is Loaded) {
       return SliverToBoxAdapter(
-        child: Row(
-          children: [
-            _buildFilterChip(EventTense.All,state.eventTense, context),
-            _buildFilterChip(EventTense.Upcoming,state.eventTense, context),
-            _buildFilterChip(EventTense.Past,state.eventTense, context),
-          ],
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              _buildFilterChip(EVENT_FILTER_QUERY, state.orderAndFilter, context),
+              SizedBox(width: 8,),
+              _buildFilterChip(
+                  EVENT_FILTER_FUTURE_DATE, state.orderAndFilter, context),
+              SizedBox(width: 8,),
+              _buildFilterChip(
+                  EVENT_FILTER_PAST_DATE, state.orderAndFilter, context),
+            ],
+          ),
         ),
       );
     } else {
@@ -120,23 +132,43 @@ Widget silverChipEvent(BuildContext context) {
   });
 }
 
-Widget _buildFilterChip(EventTense current, EventTense selectedFiltr, BuildContext context){
-  return FilterChip(selectedColor: Theme.of(context).primaryColor,label: Text(_convertEventTenseToString(current)), onSelected: (bool selected) {
-
-    if(selected){
-      print('event_screen | FilterChips | selected: $selected');
-      context.read<EventBloc>().add(FilterByEventTenseEvent(eventTense: current));
-      print('event_screen | FilterChips | eventTense: $current | onSelect: $selectedFiltr');
-    }
-  });
+Widget _buildFilterChip(String currentOrderAndFilter,
+    String selectedOrderAndFilter, BuildContext context) {
+  return FilterChip(
+      selectedColor: Theme.of(context).primaryColor,
+      selected: isSelected(selectedOrderAndFilter,currentOrderAndFilter),
+      label: Text(_convertEventTenseToString(currentOrderAndFilter)),
+      onSelected: (bool selected) {
+        if (selected) {
+          updateOrderAndFilter(context, currentOrderAndFilter);
+          print(
+              'event_screen | FilterChips | eventTense: $currentOrderAndFilter | onSelect: $selectedOrderAndFilter');
+        }
+      });
 }
 
-String _convertEventTenseToString(EventTense eventTense){
-  return eventTense.toString().split(".")[1];
+bool isSelected(String selected, String current) => selected == current;
+
+void updateOrderAndFilter(BuildContext context, String orderAndFilter) {
+  context
+      .read<EventBloc>()
+      .add(UpdateOrderAndFilter(orderAndFilter: orderAndFilter));
 }
 
-bool isHighlighted(EventTense selected, EventTense current) =>
-    selected == current;
+String _convertEventTenseToString(String orderAndFilter) {
+  switch (orderAndFilter) {
+    case EVENT_FILTER_PAST_DATE:
+      return 'PAST';
+    case EVENT_FILTER_QUERY:
+      return 'ALL';
+    case EVENT_FILTER_FUTURE_DATE:
+      return 'UPCOMING';
+    default:
+      return 'ALL';
+  }
+}
+
+bool isHighlighted(String selected, String current) => selected == current;
 
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {

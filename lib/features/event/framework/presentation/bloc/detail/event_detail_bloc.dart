@@ -4,7 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/features/event/domain/useCases/get_event_by_id.dart';
-import 'package:ironman/features/event/presentation/bloc/detail/bloc.dart';
+
+import 'bloc.dart';
+
 
 class EventDetailBloc extends Bloc<EventDetailEvent, EventDetailState> {
   final GetEventById getEventById;

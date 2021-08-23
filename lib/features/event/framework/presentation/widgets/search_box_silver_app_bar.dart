@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
 
-import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 
 class SearchBoxSilverAppBar extends StatelessWidget {
 
@@ -14,6 +14,7 @@ class SearchBoxSilverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('search_box_silver_app_bar | build() ');
     return SliverAppBar(
       backgroundColor: Colors.white,
       pinned: true,
@@ -22,10 +23,11 @@ class SearchBoxSilverAppBar extends StatelessWidget {
         height: 40,
         child: TextField(
           onSubmitted: (value) {
+            print('search_box_silver_app_bar | TextFiled | onSubmitted | value: $value');
             callback();
             context
                 .read<EventBloc>()
-                .add(SearchEventsByQueryEvent(query: value));
+                .add(SearchNewQuery(query: value));
 
           },
           decoration: InputDecoration(

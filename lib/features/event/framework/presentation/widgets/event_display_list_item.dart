@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:ironman/core/route/event/event_detail_screen_arguments.dart';
 import 'package:ironman/features/event/domain/entity/event.dart';
-import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';
+import 'package:ironman/features/event/framework/presentation/screens/event_detail_screen.dart';
 
 class EventListItem extends StatelessWidget {
   final Event event;

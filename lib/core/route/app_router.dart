@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/route/event/event_detail_screen_arguments.dart';
+import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/core/injector_container.dart' as di;
 import 'package:ironman/features/event/presentation/bloc/detail/bloc.dart';
@@ -15,7 +16,7 @@ class AppRouter {
       case '/':
         return MaterialPageRoute(
             builder: (_) => BlocProvider.value(
-                  value: _eventBloc..add(SearchEventsByQueryEvent(query: '')),
+                  value: _eventBloc..add(SearchNewQuery(query: '',orderAndFilter: EVENT_FILTER_QUERY)),
                   child: EventScreen(),
                 ));
         break;

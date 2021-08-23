@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ironman/features/event/domain/event_tense.dart';
+import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 
 @immutable
 abstract class EventEvent extends Equatable {
@@ -10,18 +11,20 @@ abstract class EventEvent extends Equatable {
 class EventInitial extends EventEvent {}
 
 class GetEventsEvent extends EventEvent {
-  final EventTense eventTense;
+  final String orerAndFilter;
   final int page;
 
-  GetEventsEvent({this.eventTense = EventTense.All,this.page}) : super([eventTense,page]);
+  GetEventsEvent({this.orerAndFilter = EVENT_FILTER_QUERY,this.page}) : super([orerAndFilter,page]);
 }
 
-class SearchEventsByQueryEvent extends EventEvent {
+class SearchNewQuery extends EventEvent {
   final String query;
+  final String orderAndFilter;
 
-  SearchEventsByQueryEvent({
-    @required this.query,
-  }): super([query]);
+  SearchNewQuery({
+    this.query,
+    this.orderAndFilter
+  }): super([query,orderAndFilter]);
 
 }
 
@@ -29,11 +32,13 @@ class SearchNextPageResultEvent extends EventEvent {
   SearchNextPageResultEvent();
 }
 
-class FilterByEventTenseEvent extends EventEvent {
-  final EventTense eventTense;
 
-  FilterByEventTenseEvent({
-    @required this.eventTense,
+
+class UpdateOrderAndFilter extends EventEvent {
+  final String orderAndFilter;
+
+  UpdateOrderAndFilter({
+    @required this.orderAndFilter,
   });
 }
 

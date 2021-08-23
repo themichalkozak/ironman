@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ironman/features/event/domain/entity/event_detail.dart';
-import 'package:ironman/features/event/domain/event_tense.dart';
+import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 
 @immutable
 abstract class EventState extends Equatable {
@@ -15,34 +15,34 @@ class Loading extends EventState {}
 class Loaded extends EventState {
   final List events;
   final bool isExhausted;
-  final EventTense eventTense;
+  final String orderAndFilter;
 
   Loaded({
     @required this.events,
     @required this.isExhausted,
-    this.eventTense = EventTense.All
-  }): super([events,isExhausted,eventTense]);
+    this.orderAndFilter = EVENT_FILTER_QUERY
+  }): super([events,isExhausted,orderAndFilter]);
 
   Loaded copyWith({
     List events,
     bool isExhausted,
-    EventTense eventTense,
+    String orderAndFilter,
   }) {
     if ((events == null || identical(events, this.events)) &&
         (isExhausted == null || identical(isExhausted, this.isExhausted)) &&
-        (eventTense == null || identical(eventTense, this.eventTense))) {
+        (orderAndFilter == null || identical(orderAndFilter, this.orderAndFilter))) {
       return this;
     }
 
     return new Loaded(
       events: events ?? this.events,
       isExhausted: isExhausted ?? this.isExhausted,
-      eventTense: eventTense ?? this.eventTense,
+      orderAndFilter: orderAndFilter ?? this.orderAndFilter,
     );
   }
 
   @override
-  String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted | eventTense" $eventTense';
+  String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted | orderAndFilter" $orderAndFilter';
 }
 
 class LoadedDetail extends EventState {

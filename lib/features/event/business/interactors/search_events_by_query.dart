@@ -32,8 +32,8 @@ class SearchEventsByQuery
     }
 
     try {
-      final result = await _readCache(params.query, params.page,params.filterAndOrder);
-      yield Right(result);
+       final result = await _readCache(params.query, params.page,params.filterAndOrder);
+       yield Right(result);
       final events = await _apiCall(params.query, params.page,params.filterAndOrder);
       await _cacheEvents(events, params.page);
       final updatedResult = await _readCache(params.query, params.page,params.filterAndOrder);
