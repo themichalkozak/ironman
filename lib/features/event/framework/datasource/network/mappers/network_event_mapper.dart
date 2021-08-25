@@ -1,6 +1,6 @@
 import 'package:ironman/features/event/business/domain/utils/domain_mapper.dart';
-import 'package:ironman/features/event/data/event/EventModel.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
+import '../../../../business/domain/models/event.dart';
+import 'package:ironman/features/event/framework/datasource/network/model/event_dto.dart';
 
 class NetworkMapper extends DomainMapper<EventDto,Event> {
 

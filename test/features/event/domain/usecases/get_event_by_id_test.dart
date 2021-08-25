@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ironman/core/error/failure.dart';
-import 'package:ironman/features/event/domain/entity/event_detail.dart';
+import '../../../../../lib/features/event/business/domain/models/event_detail.dart';
 import 'package:ironman/features/event/domain/event_repository.dart';
 import 'package:ironman/features/event/domain/useCases/get_event_by_id.dart';
 import 'package:ironman/features/event/presentation/bloc/bloc.dart';

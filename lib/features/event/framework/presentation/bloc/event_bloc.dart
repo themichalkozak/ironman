@@ -5,17 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
-import 'package:ironman/features/event/domain/useCases/search_local_events_by_query.dart';
-import 'package:ironman/features/event/domain/useCases/search_upcoming_events_by_query.dart';
+import '../../../business/domain/models/event.dart';
 import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   final SearchEventsByQuery searchEventsByQuery;
-  final SearchLocalEventsByQuery searchLocalEventsByQuery;
-  final SearchUpcomingEventsByQuery searchUpcomingEventsByQuery;
 
   final int _initialPage = 1;
 
@@ -24,12 +20,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   String _filterAndOrder = ORDER_BY_DATE_ASC;
 
 
-  EventBloc({@required this.searchEventsByQuery,
-    @required this.searchLocalEventsByQuery,
-    @required this.searchUpcomingEventsByQuery})
+  EventBloc({@required this.searchEventsByQuery,})
       : assert(searchEventsByQuery != null),
-        assert(searchLocalEventsByQuery != null),
-        assert(searchUpcomingEventsByQuery != null),
         super(Empty());
 
   EventState get initialState => Empty();

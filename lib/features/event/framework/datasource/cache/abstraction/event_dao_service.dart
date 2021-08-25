@@ -1,4 +1,6 @@
-import 'package:ironman/features/event/domain/entity/event.dart';
+import 'package:ironman/features/event/business/domain/models/event_detail.dart';
+
+import '../../../../business/domain/models/event.dart';
 import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
 
 abstract class EventDaoService {
@@ -7,7 +9,7 @@ abstract class EventDaoService {
 
   Future<void> insertEvents(List<Event> events);
 
-  Future<Event> searchEventById(int id);
+  Future<EventDetail> searchEventById(int id);
 
   Future<List<Event>> getAllEvents();
 
@@ -25,5 +27,7 @@ abstract class EventDaoService {
 
   Future<List<Event>> returnOrderedQuery(
       String query, String filterAndOrder, int page);
+
+  Future<void> insertEventDetail(EventDetail eventDetail);
 
 }

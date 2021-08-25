@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
+import '../../../../business/domain/models/event.dart';
 
 class EventDto extends Event {
 

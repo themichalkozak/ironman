@@ -7,7 +7,7 @@ import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/network_info.dart';
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
+import '../domain/models/event.dart';
 
 class SearchEventsByQuery
     extends UseCaseStream<List<Event>, SearchEventsByQueryParams> {

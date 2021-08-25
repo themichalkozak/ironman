@@ -1,11 +1,11 @@
-import 'package:ironman/features/event/domain/entity/event.dart';
-import 'package:ironman/features/event/domain/entity/event_detail.dart';
+import '../../../domain/models/event.dart';
+import '../../../domain/models/event_detail.dart';
 
 abstract class EventCacheDataSource {
 
   Future<List<Event>> searchEventsByQuery(String query, int page, String filterAndOrder);
 
-  Future<EventDetail> searchEvent(EventDetail event);
+  Future<EventDetail> searchEvent(int eventId);
 
   Future<List<Event>> searchEventsBeforeNow (String query, int page,String filterAndOrder);
 
@@ -14,5 +14,7 @@ abstract class EventCacheDataSource {
   Future<void> insertEvent(Event event);
 
   Future<void> insertEvents(List<Event> events);
+
+  Future<void> insertEventDetail(EventDetail eventDetail);
 
 }

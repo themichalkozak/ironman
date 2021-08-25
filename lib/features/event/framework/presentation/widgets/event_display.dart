@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
+import '../../../business/domain/models/event.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/bottom_loader.dart';

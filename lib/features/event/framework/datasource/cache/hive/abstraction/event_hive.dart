@@ -1,4 +1,6 @@
+import 'package:ironman/features/event/business/domain/models/event_detail.dart';
 import 'package:ironman/features/event/framework/datasource/cache/model/event_cache_entity.dart';
+import 'package:ironman/features/event/framework/datasource/cache/model/event_detail_cache_entity.dart';
 
 const EVENT_PAGINATION_PAGE_SIZE = 10;
 
@@ -20,7 +22,9 @@ abstract class EventHive {
 
   Future<void> insertEvents(List<EventCacheEntity> events);
 
-  Future<EventCacheEntity> searchEventById(int id);
+  Future<void> insertEventDetail(EventDetailCacheEntity eventDetail);
+
+  Future<EventDetailCacheEntity> searchEventById(int id);
 
   Future<List<EventCacheEntity>> getAllEvents();
 

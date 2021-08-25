@@ -21,9 +21,11 @@ class EventApiServiceImpl extends EventApiService {
     final uri = Uri.https(BASE_URL, '$endpoint/$id');
 
     final response = await client.get(uri,
-        headers: {'Content-Type': 'application/json', 'apikey': API_KEY});
+        headers: {'Content-Type': 'application/json', 'apikey': API_KEY_VALUE});
 
     final responseModel = GenericResponse.fromJson(json.decode(response.body));
+
+    print('event_api_service | getEventById | responseModel: ${response.body}');
 
     if (responseModel.status == 'fail') {
       throw ServerExceptions(message: responseModel.message);

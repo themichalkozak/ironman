@@ -3,10 +3,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive/hive.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
-import 'package:ironman/features/event/data/event/EventModel.dart';
+import '../../../../../../lib/features/event/business/domain/models/EventModel.dart';
 import 'package:ironman/features/event/data/event/event_local_data_source.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
-import 'package:ironman/features/event/domain/entity/event_detail.dart';
+import '../../../../../../lib/features/event/business/domain/models/event.dart';
+import '../../../../../../lib/features/event/business/domain/models/event_detail.dart';
 import 'package:mockito/mockito.dart';
 
 class MockEventBox extends Mock implements Box {}

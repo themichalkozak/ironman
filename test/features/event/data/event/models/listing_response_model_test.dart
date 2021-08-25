@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import '../../../../../../lib/core/data/generic_response.dart';
-import 'package:ironman/features/event/data/event/EventModel.dart';
+import '../../../../../../lib/features/event/business/domain/models/EventModel.dart';
 import '../../../../../fixtures/fixture_reader.dart';
 
 void main() {

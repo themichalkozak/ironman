@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/route/event/event_detail_screen_arguments.dart';
 import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
-import 'package:ironman/features/event/presentation/bloc/bloc.dart';
 import 'package:ironman/core/injector_container.dart' as di;
-import 'package:ironman/features/event/presentation/bloc/detail/bloc.dart';
-import 'package:ironman/features/event/presentation/screens/event_detail_screen.dart';
-import '../../features/event/presentation/widgets/event_screen.dart';
+import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/framework/presentation/bloc/detail/bloc.dart';
+import 'package:ironman/features/event/framework/presentation/screens/event_detail_screen.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/event_screen.dart';
 
 class AppRouter {
   final EventBloc _eventBloc = di.sl<EventBloc>();

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ironman/features/event/domain/entity/event_detail.dart';
+import '../../../../business/domain/models/event_detail.dart';
 import 'widgets.dart';
 
 class EventDetailDisplay extends StatelessWidget {

@@ -4,18 +4,21 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/injector_container.dart' as di;
 import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/core/route/app_router.dart';
-import 'package:ironman/features/event/data/event/event_detailed_model.dart';
 import 'package:ironman/features/event/framework/datasource/cache/model/event_cache_entity.dart';
+import 'package:ironman/features/event/framework/datasource/cache/model/event_detail_cache_entity.dart';
+import 'package:ironman/features/event/framework/datasource/cache/model/event_specification_cache_entity.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'features/event/framework/datasource/cache/model/event_specification_cache_entity.dart';
 
 
 void main() async {
    WidgetsFlutterBinding.ensureInitialized();
    final appDocumentDir = await getApplicationDocumentsDirectory();
    Hive.init(appDocumentDir.path);
-   Hive.registerAdapter(EventDetailModelAdapter());
-   Hive.registerAdapter(EventSpecificationModelAdapter());
    Hive.registerAdapter(EventCacheEntityAdapter());
+   Hive.registerAdapter(EventDetailCacheEntityAdapter());
+   Hive.registerAdapter(EventSpecificationCacheEntityAdapter());
    await di.init();
   runApp(MyApp());
 }

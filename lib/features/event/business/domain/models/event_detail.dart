@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:ironman/features/event/domain/entity/event.dart';
+import 'event.dart';
 
 class EventDetail extends Event {
   final List<EventSpecification> eventSpecifications;
@@ -36,7 +36,8 @@ class EventDetail extends Event {
             eventCountryName: $eventCountryName,
             eventFlag: $eventFlag
             information: $information,
-            enterWebsite: $eventWebSite """;
+            enterWebsite: $eventWebSite
+            specification: $eventSpecifications """;
 }
 
 class EventSpecification {
