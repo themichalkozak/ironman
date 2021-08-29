@@ -1,14 +1,14 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import '../../../business/domain/models/event_detail.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
+import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 
 @immutable
 abstract class EventState extends Equatable {
   EventState([List props = const <dynamic>[]]) : super(props);
 }
 
-class Empty extends EventState {}
+class Initial extends EventState {}
 
 class Loading extends EventState {}
 

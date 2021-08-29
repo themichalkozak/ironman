@@ -6,7 +6,7 @@ import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
 import '../../../business/domain/models/event.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
+import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:meta/meta.dart';
 import 'bloc.dart';
 
@@ -22,9 +22,9 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   EventBloc({@required this.searchEventsByQuery,})
       : assert(searchEventsByQuery != null),
-        super(Empty());
+        super(Initial());
 
-  EventState get initialState => Empty();
+  EventState get initialState => Initial();
 
   bool updateFilterAndOrder(String newUpdateAndOrder) {
     print('event_bloc | newFilter: $newUpdateAndOrder');
@@ -130,7 +130,7 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       resetPage();
 
-      if (updateSearchQuery(event.query)) {
+      if (updateSearchQuery(event.query) || state is Initial) {
 
         yield Loading();
 

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:ironman/core/domain/usecase.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
-import 'package:ironman/core/platform/network_info.dart';
+import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
 import '../domain/models/event.dart';
@@ -13,15 +13,15 @@ class SearchEventsByQuery
     extends UseCaseStream<List<Event>, SearchEventsByQueryParams> {
   EventNetworkDataSource eventNetworkDataSource;
   EventCacheDataSource eventCacheDataSource;
-  NetworkInfo networkInfo;
+  InternetCubit internetCubit;
 
   SearchEventsByQuery(
-      this.eventNetworkDataSource, this.eventCacheDataSource, this.networkInfo);
+      this.eventNetworkDataSource, this.eventCacheDataSource, this.internetCubit);
 
   @override
   Stream<Either<Failure, List<Event>>> call(
       SearchEventsByQueryParams params) async* {
-    if (!await networkInfo.isConnected) {
+    if (!await internetCubit.isConnected()) {
       try {
         final cachedEvents = await _readCache(params.query, params.page,params.filterAndOrder);
         yield Right(cachedEvents);
@@ -32,10 +32,21 @@ class SearchEventsByQuery
     }
 
     try {
-       final result = await _readCache(params.query, params.page,params.filterAndOrder);
+       List<Event> result = await _readCache(params.query, params.page,params.filterAndOrder);
        yield Right(result);
-      final events = await _apiCall(params.query, params.page,params.filterAndOrder);
-      await _cacheEvents(events, params.page);
+       if(result == null){
+
+         if(await internetCubit.isConnected()) {
+           final events = await _apiCall(
+               params.query, params.page, params.filterAndOrder);
+           await _cacheEvents(events, params.page);
+           result = await _readCache(params.query, params.page, params.filterAndOrder);
+           yield Right(result);
+         }else {
+           yield Left(NoElementFailure());
+         }
+       }
+
       final updatedResult = await _readCache(params.query, params.page,params.filterAndOrder);
       yield Right(updatedResult);
     } on ServerExceptions catch (error) {

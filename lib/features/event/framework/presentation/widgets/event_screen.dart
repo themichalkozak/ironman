@@ -172,7 +172,7 @@ bool isHighlighted(String selected, String current) => selected == current;
 
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
-    if (state is Empty) {
+    if (state is Initial) {
       return SliverFillRemaining(
           child: MessageDisplay(message: 'Start searching'));
     } else if (state is Loading) {
@@ -183,7 +183,7 @@ BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
     } else {
       final loadState = state as Loaded;
       if (loadState.events.isEmpty) {
-        return SliverToBoxAdapter(child: EmptyList());
+        return SliverToBoxAdapter(child: MessageDisplay(message: 'Events not found',assetPath: 'assets/images/event_date_and_time_symbol.png'));
       }
       return EventDisplay(
           events: loadState.events, isExhausted: loadState.isExhausted);

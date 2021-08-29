@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
+import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 
 @immutable
 abstract class EventEvent extends Equatable {
