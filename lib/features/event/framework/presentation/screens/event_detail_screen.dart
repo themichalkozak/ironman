@@ -17,7 +17,7 @@ class EventDetailScreen extends StatelessWidget {
             return LoadingWidget();
           }
           if (state is Error) {
-            return MessageDisplay(message: state.errorMessage);
+            return MessageDisplay(message: state.errorMessage,assetPath: 'assets/images/event_date_and_time_symbol.png');
           }
           if (state is Loaded) {
             return EventDetailDisplay(eventDetail: state.data);
