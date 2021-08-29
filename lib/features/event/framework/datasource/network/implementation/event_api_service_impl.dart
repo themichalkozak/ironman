@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:ironman/core/data/generic_response.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/features/event/business/domain/utils/date_util.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
+import '../../cache/event/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/datasource/network/abstraction/event_api_service.dart';
 import 'package:ironman/features/event/framework/datasource/network/model/models.dart';
 import 'package:ironman/features/event/framework/datasource/network/utils/Constants.dart';

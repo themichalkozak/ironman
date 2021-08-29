@@ -1,12 +1,12 @@
 import 'package:ironman/features/event/business/domain/models/event_detail.dart';
-import 'package:ironman/features/event/framework/datasource/cache/mappers/cache_detail_event_mapper.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_detail_cache_entity.dart';
+import '../../eventDetail/mapper/cache_detail_event_mapper.dart';
+import '../../eventDetail/model/event_detail_cache_entity.dart';
 
-import '../../../../business/domain/models/event.dart';
-import 'package:ironman/features/event/framework/datasource/cache/abstraction/event_dao_service.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
-import 'package:ironman/features/event/framework/datasource/cache/mappers/cache_event_mapper.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_cache_entity.dart';
+import '../../../../../business/domain/models/event.dart';
+import '../abstraction/event_dao_service.dart';
+import '../hive/abstraction/event_hive.dart';
+import '../mapper/cache_event_mapper.dart';
+import '../model/event_cache_entity.dart';
 
 class EventDaoServiceImpl extends EventDaoService {
   EventHive eventHive;
@@ -32,32 +32,11 @@ class EventDaoServiceImpl extends EventDaoService {
       eventHive.insertEvents(cacheMapper.domainListToEntityList(events));
 
   @override
-  Future<void> insertEventDetail(EventDetail eventDetail) async {
-    final EventDetailCacheEntity eventDetailCacheEntity =
-        eventDetailCacheMapper.mapFromDomainModel(eventDetail);
-    print(
-        'event_dao_service_impl | insertEventDetail | Param: eventDetail: $eventDetail | eventDetailCacheEntity: $eventDetailCacheEntity');
-    return eventHive.insertEventDetail(eventDetailCacheEntity);
-  }
-
-  @override
   Future<List<Event>> returnOrderedQuery(
       String query, String filterAndOrder, int page) async {
     List<EventCacheEntity> list =
         await eventHive.returnOrderedQuery(query, filterAndOrder, page);
     return cacheMapper.entityListToDomainList(list);
-  }
-
-  @override
-  Future<EventDetail> searchEventById(int id) async {
-
-    EventDetailCacheEntity eventDetailCacheEntity = await eventHive.searchEventById(id);
-    print('event_dao_service_impl | id: $id | data: $eventDetailCacheEntity');
-    if(eventDetailCacheEntity != null){
-      return eventDetailCacheMapper.mapToDomainModel(eventDetailCacheEntity);
-    }
-    return null;
-
   }
 
   @override

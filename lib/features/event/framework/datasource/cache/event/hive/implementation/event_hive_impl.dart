@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/error/exceptions.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_cache_entity.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_detail_cache_entity.dart';
+import '../abstraction/event_hive.dart';
+import '../../model/event_cache_entity.dart';
 
 class EventHiveImpl extends EventHive {
   final Box eventBox;
-  final Box singleEventsBox;
 
-  EventHiveImpl(this.eventBox, this.singleEventsBox);
+  EventHiveImpl(this.eventBox);
 
   @override
   Future<List<EventCacheEntity>> getAllEvents() async {
@@ -26,13 +24,6 @@ class EventHiveImpl extends EventHive {
     events.forEach((element) {
       insertEvent(element);
     });
-  }
-
-  @override
-  Future<void> insertEventDetail(EventDetailCacheEntity eventDetail) async {
-    singleEventsBox.put(eventDetail.eventId, eventDetail);
-    var isSaved = singleEventsBox.containsKey(eventDetail.eventId);
-    print('event_hive_impl | isSaved: $isSaved');
   }
 
   @override
@@ -110,24 +101,6 @@ class EventHiveImpl extends EventHive {
     events = _orderByDateDESC(events);
     events = _setupPagination(events, page, pageSize);
     return events;
-  }
-
-  @override
-  Future<EventDetailCacheEntity> searchEventById(int id) async {
-
-
-    // persons = singeEventsBox
-    final EventDetailCacheEntity eventDetail = singleEventsBox.get(id);
-    eventDetail.eventSpecifications.forEach((element) {
-
-    });
-
-    if(!singleEventsBox.containsKey(id)){
-      return null;
-    }
-    EventDetailCacheEntity data =  singleEventsBox.get(id,defaultValue: null);
-    print('event_hive_impl | searchEventById | id: $id | data: $data');
-    return data;
   }
 
   List<EventCacheEntity> _orderByDateASC(List<EventCacheEntity> events){

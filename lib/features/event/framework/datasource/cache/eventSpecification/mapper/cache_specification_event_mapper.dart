@@ -1,7 +1,7 @@
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/features/event/business/domain/models/event_detail.dart';
 import 'package:ironman/features/event/business/domain/utils/domain_mapper.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_specification_cache_entity.dart';
+import '../model/event_specification_cache_entity.dart';
 
 class SpecificationEventCacheMapper
     extends DomainMapper<EventSpecification, EventSpecificationCacheEntity> {
@@ -29,9 +29,9 @@ class SpecificationEventCacheMapper
     return domainList;
   }
 
-  HiveList<EventSpecificationCacheEntity> mapDomainListToEntityList(List<EventSpecification> list){
+  List<EventSpecificationCacheEntity> mapDomainListToEntityList(List<EventSpecification> list){
 
-    HiveList<EventSpecificationCacheEntity> entityList = HiveList(box)
+    List<EventSpecificationCacheEntity> entityList = [];
     list.forEach((element) {
       entityList.add(mapFromDomainModel(element));
     });

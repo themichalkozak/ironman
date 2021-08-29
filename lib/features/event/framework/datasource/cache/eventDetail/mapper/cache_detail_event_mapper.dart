@@ -1,18 +1,18 @@
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/features/event/business/domain/models/event_detail.dart';
-import 'package:ironman/features/event/business/domain/utils/domain_mapper.dart';
-import 'package:ironman/features/event/framework/datasource/cache/mappers/cache_specification_event_mapper.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_detail_cache_entity.dart';
+import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/mapper/cache_specification_event_mapper.dart';
+import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/model/event_specification_cache_entity.dart';
+import '../model/event_detail_cache_entity.dart';
 
-class EventDetailCacheMapper extends DomainMapper<EventDetail,EventDetailCacheEntity> {
+class EventDetailCacheMapper {
 
   final SpecificationEventCacheMapper cacheSpecificationEventMapper;
 
   EventDetailCacheMapper(this.cacheSpecificationEventMapper);
 
-  @override
-  EventDetailCacheEntity mapFromDomainModel(EventDetail model) {
+  EventDetailCacheEntity mapFromDomainModel(EventDetail model,HiveList<EventSpecificationCacheEntity> eventSpecifications) {
     return EventDetailCacheEntity(
-      eventSpecifications: cacheSpecificationEventMapper.mapDomainListToEntityList(model.eventSpecifications),
+      eventSpecifications: eventSpecifications,
       eventWebSite: model.eventWebSite,
       information: model.information,
       eventId: model.eventId,
@@ -25,7 +25,6 @@ class EventDetailCacheMapper extends DomainMapper<EventDetail,EventDetailCacheEn
     );
   }
 
-  @override
   EventDetail mapToDomainModel(EventDetailCacheEntity domainModel) {
     return EventDetail(
         eventSpecifications: cacheSpecificationEventMapper.mapEntityListToDomainList(domainModel.eventSpecifications),
@@ -40,5 +39,4 @@ class EventDetailCacheMapper extends DomainMapper<EventDetail,EventDetailCacheEn
         eventFlag: domainModel.eventFlag
     );
   }
-
 }

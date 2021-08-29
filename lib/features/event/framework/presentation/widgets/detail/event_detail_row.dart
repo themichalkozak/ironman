@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class EventDetailRow extends StatelessWidget {
@@ -34,7 +35,7 @@ class EventDetailRow extends StatelessWidget {
               SizedBox(
                 width: 4,
               ),
-              Image.network(flagUrl),
+              CachedNetworkImage(imageUrl: flagUrl),
             ],
           ),
         ));

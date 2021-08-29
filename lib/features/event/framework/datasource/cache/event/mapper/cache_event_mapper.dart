@@ -1,7 +1,7 @@
 import 'package:ironman/features/event/business/domain/utils/date_util.dart';
 import 'package:ironman/features/event/business/domain/utils/domain_mapper.dart';
-import '../../../../business/domain/models/event.dart';
-import 'package:ironman/features/event/framework/datasource/cache/model/event_cache_entity.dart';
+import '../../../../../business/domain/models/event.dart';
+import '../model/event_cache_entity.dart';
 
 class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
   DateUtils dateUtils;

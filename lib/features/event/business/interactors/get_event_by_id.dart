@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/core/error/failure.dart';
+import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
 import 'package:ironman/features/event/business/domain/models/event_detail.dart';
@@ -15,9 +16,11 @@ class GetEventById extends UseCaseStream<Event, GetEventByIdParams> {
   final EventNetworkDataSource eventNetworkDataSource;
   final EventCacheDataSource eventCacheDataSource;
   final NetworkMapper networkMapper;
+  final InternetCubit internetCubit;
 
 
-  GetEventById(this.eventNetworkDataSource, this.eventCacheDataSource,this.networkMapper);
+
+  GetEventById(this.eventNetworkDataSource, this.eventCacheDataSource,this.networkMapper,this.internetCubit);
 
   @override
   Stream<Either<Failure, EventDetail>> call(GetEventByIdParams params) async* {
@@ -26,13 +29,18 @@ class GetEventById extends UseCaseStream<Event, GetEventByIdParams> {
       EventDetail cacheResult = await eventCacheDataSource.searchEvent(params.id);
 
       if(cacheResult == null){
-        print('get_event_by_id | apiCall');
-        final result = await apiCall(params.id);
-        await eventCacheDataSource.insertEventDetail(result);
-        cacheResult = await eventCacheDataSource.searchEvent(params.id);
-        yield(Right(cacheResult));
+
+        if(await internetCubit.isConnected()){
+          print('get_event_by_id | apiCall');
+          final result = await apiCall(params.id);
+          await eventCacheDataSource.insertEventDetail(result);
+          cacheResult = await eventCacheDataSource.searchEvent(params.id);
+          yield(Right(cacheResult));
+        }else {
+         yield(Left(NoElementFailure()));
+        }
       }else {
-        print('get_event_by_id | cacheCall');
+        print('get_event_by_id | cacheCall | cacheResult: $cacheResult');
         yield Right(cacheResult);
       }
 

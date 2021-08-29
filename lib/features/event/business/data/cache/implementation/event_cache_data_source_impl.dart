@@ -1,13 +1,15 @@
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
+import 'package:ironman/features/event/framework/datasource/cache/eventDetail/abstraciton/event_detail_service_dao.dart';
 import '../../../domain/models/event.dart';
 import '../../../domain/models/event_detail.dart';
-import 'package:ironman/features/event/framework/datasource/cache/abstraction/event_dao_service.dart';
+import '../../../../framework/datasource/cache/event/abstraction/event_dao_service.dart';
 
 class EventCacheDataSourceImpl extends EventCacheDataSource {
 
   EventDaoService eventDaoService;
+  EventDetailServiceDao eventDetailServiceDao;
 
-  EventCacheDataSourceImpl(this.eventDaoService);
+  EventCacheDataSourceImpl(this.eventDaoService,this.eventDetailServiceDao);
 
   @override
   Future<void> insertEvent(Event event) async {
@@ -21,7 +23,7 @@ class EventCacheDataSourceImpl extends EventCacheDataSource {
 
   @override
   Future<EventDetail> searchEvent(int eventId) {
-    return eventDaoService.searchEventById(eventId);
+    return eventDetailServiceDao.searchEventById(eventId);
   }
 
   @override
@@ -41,7 +43,7 @@ class EventCacheDataSourceImpl extends EventCacheDataSource {
 
   @override
   Future<void> insertEventDetail(EventDetail eventDetail) async {
-    return eventDaoService.insertEventDetail(eventDetail);
+    return eventDetailServiceDao.insertEventDetail(eventDetail);
   }
 
 }

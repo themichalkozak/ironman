@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
-import 'package:ironman/features/event/framework/datasource/cache/hive/abstraction/event_hive.dart';
+import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/widgets.dart';
 
