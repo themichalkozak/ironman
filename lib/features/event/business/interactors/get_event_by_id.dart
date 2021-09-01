@@ -15,7 +15,7 @@ class GetEventById extends UseCaseStream<Event, GetEventByIdParams> {
 
   final EventNetworkDataSource eventNetworkDataSource;
   final EventCacheDataSource eventCacheDataSource;
-  final NetworkMapper networkMapper;
+  final DetailEventNetworkMapper networkMapper;
   final InternetCubit internetCubit;
 
 

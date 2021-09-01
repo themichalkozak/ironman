@@ -2,7 +2,8 @@ import 'package:ironman/features/event/business/domain/utils/domain_mapper.dart'
 import '../../../../business/domain/models/event_detail.dart';
 import 'package:ironman/features/event/framework/datasource/network/model/event_detailed_dto.dart';
 
-class NetworkMapper extends DomainMapper<EventDetailDto,EventDetail> {
+class DetailEventNetworkMapper extends DomainMapper<EventDetailDto,EventDetail> {
+
   @override
   EventDetail mapFromDomainModel(EventDetailDto model) {
     return EventDetail(

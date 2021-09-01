@@ -16,12 +16,12 @@ class EventHiveImpl extends EventHive {
 
   @override
   Future<void> insertEvent(EventCacheEntity event) async {
-    eventBox.put(event.eventId, event);
+    return eventBox.put(event.eventId, event);
   }
 
   @override
   Future<void> insertEvents(List<EventCacheEntity> events) async {
-    events.forEach((element) {
+    return events.forEach((element) {
       insertEvent(element);
     });
   }
@@ -54,7 +54,12 @@ class EventHiveImpl extends EventHive {
   Future<List<EventCacheEntity>> searchEventsOrderByDateASC(
       String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE}) async {
+
     List<EventCacheEntity> events = await getAllEvents();
+
+    if(events == null){
+      return null;
+    }
     events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
     events = _filterByQuery(query, events);
     events = _setupPagination(events, page, pageSize);
@@ -66,6 +71,11 @@ class EventHiveImpl extends EventHive {
       String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE}) async {
     List<EventCacheEntity> events = await getAllEvents();
+
+    if(events == null){
+      return null;
+    }
+
     events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
     return events.reversed;
   }
@@ -78,6 +88,11 @@ class EventHiveImpl extends EventHive {
       dateTime = DateTime.now();
     }
     List<EventCacheEntity> events = await getAllEvents();
+
+    if(events == null){
+      return null;
+    }
+
     events = _filterByQuery(query, events);
     events = _filterByFutureDate(events,dateTime: dateTime);
 
@@ -96,6 +111,11 @@ class EventHiveImpl extends EventHive {
       dateTime = DateTime.now();
     }
     List<EventCacheEntity> events = await getAllEvents();
+
+    if(events == null){
+      return null;
+    }
+
     events = _filterByQuery(query, events);
     events = _filterByPastDate(events,dateTime: dateTime);
     events = _orderByDateDESC(events);
@@ -155,11 +175,11 @@ class EventHiveImpl extends EventHive {
   @visibleForTesting
   List<EventCacheEntity> _setupPagination(List<EventCacheEntity> events, int page, int perPage) {
     if (events == null) {
-      return [];
+      return null;
     }
 
     if (events.isEmpty) {
-      return [];
+      return null;
     }
 
     int indexStart = (page - 1) * perPage;
@@ -170,7 +190,7 @@ class EventHiveImpl extends EventHive {
     }
 
     if (indexStart > events.length) {
-      return [];
+      return null;
     }
 
     if (indexStart < 0) {

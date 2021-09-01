@@ -33,6 +33,9 @@ class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
   }
 
   List<Event> entityListToDomainList(List<EventCacheEntity> events){
+    if(events == null){
+      return null;
+    }
     List<Event> list = [];
     events.forEach((element) {
       list.add(mapToDomainModel(element));
@@ -41,6 +44,10 @@ class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
   }
 
   List<EventCacheEntity> domainListToEntityList(List<Event> events){
+    if(events == null){
+      return null;
+    }
+
     List<EventCacheEntity> list = [];
     events.forEach((element) {
       list.add(mapFromDomainModel(element));

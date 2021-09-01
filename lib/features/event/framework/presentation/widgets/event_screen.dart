@@ -92,7 +92,7 @@ class _EventScreenState extends State<EventScreen> {
   }
 }
 
-Widget displayNetwokInfo(BuildContext context, String message, Color color) {
+Widget displayNetworkInfo(BuildContext context, String message, Color color) {
   return SliverFillRemaining(
     hasScrollBody: false,
     child: Align(

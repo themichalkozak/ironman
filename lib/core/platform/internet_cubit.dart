@@ -17,6 +17,10 @@ class InternetCubit extends Cubit<InternetState> {
     @required this.connectivity
   }): super(InternetLoading()){
     connectivityStreamSubscription = connectivity.onConnectivityChanged.listen((connectivityResult) {
+
+      print('internet_cubit | connectivityResult: $connectivityResult');
+      print('internet_cubit | connectivity: ${connectivity.hashCode}');
+
       if(connectivityResult == ConnectivityResult.mobile){
         emitInternetConnection(ConnectionType.Mobile);
       }else if(connectivityResult == ConnectivityResult.wifi){

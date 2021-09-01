@@ -7,6 +7,7 @@ import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
+import 'package:ironman/features/event/framework/datasource/cache/event/hive/abstraction/event_hive.dart';
 import '../domain/models/event.dart';
 
 class SearchEventsByQuery
@@ -21,34 +22,36 @@ class SearchEventsByQuery
   @override
   Stream<Either<Failure, List<Event>>> call(
       SearchEventsByQueryParams params) async* {
-    if (!await internetCubit.isConnected()) {
-      try {
-        final cachedEvents = await _readCache(params.query, params.page,params.filterAndOrder);
-        yield Right(cachedEvents);
-      } on CacheException {
-        yield Left(CacheFailure());
-      }
-      return;
-    }
 
     try {
-       List<Event> result = await _readCache(params.query, params.page,params.filterAndOrder);
-       yield Right(result);
-       if(result == null){
 
-         if(await internetCubit.isConnected()) {
-           final events = await _apiCall(
-               params.query, params.page, params.filterAndOrder);
-           await _cacheEvents(events, params.page);
-           result = await _readCache(params.query, params.page, params.filterAndOrder);
-           yield Right(result);
-         }else {
-           yield Left(NoElementFailure());
-         }
-       }
+      List<Event> _cachedEvents = await _readCache(params.query, params.page, params.filterAndOrder);
 
-      final updatedResult = await _readCache(params.query, params.page,params.filterAndOrder);
-      yield Right(updatedResult);
+      if(_cachedEvents == null || _cachedEvents.length < EVENT_PAGINATION_PAGE_SIZE){
+
+        if(!await internetCubit.isConnected() && _cachedEvents == null){
+          yield Right([]);
+          return;
+        }
+
+        List<Event> _apiResult = await _apiCall(params.query, params.page, params.filterAndOrder);
+
+        if(_apiResult == null && _cachedEvents == null){
+          yield Right([]);
+          return;
+        }
+
+        await _cacheEvents(_apiResult, params.page);
+
+        _cachedEvents = await _readCache(params.query, params.page, params.filterAndOrder);
+
+        yield Right(_cachedEvents);
+
+        return;
+      }
+
+      yield Right(_cachedEvents);
+
     } on ServerExceptions catch (error) {
       yield Left(NetworkFailure(error: error.message));
     } on TimeoutException catch (error) {
@@ -56,6 +59,7 @@ class SearchEventsByQuery
     } on CacheException catch (error) {
       yield Left(CacheFailure(error: error.message));
     }
+
   }
 
   Future<List<Event>> _readCache(

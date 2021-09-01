@@ -11,7 +11,7 @@ import 'package:ironman/features/event/framework/presentation/widgets/event_scre
 class AppRouter {
   final EventBloc _eventBloc = di.sl<EventBloc>();
 
-  Route onGenerateRoute(RouteSettings routeSettings) {
+  Route  onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case '/':
         return MaterialPageRoute(
