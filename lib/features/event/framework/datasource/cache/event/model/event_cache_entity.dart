@@ -36,4 +36,7 @@ class EventCacheEntity {
     @required this.eventCountryName,
     @required this.eventFlag,
   });
+
+  @override
+  String toString() => ''' id: $eventId title: $eventTitle \n ''';
 }

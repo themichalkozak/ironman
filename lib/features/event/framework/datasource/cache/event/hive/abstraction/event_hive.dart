@@ -38,4 +38,6 @@ abstract class EventHive {
 
   Future<List<EventCacheEntity>> returnOrderedQuery(
       String query, String filterAndOrder, int page);
+
+  List<EventCacheEntity> setupPagination(List<EventCacheEntity> events, int page, int perPage);
 }

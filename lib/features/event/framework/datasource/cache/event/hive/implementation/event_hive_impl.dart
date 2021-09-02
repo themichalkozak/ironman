@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import '../abstraction/event_hive.dart';
@@ -60,9 +60,9 @@ class EventHiveImpl extends EventHive {
     if(events == null){
       return null;
     }
-    events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
+    events = _orderByDateASC(events);
     events = _filterByQuery(query, events);
-    events = _setupPagination(events, page, pageSize);
+    events = setupPagination(events, page, pageSize);
     return events;
   }
 
@@ -75,9 +75,10 @@ class EventHiveImpl extends EventHive {
     if(events == null){
       return null;
     }
-
-    events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
-    return events.reversed;
+    events = _orderByDateDESC(events);
+    // events = _filterByQuery(query, events);
+    // events = setupPagination(events, page, pageSize);
+    return events;
   }
 
   @override
@@ -99,7 +100,7 @@ class EventHiveImpl extends EventHive {
     print('event_hive_impl | searchEventsFilterByFutureDateDESC | query: $query | list size: ${events.length}');
 
     events = _orderByDateASC(events);
-    events = _setupPagination(events, page, pageSize);
+    events = setupPagination(events, page, pageSize);
     return events;
   }
 
@@ -119,7 +120,7 @@ class EventHiveImpl extends EventHive {
     events = _filterByQuery(query, events);
     events = _filterByPastDate(events,dateTime: dateTime);
     events = _orderByDateDESC(events);
-    events = _setupPagination(events, page, pageSize);
+    events = setupPagination(events, page, pageSize);
     return events;
   }
 
@@ -173,7 +174,7 @@ class EventHiveImpl extends EventHive {
   }
 
   @visibleForTesting
-  List<EventCacheEntity> _setupPagination(List<EventCacheEntity> events, int page, int perPage) {
+  List<EventCacheEntity> setupPagination(List<EventCacheEntity> events, int page, int perPage) {
     if (events == null) {
       return null;
     }
@@ -211,4 +212,5 @@ class EventHiveImpl extends EventHive {
 
     return events.getRange(indexStart, indexEnd).toList();
   }
+
 }
