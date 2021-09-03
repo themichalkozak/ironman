@@ -18,25 +18,8 @@ class EventApiServiceImpl extends EventApiService {
       .mapToDomainModel(await eventHttpClient.getEventById(id));
 
   @override
-  Future<List<Event>> searchEventsByQuery(String query, int page) async =>
-      eventNetworkMapper.mapEntityListToDomainList(
-          await eventHttpClient.searchEventsByQuery(query, page));
-
-  @override
-  Future<List<Event>> searchFilteredEvents(
+  Future<List<Event>> searchEvents(
           String query, int page, String filterAndOrder) async =>
       eventNetworkMapper.mapEntityListToDomainList(await eventHttpClient
           .searchFilteredEvents(query, page, filterAndOrder));
-
-  @override
-  Future<List<Event>> searchPastEvents(
-          String query, int page, String dateTime) async =>
-      eventNetworkMapper.mapEntityListToDomainList(
-          await eventHttpClient.searchPastEvents(query, page, dateTime));
-
-  @override
-  Future<List<Event>> searchUpcomingEventsByQuery(
-          String query, int page, String dateTime) async =>
-      eventNetworkMapper.mapEntityListToDomainList(await eventHttpClient
-          .searchUpcomingEventsByQuery(query, page, dateTime));
 }
