@@ -1,10 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 part 'event_cache_entity.g.dart';
 
 @HiveType(typeId: 1)
-class EventCacheEntity {
+class EventCacheEntity  extends Equatable{
 
   @HiveField(0)
   final int eventId;
@@ -38,5 +39,9 @@ class EventCacheEntity {
   });
 
   @override
-  String toString() => ''' id: $eventId title: $eventTitle \n ''';
+  String toString() => ''' id: $eventId title: $eventTitle eventDate: $eventDate \n  ''';
+
+  @override
+  List get props => [eventId,eventDate];
+
 }

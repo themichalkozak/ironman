@@ -64,7 +64,7 @@ class SearchEventsByQuery
 
   Future<List<Event>> _readCache(
       String query, int page, String filterAndOrder) async {
-    return eventCacheDataSource.searchEventsByQuery(
+    return eventCacheDataSource.searchEvents(
         query, page, filterAndOrder);
   }
 

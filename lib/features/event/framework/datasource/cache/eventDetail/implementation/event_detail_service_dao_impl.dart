@@ -28,7 +28,7 @@ class EventDetailServiceDaoImpl extends EventDetailServiceDao {
     });
 
     specificationHive.insertEventSpecificationList(entityList);
-    HiveList <EventSpecificationCacheEntity> hiveList = await specificationHive.createEventSpecificationList();
+    HiveList <EventSpecificationCacheEntity> hiveList = await specificationHive.createHiveList();
     hiveList.addAll(entityList);
 
 

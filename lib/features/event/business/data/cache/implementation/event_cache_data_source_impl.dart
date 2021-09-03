@@ -27,17 +27,7 @@ class EventCacheDataSourceImpl extends EventCacheDataSource {
   }
 
   @override
-  Future<List<Event>> searchEventsAfterNow(String query, int page, String filterAndOrder) async {
-    return eventDaoService.returnOrderedQuery(query, filterAndOrder, page);
-  }
-
-  @override
-  Future<List<Event>> searchEventsBeforeNow(String query, int page, String filterAndOrder) async {
-    return eventDaoService.returnOrderedQuery(query, filterAndOrder, page);
-  }
-
-  @override
-  Future<List<Event>> searchEventsByQuery(String query, int page, String filterAndOrder) async {
+  Future<List<Event>> searchEvents(String query, int page, String filterAndOrder) async {
     return eventDaoService.returnOrderedQuery(query, filterAndOrder, page);
   }
 

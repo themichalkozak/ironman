@@ -1,7 +1,4 @@
-import 'package:ironman/features/event/business/domain/models/event_detail.dart';
 import '../../eventDetail/mapper/cache_detail_event_mapper.dart';
-import '../../eventDetail/model/event_detail_cache_entity.dart';
-
 import '../../../../../business/domain/models/event.dart';
 import '../abstraction/event_dao_service.dart';
 import '../hive/abstraction/event_hive.dart';
@@ -11,10 +8,9 @@ import '../model/event_cache_entity.dart';
 class EventDaoServiceImpl extends EventDaoService {
   EventHive eventHive;
   EventCacheMapper cacheMapper;
-  EventDetailCacheMapper eventDetailCacheMapper;
 
   EventDaoServiceImpl(
-      this.eventHive, this.cacheMapper, this.eventDetailCacheMapper);
+      this.eventHive, this.cacheMapper);
 
   @override
   Future<List<Event>> getAllEvents() async {
@@ -39,35 +35,4 @@ class EventDaoServiceImpl extends EventDaoService {
     return cacheMapper.entityListToDomainList(list);
   }
 
-  @override
-  Future<List<Event>> searchEventsFilterByFutureDateDESC(String query, int page,
-      {int pageSize = EVENT_PAGINATION_PAGE_SIZE, DateTime dateTime}) async {
-    List<EventCacheEntity> list =
-        await eventHive.searchEventsFilterByFutureDateASC(query, page);
-    return cacheMapper.entityListToDomainList(list);
-  }
-
-  @override
-  Future<List<Event>> searchEventsFilterByPastDateASC(String query, int page,
-      {int pageSize = EVENT_PAGINATION_PAGE_SIZE, DateTime dateTime}) async {
-    List<EventCacheEntity> list =
-        await eventHive.searchEventsFilterByPastDateDESC(query, page);
-    return cacheMapper.entityListToDomainList(list);
-  }
-
-  @override
-  Future<List<Event>> searchEventsOrderByDateASC(String query, int page,
-      {int pageSize = EVENT_PAGINATION_PAGE_SIZE}) async {
-    List<EventCacheEntity> list =
-        await eventHive.searchEventsOrderByDateASC(query, page);
-    return cacheMapper.entityListToDomainList(list);
-  }
-
-  @override
-  Future<List<Event>> searchEventsOrderByDateDESC(String query, int page,
-      {int pageSize = EVENT_PAGINATION_PAGE_SIZE}) async {
-    List<EventCacheEntity> list =
-        await eventHive.searchEventsOrderByDateDESC(query, page);
-    return cacheMapper.entityListToDomainList(list);
-  }
 }

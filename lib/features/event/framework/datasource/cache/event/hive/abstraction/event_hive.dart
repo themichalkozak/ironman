@@ -27,9 +27,6 @@ abstract class EventHive {
   Future<List<EventCacheEntity>> searchEventsOrderByDateASC(String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE});
 
-  Future<List<EventCacheEntity>> searchEventsOrderByDateDESC(String query, int page,
-      {int pageSize = EVENT_PAGINATION_PAGE_SIZE});
-
   Future<List<EventCacheEntity>> searchEventsFilterByFutureDateASC(String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE,DateTime dateTime});
 

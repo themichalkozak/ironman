@@ -45,7 +45,7 @@ class EventHiveImpl extends EventHive {
         }
       default:
         {
-          return await searchEventsOrderByDateASC(query, page);
+          return searchEventsOrderByDateASC(query, page);
         }
     }
   }
@@ -66,20 +66,6 @@ class EventHiveImpl extends EventHive {
     return events;
   }
 
-  @override
-  Future<List<EventCacheEntity>> searchEventsOrderByDateDESC(
-      String query, int page,
-      {int pageSize = EVENT_PAGINATION_PAGE_SIZE}) async {
-    List<EventCacheEntity> events = await getAllEvents();
-
-    if(events == null){
-      return null;
-    }
-    events = _orderByDateDESC(events);
-    // events = _filterByQuery(query, events);
-    // events = setupPagination(events, page, pageSize);
-    return events;
-  }
 
   @override
   Future<List<EventCacheEntity>> searchEventsFilterByFutureDateASC(
@@ -96,11 +82,9 @@ class EventHiveImpl extends EventHive {
 
     events = _filterByQuery(query, events);
     events = _filterByFutureDate(events,dateTime: dateTime);
-
-    print('event_hive_impl | searchEventsFilterByFutureDateDESC | query: $query | list size: ${events.length}');
-
     events = _orderByDateASC(events);
     events = setupPagination(events, page, pageSize);
+
     return events;
   }
 
@@ -121,6 +105,7 @@ class EventHiveImpl extends EventHive {
     events = _filterByPastDate(events,dateTime: dateTime);
     events = _orderByDateDESC(events);
     events = setupPagination(events, page, pageSize);
+
     return events;
   }
 

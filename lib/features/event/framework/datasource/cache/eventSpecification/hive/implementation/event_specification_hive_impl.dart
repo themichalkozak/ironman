@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:ironman/core/error/exceptions.dart';
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/hive/abstraction/event_specification_hive.dart';
@@ -5,12 +6,12 @@ import 'package:ironman/features/event/framework/datasource/cache/eventSpecifica
 
 class EventSpecificationHiveImpl extends EventSpecificationHive {
 
-  Box<EventSpecificationCacheEntity> _box;
+  Box _box;
 
   EventSpecificationHiveImpl(this._box);
 
   @override
-  Future<HiveList<EventSpecificationCacheEntity>> createEventSpecificationList() async {
+  Future<HiveList<EventSpecificationCacheEntity>> createHiveList() async {
     return HiveList(_box);
 
   }
@@ -30,6 +31,12 @@ class EventSpecificationHiveImpl extends EventSpecificationHive {
       throw CacheException(message: EVENT_SPECIFICATION_NULL_ERROR);
     }
   }
+
+  @visibleForTesting
+  Future<List<EventSpecificationCacheEntity>> getEventsSpecification () async {
+    return _box.values.toList().cast<EventSpecificationCacheEntity>();
+  }
+
 
 }
 
