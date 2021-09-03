@@ -7,6 +7,8 @@ import 'package:ironman/features/event/framework/datasource/cache/event/hive/imp
 import 'package:ironman/features/event/framework/datasource/cache/event/model/event_cache_entity.dart';
 import 'package:ironman/features/event/framework/datasource/network/utils/Constants.dart';
 
+import '../../../../../../fixtures/test_generator.dart';
+
 void initHive() {
   var path = Directory.current.path;
   Hive.init(path + '/test/hive_testing_path');
@@ -87,7 +89,7 @@ void main() {
   // should insert list when data is correct
 
   test('insert events', () async {
-    List<EventCacheEntity> list = await _getTestData(20);
+    List<EventCacheEntity> list = await getTestEventsCacheEntities(20);
 
     await eventHive.insertEvents(list);
 
@@ -98,7 +100,7 @@ void main() {
   // pagination
 
   test('_setupPagination should return first page', () async {
-    List<EventCacheEntity> list = await _getTestData(20);
+    List<EventCacheEntity> list = await getTestEventsCacheEntities(20);
 
     await eventHive.insertEvents(list);
 
@@ -110,7 +112,7 @@ void main() {
   });
 
   test('_setupPagination should return second page', () async {
-    List<EventCacheEntity> list = await _getTestData(16);
+    List<EventCacheEntity> list = await getTestEventsCacheEntities(16);
 
     await eventHive.insertEvents(list);
 
@@ -122,7 +124,7 @@ void main() {
   });
 
   test('_setupPagination should return empty list', () async {
-    List<EventCacheEntity> list = await _getTestData(10);
+    List<EventCacheEntity> list = await getTestEventsCacheEntities(10);
 
     await eventHive.insertEvents(list);
 
@@ -134,7 +136,7 @@ void main() {
   });
 
   test('_setupPagination should return list with one element', () async {
-    List<EventCacheEntity> list = await _getTestData(11);
+    List<EventCacheEntity> list = await getTestEventsCacheEntities(11);
 
     await eventHive.insertEvents(list);
 
@@ -158,18 +160,6 @@ void main() {
 
     print('searchEventsOrderByDateASC test finished');
   });
-
-  // orderByDate DESC
-
-  test('searchEventsOrderByDateDESC return sorted list', () async {
-    await eventHive.insertEvents(notSortedList);
-
-    final result = await eventHive.searchEventsOrderByDateDESC('', 1);
-
-    expect(result, sortedListByDateDESC);
-  });
-
-  // filterByFutureDateASC
 
   EventCacheEntity tFilterEvent1 = EventCacheEntity(eventId: 0,
       eventTitle: 'title2',
@@ -208,6 +198,7 @@ void main() {
   List<EventCacheEntity> filterListByFutureDateASC = [tFilterEvent1,tFilterEvent2];
 
   test('filterByFutureDateASC return filtered list',() async{
+
      await eventHive.insertEvents(notFilteredList);
 
      final result = await eventHive.searchEventsFilterByFutureDateASC('', 1);
@@ -216,40 +207,17 @@ void main() {
 
   });
 
-  List<EventCacheEntity> filterListByFutureDateDESC = [tFilterEvent3,tFilterEvent4];
+  List<EventCacheEntity> filterListByPastDateDESC = [tFilterEvent3,tFilterEvent4];
 
   // filterByPastDateDESC
 
-  test('filterByFutureDateDESC return filtered list',() async{
+  test('filter by past date DESC return filtered list',() async{
     await eventHive.insertEvents(notFilteredList);
 
-    final result = await eventHive.searchEventsFilterByPastDateDESC('', 1);
+    final result = await eventHive.searchEventsFilterByPastDateDESC('', 1,dateTime: DateTime.now());
 
-    expect(result,filterListByFutureDateDESC);
+    expect(result,filterListByPastDateDESC);
 
   });
 
-}
-
-Future<List<EventCacheEntity>> _getTestData(int size) async {
-  if (size == 0) {
-    return [];
-  }
-
-  int i = 0;
-
-  List<EventCacheEntity> list = [];
-
-  while (i < size) {
-    list.add(EventCacheEntity(eventId: i,
-        eventTitle: 'Title #$i',
-        eventDate: DateTime(2021, 02, 01),
-        eventFinishDate: DateTime(2021, 02, 01),
-        eventVenue: 'Lublin',
-        eventCountryName: 'Poland',
-        eventFlag: 'eventFlag'));
-    i++;
-  }
-
-  return list;
 }

@@ -37,7 +37,7 @@ void main() {
   ];
 
   mockSearchEventsByQuerySuccessResult(String searchQuery) async {
-    when(mockEventRepository.searchEventsByQuery(searchQuery, 1))
+    when(mockEventRepository.searchEvents(searchQuery, 1))
         .thenAnswer((_) async* {
       yield Right(events);
     });
@@ -61,13 +61,13 @@ void main() {
     // useCase simply return whatever is in repository
     expect(result, emitsInOrder([Right(events)]));
     // verify is method has been called in eventRepository
-    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
+    verify(mockEventRepository.searchEvents(searchQuery, page));
     // check if only above method has been called and nothing more
     verifyNoMoreInteractions(mockEventRepository);
   });
 
   void mockSearchEventsQueryFailureResult(Failure failure) async {
-    when(mockEventRepository.searchEventsByQuery(any, any))
+    when(mockEventRepository.searchEvents(any, any))
         .thenAnswer((_) async* {
       yield Left(failure);
     });
@@ -87,7 +87,7 @@ void main() {
 
     expect(result, emitsInOrder([Left(NoInternetFailure())]));
 
-    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
+    verify(mockEventRepository.searchEvents(searchQuery, page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
@@ -101,7 +101,7 @@ void main() {
 
     expect(result, emitsInOrder([Left(NoElementFailure())]));
 
-    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
+    verify(mockEventRepository.searchEvents(searchQuery, page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });
@@ -116,7 +116,7 @@ void main() {
 
     expect(result, emitsInOrder([Left(NetworkFailure())]));
 
-    verify(mockEventRepository.searchEventsByQuery(searchQuery, page));
+    verify(mockEventRepository.searchEvents(searchQuery, page));
 
     verifyNoMoreInteractions(mockEventRepository);
   });

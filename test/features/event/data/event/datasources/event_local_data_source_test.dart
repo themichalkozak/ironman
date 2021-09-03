@@ -76,7 +76,7 @@ void main() {
       when(eventBox.values).thenAnswer((_) => tEventModels);
 
       // act
-      final result = await eventLocalDataSource.searchEventsByQuery(query, page);
+      final result = await eventLocalDataSource.searchEvents(query, page);
 
       // assert
       expect(result,tEventModels);
@@ -88,7 +88,7 @@ void main() {
       when(eventBox.values).thenAnswer((_) => tEventModels);
 
       // act
-      final result = await eventLocalDataSource.searchEventsByQuery(query, page,dateTime);
+      final result = await eventLocalDataSource.searchEvents(query, page,dateTime);
 
       // assert
       expect(result,tFilteredEventModels);

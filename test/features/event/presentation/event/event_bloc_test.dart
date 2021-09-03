@@ -18,7 +18,7 @@ void main() {
 
   setUp(() {
     mockSearchEventsByQuery = MockSearchEventsByQuery();
-    bloc = EventBloc(searchEventsByQuery: mockSearchEventsByQuery);
+    bloc = EventBloc(searchEvents: mockSearchEventsByQuery);
   });
 
   tearDown(() {
@@ -31,7 +31,7 @@ void main() {
 
   test('should assert if null', () {
     expect(
-      () => EventBloc(searchEventsByQuery: null),
+      () => EventBloc(searchEvents: null),
       throwsA(isAssertionError),
     );
   });

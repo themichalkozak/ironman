@@ -75,7 +75,7 @@ void main() {
       final uri = setUpMockHttpClientSuccessResponse(
           jsonPath, endpoint, mockHttpClient, queryParams);
       // act
-      await dataSourceImpl.searchEventsByQuery(queryParam, page);
+      await dataSourceImpl.searchEvents(queryParam, page);
       // assert
       verify(mockHttpClient.get(uri,
           headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
@@ -91,7 +91,7 @@ void main() {
       setUpMockHttpClientSuccessResponse(
           jsonPath, endpoint, mockHttpClient, queryParams);
       // act
-      final result = await dataSourceImpl.searchEventsByQuery(queryParam, page);
+      final result = await dataSourceImpl.searchEvents(queryParam, page);
 
       // assert
       expect(result, equals(tResponse.data));
@@ -103,7 +103,7 @@ void main() {
       // arrange
       setUpMockHttpClientFailure404(failedJsonPath, mockHttpClient);
 
-      final call = dataSourceImpl.searchEventsByQuery(queryParam, page);
+      final call = dataSourceImpl.searchEvents(queryParam, page);
 
       // assert
       expect(() => call, throwsA(isA<ServerExceptions>()));
@@ -114,7 +114,7 @@ void main() {
       setUpMockHttpClientSuccessDelayedResponse(
           jsonPath, endpoint, mockHttpClient,queryParams);
 
-      final call = dataSourceImpl.searchEventsByQuery(query, page);
+      final call = dataSourceImpl.searchEvents(query, page);
 
       expect(() => call, throwsA(isA<TimeoutException>()));
     });

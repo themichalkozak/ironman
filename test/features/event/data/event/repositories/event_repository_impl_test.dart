@@ -87,14 +87,14 @@ void main() {
           () {
         // assert
         var callCount = 0;
-        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventRemoteDataSource.searchEvents(searchQuery, page))
             .thenAnswer((_) async => [tEventModelUpdated]);
 
-        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventLocalDataSource.searchEvents(searchQuery, page))
             .thenAnswer((_) async => [tEvents, tEventsUpdated][callCount++]);
 
         // act
-        final result = repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEvents(searchQuery, page);
 
         // assert
 
@@ -108,11 +108,11 @@ void main() {
           'searchEventsByQuery when is no internet connection return cached list of events',
           () {
         // arrange
-        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventLocalDataSource.searchEvents(searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
         // act
-        final result = repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEvents(searchQuery, page);
 
         // assert
         expect(result, emitsInOrder([Right(tEvents), emitsDone]));
@@ -124,14 +124,14 @@ void main() {
           'searchEventsByQuery when call to remote data source is unsuccessful return ServerFailure',
           () {
         // arrange
-        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventLocalDataSource.searchEvents(searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
-        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventRemoteDataSource.searchEvents(searchQuery, page))
             .thenThrow(ServerExceptions(message: 'Error'));
 
         // act
-        final result = repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEvents(searchQuery, page);
 
         expect(result, emitsInOrder([Right(tEvents), Left(NetworkFailure())]));
       });
@@ -141,10 +141,10 @@ void main() {
       test('searchEventsByQuery when throw Cache Exception return cacheFailure',
           () async {
         // arrange
-        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventLocalDataSource.searchEvents(searchQuery, page))
             .thenThrow(CacheException(message: CACHE_FAILURE));
         // act
-        final result = repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEvents(searchQuery, page);
         // assert
         expect(
             result, emitsInOrder([Left(CacheFailure(error: CACHE_FAILURE))]));
@@ -157,13 +157,13 @@ void main() {
           () async {
         // arrange
 
-        when(mockEventLocalDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventLocalDataSource.searchEvents(searchQuery, page))
             .thenAnswer((_) async => tEvents);
 
-        when(mockEventRemoteDataSource.searchEventsByQuery(searchQuery, page))
+        when(mockEventRemoteDataSource.searchEvents(searchQuery, page))
             .thenThrow(TimeoutException(message: TIMEOUT_FAILURE_MESSAGE));
         // act
-        final result = repository.searchEventsByQuery(searchQuery, page);
+        final result = repository.searchEvents(searchQuery, page);
         // assert
         expect(result, emitsInOrder([Right(tEvents), Left(TimeoutFailure())]));
       });
@@ -328,7 +328,7 @@ void main() {
       test(
           'search upcoming events by query when is CacheException and no internet connection yield Left(CacheFailure)',
           () async {
-        when(mockEventLocalDataSource.searchEventsByQuery(
+        when(mockEventLocalDataSource.searchEvents(
                 queryParam, page, dateTime))
             .thenThrow(CacheException(message: CACHE_FAILURE));
 
@@ -346,7 +346,7 @@ void main() {
       test(
           'search upcoming events by query when is CacheException and internet connection yield Left(CacheFailure)',
           () async {
-        when(mockEventLocalDataSource.searchEventsByQuery(
+        when(mockEventLocalDataSource.searchEvents(
                 queryParam, page, dateTime))
             .thenThrow(CacheException(message: CACHE_FAILURE));
 
@@ -366,7 +366,7 @@ void main() {
           () async {
         // arrange
         int callCount = 0;
-        when(mockEventLocalDataSource.searchEventsByQuery(
+        when(mockEventLocalDataSource.searchEvents(
                 queryParam, page, dateTime))
             .thenAnswer((_) async => [
                   tFilteredEventModels,
@@ -396,7 +396,7 @@ void main() {
       test(
           'search upcoming events when is no internet return cached list of events',
           () async {
-        when(mockEventLocalDataSource.searchEventsByQuery(
+        when(mockEventLocalDataSource.searchEvents(
                 queryParam, page, dateTime))
             .thenAnswer((_) async => tUpdatedFilteredEventModels);
 
@@ -412,7 +412,7 @@ void main() {
           'search upcoming events when occurred ServerException return ServerFailure',
           () async {
         // assert
-        when(mockEventLocalDataSource.searchEventsByQuery(
+        when(mockEventLocalDataSource.searchEvents(
                 queryParam, page, dateTime))
             .thenAnswer((_) async => tUpdatedFilteredEventModels);
 
@@ -440,7 +440,7 @@ void main() {
                 queryParam, page, formattedDateTime))
             .thenThrow(TimeoutException(message: TIMEOUT_FAILURE_MESSAGE));
 
-        when(mockEventLocalDataSource.searchEventsByQuery(
+        when(mockEventLocalDataSource.searchEvents(
                 queryParam, page, dateTime))
             .thenAnswer((_) async => tUpdatedFilteredEventModels);
 
