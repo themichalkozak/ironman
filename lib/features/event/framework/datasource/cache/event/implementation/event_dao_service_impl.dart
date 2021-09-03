@@ -20,7 +20,7 @@ class EventDaoServiceImpl extends EventDaoService {
 
   @override
   Future<void> insertEvent(Event event) async {
-    return eventHive.insertEvent(cacheMapper.mapFromDomainModel(event));
+    return eventHive.insertEvent(cacheMapper.mapToDomainModel(event));
   }
 
   @override

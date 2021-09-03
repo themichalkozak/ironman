@@ -5,7 +5,7 @@ import 'package:ironman/features/event/framework/datasource/network/model/event_
 class EventNetworkMapper extends DomainMapper<EventDto,Event> {
 
   @override
-  Event mapFromDomainModel(EventDto model) {
+  Event mapToDomainModel(EventDto model) {
     return Event(
       eventId: model.eventId,
       eventTitle: model.eventTitle,
@@ -18,7 +18,7 @@ class EventNetworkMapper extends DomainMapper<EventDto,Event> {
   }
 
   @override
-  EventDto mapToDomainModel(Event domainModel) {
+  EventDto mapFromDomainModel(Event domainModel) {
     return EventDto( eventId: domainModel.eventId,
         eventTitle: domainModel.eventTitle,
         eventDate: domainModel.eventDate,

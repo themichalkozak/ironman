@@ -6,7 +6,7 @@ import 'package:ironman/core/route/app_router.dart';
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
 import 'package:ironman/features/event/business/data/cache/implementation/event_cache_data_source_impl.dart';
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
-import 'package:ironman/features/event/business/data/network/implementation/EventNetworkDataSourceImpl.dart';
+import 'package:ironman/features/event/business/data/network/implementation/event_network_data_source_impl.dart';
 import 'package:ironman/features/event/business/domain/utils/date_util.dart';
 import 'package:ironman/features/event/business/interactors/get_event_by_id.dart';
 import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
@@ -19,6 +19,8 @@ import 'package:ironman/features/event/framework/datasource/cache/eventSpecifica
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/hive/implementation/event_specification_hive_impl.dart';
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/mapper/cache_specification_event_mapper.dart';
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/model/event_specification_cache_entity.dart';
+import 'package:ironman/features/event/framework/datasource/network/implementation/event_api_service_impl.dart';
+import 'package:ironman/features/event/framework/datasource/network/mappers/network_event_mapper.dart';
 import '../features/event/framework/datasource/cache/event/abstraction/event_dao_service.dart';
 import '../features/event/framework/datasource/cache/event/hive/abstraction/event_hive.dart';
 import '../features/event/framework/datasource/cache/event/hive/implementation/event_hive_impl.dart';
@@ -58,6 +60,7 @@ Future<void> init() async {
 
   // Api
   sl.registerLazySingleton<EventHttpClient>(() => EventHttpClientImpl(sl(),sl()));
+  sl.registerLazySingleton(() => EventApiServiceImpl(sl(),sl(),sl()));
 
   // Hive
   sl.registerLazySingleton<EventHive>(() => EventHiveImpl(box));
@@ -70,13 +73,15 @@ Future<void> init() async {
   // Mapper
   sl.registerLazySingleton(() => SpecificationEventCacheMapper());
   sl.registerLazySingleton(() => EventDetailCacheMapper(sl()));
+  sl.registerLazySingleton<EventCacheMapper>(() => EventCacheMapper(sl()));
+  sl.registerLazySingleton(() => EventNetworkMapper());
   sl.registerLazySingleton(() => DetailEventNetworkMapper());
+
 
 
   sl.registerLazySingleton<AppRouter>(() => AppRouter());
   sl.registerLazySingleton(() => Connectivity());
   sl.registerLazySingleton(() => DateUtils());
-  sl.registerLazySingleton<EventCacheMapper>(() => EventCacheMapper(sl()));
   // External
   sl.registerLazySingleton(() => http.Client());
 }

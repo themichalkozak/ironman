@@ -1,6 +1,6 @@
 abstract class DomainMapper<T,DomainModel> {
 
-  DomainModel mapFromDomainModel(T model);
+  DomainModel mapToDomainModel(T model);
 
-  T mapToDomainModel(DomainModel domainModel);
+  T mapFromDomainModel(DomainModel domainModel);
 }

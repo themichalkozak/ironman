@@ -23,7 +23,7 @@ void main(){
     Event tEvent = getEvents(1).first;
     EventCacheEntity tEventCacheEntity = getEventsCacheEntity(1).first;
 
-    final result = mapper.mapFromDomainModel(tEvent);
+    final result = mapper.mapToDomainModel(tEvent);
 
     expect(result,tEventCacheEntity);
 
@@ -34,7 +34,7 @@ void main(){
     Event tEvent = getEvents(1).first;
     EventCacheEntity tEventCacheEntity = getEventsCacheEntity(1).first;
 
-    final result = mapper.mapToDomainModel(tEventCacheEntity);
+    final result = mapper.mapFromDomainModel(tEventCacheEntity);
 
     expect(result,tEvent);
 

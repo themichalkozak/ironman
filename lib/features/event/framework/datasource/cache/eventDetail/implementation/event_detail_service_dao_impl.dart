@@ -24,7 +24,7 @@ class EventDetailServiceDaoImpl extends EventDetailServiceDao {
     List<EventSpecification> domainList = eventDetail.eventSpecifications;
 
     domainList.forEach((element) {
-      entityList.add(specMapper.mapFromDomainModel(element));
+      entityList.add(specMapper.mapToDomainModel(element));
     });
 
     specificationHive.insertEventSpecificationList(entityList);

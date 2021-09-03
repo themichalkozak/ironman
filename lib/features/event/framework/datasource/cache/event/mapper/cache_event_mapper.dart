@@ -9,7 +9,7 @@ class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
   EventCacheMapper(this.dateUtils);
 
   @override
-  EventCacheEntity mapFromDomainModel(Event model) {
+  EventCacheEntity mapToDomainModel(Event model) {
     return EventCacheEntity(
         eventId: model.eventId,
         eventTitle: model.eventTitle,
@@ -21,7 +21,7 @@ class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
   }
 
   @override
-  Event mapToDomainModel(EventCacheEntity domainModel) {
+  Event mapFromDomainModel(EventCacheEntity domainModel) {
     return Event(
         eventId: domainModel.eventId,
         eventTitle: domainModel.eventTitle,
@@ -38,7 +38,7 @@ class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
     }
     List<Event> list = [];
     events.forEach((element) {
-      list.add(mapToDomainModel(element));
+      list.add(mapFromDomainModel(element));
     });
     return list;
   }
@@ -50,7 +50,7 @@ class EventCacheMapper extends DomainMapper<Event, EventCacheEntity> {
 
     List<EventCacheEntity> list = [];
     events.forEach((element) {
-      list.add(mapFromDomainModel(element));
+      list.add(mapToDomainModel(element));
     });
     return list;
   }

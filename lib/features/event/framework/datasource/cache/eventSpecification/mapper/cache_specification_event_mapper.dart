@@ -6,12 +6,12 @@ import '../model/event_specification_cache_entity.dart';
 class SpecificationEventCacheMapper
     extends DomainMapper<EventSpecification, EventSpecificationCacheEntity> {
   @override
-  EventSpecificationCacheEntity mapFromDomainModel(EventSpecification model) {
+  EventSpecificationCacheEntity mapToDomainModel(EventSpecification model) {
     return EventSpecificationCacheEntity(model.name, model.id, model.parentId);
   }
 
   @override
-  EventSpecification mapToDomainModel(
+  EventSpecification mapFromDomainModel(
       EventSpecificationCacheEntity domainModel) {
     return EventSpecification(
         domainModel.name, domainModel.id, domainModel.parentId);
@@ -24,7 +24,7 @@ class SpecificationEventCacheMapper
     }
     List<EventSpecification> domainList = [];
     list.forEach((element) {
-      domainList.add(mapToDomainModel(element));
+      domainList.add(mapFromDomainModel(element));
     });
     return domainList;
   }
@@ -33,7 +33,7 @@ class SpecificationEventCacheMapper
 
     List<EventSpecificationCacheEntity> entityList = [];
     list.forEach((element) {
-      entityList.add(mapFromDomainModel(element));
+      entityList.add(mapToDomainModel(element));
     });
     return entityList;
   }

@@ -30,7 +30,7 @@ main(){
     Event tEvent = getEvents(1).first;
     EventCacheEntity tEventCacheEntity = getEventsCacheEntity(1).first;
 
-    when(mockEventCacheMapper.mapFromDomainModel(tEvent))
+    when(mockEventCacheMapper.mapToDomainModel(tEvent))
     .thenReturn(tEventCacheEntity);
 
     eventDaoService.insertEvent(tEvent);
@@ -65,7 +65,7 @@ main(){
     expect(result,tEvents);
 
   });
-  
+
   test('returnOrderedQuery when filterAndOrder is All should return list of events',() async {
     List<EventCacheEntity> tEventCacheEntity = getEventsCacheEntity(10);
     List<Event> tEvents = getEvents(10);
