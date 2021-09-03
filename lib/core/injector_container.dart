@@ -53,7 +53,7 @@ Future<void> init() async {
   sl.registerLazySingleton<EventCacheDataSource>(() => EventCacheDataSourceImpl(sl(),sl()));
   sl.registerLazySingleton<EventNetworkDataSource>(() => EventNetworkDataSourceImpl(sl()));
 
-  sl.registerLazySingleton<EventDaoService>(() => EventDaoServiceImpl(sl(),sl(),sl()));
+  sl.registerLazySingleton<EventDaoService>(() => EventDaoServiceImpl(sl(),sl()));
   sl.registerLazySingleton<EventDetailServiceDao>(() => EventDetailServiceDaoImpl(sl(),sl(),sl(),sl()));
 
   // Api
