@@ -56,26 +56,7 @@ void main() {
   final tEvents = [tEventModel];
   final tEventsUpdated = [tEventModelUpdated];
 
-  // This refactoring allows to avoid repeats write when to return true or false networkInfo !
-  void runTestsOnline(Function body) {
-    group('device is online', () {
-      setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => true);
-      });
 
-      body();
-    });
-  }
-
-  void runTestsOffline(Function body) {
-    group('device is offline', () {
-      setUp(() {
-        when(mockNetworkInfo.isConnected).thenAnswer((_) async => false);
-      });
-
-      body();
-    });
-  }
 
   group('get Events by query', () {
     final searchQuery = 'poland';

@@ -19,6 +19,7 @@ import 'package:ironman/features/event/framework/datasource/cache/eventSpecifica
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/hive/implementation/event_specification_hive_impl.dart';
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/mapper/cache_specification_event_mapper.dart';
 import 'package:ironman/features/event/framework/datasource/cache/eventSpecification/model/event_specification_cache_entity.dart';
+import 'package:ironman/features/event/framework/datasource/network/abstraction/event_api_service.dart';
 import 'package:ironman/features/event/framework/datasource/network/implementation/event_api_service_impl.dart';
 import 'package:ironman/features/event/framework/datasource/network/mappers/network_event_mapper.dart';
 import '../features/event/framework/datasource/cache/event/abstraction/event_dao_service.dart';
@@ -45,11 +46,15 @@ Future<void> init() async {
   // Features
   // UseCases
   sl.registerLazySingleton(() => SearchEventsByQuery(sl(),sl(),sl()));
-  sl.registerLazySingleton(() => GetEventById(sl(),sl(),sl(),sl()));
+  sl.registerLazySingleton(() => GetEventById(sl(),sl(),sl()));
   // Bloc
   sl.registerFactory<InternetCubit>(() => InternetCubit(connectivity: sl()));
   sl.registerFactory<EventBloc>(() => (EventBloc(searchEventsByQuery: sl())));
   sl.registerFactory<EventDetailBloc>(() => (EventDetailBloc(getEventById: sl())));
+
+  // Api
+  sl.registerLazySingleton<EventHttpClient>(() => EventHttpClientImpl(sl(),sl()));
+  sl.registerLazySingleton<EventApiService>(() => EventApiServiceImpl(sl(),sl(),sl()));
 
   // Data sources
   sl.registerLazySingleton<EventCacheDataSource>(() => EventCacheDataSourceImpl(sl(),sl()));
@@ -57,10 +62,6 @@ Future<void> init() async {
 
   sl.registerLazySingleton<EventDaoService>(() => EventDaoServiceImpl(sl(),sl()));
   sl.registerLazySingleton<EventDetailServiceDao>(() => EventDetailServiceDaoImpl(sl(),sl(),sl(),sl()));
-
-  // Api
-  sl.registerLazySingleton<EventHttpClient>(() => EventHttpClientImpl(sl(),sl()));
-  sl.registerLazySingleton(() => EventApiServiceImpl(sl(),sl(),sl()));
 
   // Hive
   sl.registerLazySingleton<EventHive>(() => EventHiveImpl(box));

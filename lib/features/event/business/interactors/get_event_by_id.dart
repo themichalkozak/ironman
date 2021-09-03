@@ -7,7 +7,6 @@ import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/features/event/business/data/cache/abstraction/event_cache_data_source.dart';
 import 'package:ironman/features/event/business/data/network/abstraction/event_network_data_source.dart';
 import 'package:ironman/features/event/business/domain/models/event_detail.dart';
-import 'package:ironman/features/event/framework/datasource/network/mappers/network_event_detail_mapper.dart';
 import '../../../../core/domain/usecase.dart';
 import '../domain/models/event.dart';
 
@@ -15,12 +14,9 @@ class GetEventById extends UseCaseStream<Event, GetEventByIdParams> {
 
   final EventNetworkDataSource eventNetworkDataSource;
   final EventCacheDataSource eventCacheDataSource;
-  final DetailEventNetworkMapper networkMapper;
   final InternetCubit internetCubit;
 
-
-
-  GetEventById(this.eventNetworkDataSource, this.eventCacheDataSource,this.networkMapper,this.internetCubit);
+  GetEventById(this.eventNetworkDataSource, this.eventCacheDataSource,this.internetCubit);
 
   @override
   Stream<Either<Failure, EventDetail>> call(GetEventByIdParams params) async* {
