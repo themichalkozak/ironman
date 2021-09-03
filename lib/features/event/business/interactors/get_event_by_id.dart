@@ -55,10 +55,9 @@ class GetEventById extends UseCaseStream<Event, GetEventByIdParams> {
 
   }
 
-  Future<EventDetail> apiCall(int eventId) async{
-    EventDetail response = await eventNetworkDataSource.searchEvent(eventId);
-    return networkMapper.mapFromDomainModel(response);
-  }
+  Future<EventDetail> apiCall(int eventId) async =>
+      await eventNetworkDataSource.searchEvent(eventId);
+
 
 }
 
