@@ -1,44 +1,41 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
+import 'package:ironman/core/data/generic_response.dart';
 
 import 'package:ironman/core/error/exceptions.dart';
-import '../../../../../../lib/core/data/generic_response.dart';
-import 'package:ironman/core/utils/constants.dart';
-import '../../../../../../lib/features/event/business/domain/models/event_detailed_model.dart';
-import '../../../../../../lib/features/event/business/domain/models/EventModel.dart';
-import 'package:ironman/features/event/data/event/event_remote_data_source.dart';
+import 'package:ironman/features/event/business/domain/utils/date_util.dart';
+import 'package:ironman/features/event/framework/datasource/network/client/abstraction/event_http_client.dart';
+import 'package:ironman/features/event/framework/datasource/network/client/implementation/event_http_client_impl.dart';
+import 'package:ironman/features/event/framework/datasource/network/model/models.dart';
+import 'package:ironman/features/event/framework/datasource/network/utils/Constants.dart';
 import 'package:mockito/mockito.dart';
-import 'http_mock_helper_method.dart';
+
+import '../../../../../fixtures/fixture_reader.dart';
+import '../utils/http_mock_helper_method.dart';
 
 class MockHttpClient extends Mock implements http.Client {}
 
 void main() {
-  EventRemoteDataSourceImpl dataSourceImpl;
+  EventHttpClient eventHttpClient;
   MockHttpClient mockHttpClient;
+  DateUtils dateUtils;
 
   setUp(() {
     mockHttpClient = MockHttpClient();
-    dataSourceImpl = EventRemoteDataSourceImpl(mockHttpClient);
+    eventHttpClient = EventHttpClientImpl(mockHttpClient, dateUtils);
   });
-
-
 
   group('getEvents by query', () {
 
 
     final page = 1;
     final queryParam = 'poland';
-    final failedQueryParam = '-123=*';
     final jsonPath = 'event/get_events_PL.json';
     final failedJsonPath = 'event/get_events_fail.json';
     final endpoint = '/v1/search/events';
 
     final queryParams = {'query': queryParam, 'page': page.toString()};
-    final failedQueryParams = {
-      'query': failedQueryParam,
-      'page': page.toString()
-    };
 
     final tEventModel1 = EventDto(
         eventId: 122987,
@@ -69,56 +66,48 @@ void main() {
     List<EventDto> tEventModels = [tEventModel1, tEventModel2, tEventModel3];
 
     test('getEvents by query when apikey is correct called get request',
-        () async {
-      // arrange
+            () async {
+          // arrange
 
-      final uri = setUpMockHttpClientSuccessResponse(
-          jsonPath, endpoint, mockHttpClient, queryParams);
-      // act
-      await dataSourceImpl.searchEvents(queryParam, page);
-      // assert
-      verify(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
-    });
+          final uri = setUpMockHttpClientSuccessResponse(
+              jsonPath, endpoint, mockHttpClient, queryParams);
+          // act
+          await eventHttpClient.searchEventsByQuery(queryParam, page);
+          // assert
+          verify(mockHttpClient.get(uri,
+              headers: {'Content-Type': 'application/json', 'apikey': API_KEY_VALUE}));
+        });
 
-    final tResponse = ResponseModel(
+    final tResponse = GenericResponse(
         status: "success", currentPage: 1, lastPage: 15, data: tEventModels);
 
     test(
         'getEvents by query when apikey is correct return valid response model',
-        () async {
-      // arrange
-      setUpMockHttpClientSuccessResponse(
-          jsonPath, endpoint, mockHttpClient, queryParams);
-      // act
-      final result = await dataSourceImpl.searchEvents(queryParam, page);
+            () async {
+          // arrange
+          setUpMockHttpClientSuccessResponse(
+              jsonPath, endpoint, mockHttpClient, queryParams);
+          // act
+          final result = await eventHttpClient.searchEventsByQuery(queryParam, page);
 
-      // assert
-      expect(result, equals(tResponse.data));
-    });
+          // assert
+          expect(result, equals(tResponse.data));
+        });
 
     test(
         'getEvents by query when responseCode is 404 or other throw ServerException',
-        () async {
-      // arrange
-      setUpMockHttpClientFailure404(failedJsonPath, mockHttpClient);
+            () async {
+          // arrange
+          setUpMockHttpClientFailure404(failedJsonPath, mockHttpClient);
 
-      final call = dataSourceImpl.searchEvents(queryParam, page);
+          final call = eventHttpClient.searchEventsByQuery(queryParam, page);
 
-      // assert
-      expect(() => call, throwsA(isA<ServerExceptions>()));
-    });
+          // assert
+          expect(() => call, throwsA(isA<ServerExceptions>()));
+        });
 
-    test('getEvents by query when timeout is occured throw timeout', () async {
-      final query = 'poland';
-      setUpMockHttpClientSuccessDelayedResponse(
-          jsonPath, endpoint, mockHttpClient,queryParams);
-
-      final call = dataSourceImpl.searchEvents(query, page);
-
-      expect(() => call, throwsA(isA<TimeoutException>()));
-    });
   });
+
 
   // ******************** get Events By Id **************************** //
 
@@ -133,22 +122,22 @@ void main() {
           jsonPath, endpoint, mockHttpClient);
 
       // act
-      await dataSourceImpl.getEventById(id);
+      await eventHttpClient.getEventById(id);
 
       // assert
       verify(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY_VALUE}));
     });
 
     final testListEventSpec = [
-      EventSpecificationModel(name: 'Triathlon', id: 357, parentId: null),
-      EventSpecificationModel(name: 'Relay', id: 379, parentId: 357)
+      EventSpecificationDto(name: 'Triathlon', id: 357, parentId: null),
+      EventSpecificationDto(name: 'Relay', id: 379, parentId: 357)
     ];
 
-    final testEventDetail = EventDetailModel(
+    final testEventDetail = EventDetailDto(
         eventId: 149007,
         eventTitle:
-            '1985 Ulster ETU Triathlon Team Relay European Championships',
+        '1985 Ulster ETU Triathlon Team Relay European Championships',
         eventDate: "1985-06-08",
         eventFinishDate: "1985-06-08",
         eventVenue: 'Ulster',
@@ -159,15 +148,15 @@ void main() {
         information: null);
 
     test('getEventById when is correct apikey return valid EventModel',
-        () async {
-      // arrange
-      setUpMockHttpClientSuccessResponse(jsonPath, endpoint, mockHttpClient);
-      // act
-      final result = await dataSourceImpl.getEventById(id);
+            () async {
+          // arrange
+          setUpMockHttpClientSuccessResponse(jsonPath, endpoint, mockHttpClient);
+          // act
+          final result = await eventHttpClient.getEventById(id);
 
-      // assert
-      expect(result, equals(testEventDetail));
-    });
+          // assert
+          expect(result, equals(testEventDetail));
+        });
 
     test('getEventById when statusCode is not 200 throw ServerException', () {
       // arrange
@@ -175,21 +164,11 @@ void main() {
       setUpMockHttpClientException(jsonPath, mockHttpClient);
 
       // act
-      final call = dataSourceImpl.getEventById(id);
+      final call = eventHttpClient.getEventById(id);
 
       // assert
 
       expect(() => call, throwsA(isA<ServerExceptions>()));
-    });
-
-    test('search event by id when is timout throw timeout Exception',(){
-      // arrange
-      setUpMockHttpClientSuccessDelayedResponse(jsonPath, endpoint, mockHttpClient);
-      // act
-      final call = dataSourceImpl.getEventById(id);
-
-      // assert
-      expect(() => call, throwsA(isA<TimeoutException>()));
     });
 
   });
@@ -207,9 +186,10 @@ void main() {
     final page = 1;
 
     final queryParams = {
-      'query': queryParam,
-      'page': page.toString(),
-      'start_date': startDateParam
+      QUERY_PARAM_NAME: queryParam,
+      PAGE_PARAM_NAME: page.toString(),
+      START_DATE_PARAM: startDateParam,
+      ORDER_PARAM_NAME: ORDER_ASC_PARAM
     };
 
     test(
@@ -218,13 +198,18 @@ void main() {
 
       Uri uri = setUpMockHttpClientSuccessResponse(jsonPath, endpoint, mockHttpClient,queryParams);
 
+      // Uri uri  = Uri.https(BASE_URL, endpoint,queryParams);
+      //
+      // when(mockHttpClient.get(uri,  headers: {'Content-Type': 'application/json', 'apikey': API_KEY_VALUE}))
+      // .thenAnswer((realInvocation) async => http.Response(fixture(jsonPath), 200));
+
       // act
-      await dataSourceImpl.searchUpcomingEventsByQuery(
+      await eventHttpClient.searchUpcomingEventsByQuery(
           queryParam, page, startDateParam);
 
       // assert
       verify(mockHttpClient.get(uri,
-          headers: {'Content-Type': 'application/json', 'apikey': API_KEY}));
+          headers: {'Content-Type': 'application/json', 'apikey': API_KEY_VALUE}));
     });
 
     final tUpcomingEvent = EventDto(
@@ -239,7 +224,7 @@ void main() {
     final tUpcomingEvent2 = EventDto(
         eventId: 153772,
         eventTitle:
-            "Groupe Copley 2021 World Triathlon Championship Series Montreal",
+        "Groupe Copley 2021 World Triathlon Championship Series Montreal",
         eventVenue: "Montreal",
         eventCountryName: "Canada",
         eventDate: "2021-08-13",
@@ -261,38 +246,23 @@ void main() {
       tUpcomingEvent3
     ];
 
-    ResponseModel tUpcomingResponseModel = ResponseModel(
+    GenericResponse tUpcomingResponseModel = GenericResponse(
         status: 'success', data: tUpcomingEvents, currentPage: 1, lastPage: 99);
 
-    test(
+     test(
         'search upcoming events by query when api call is correct return valid response model',
-        () async {
-      // arrange
+            () async {
+          // arrange
 
-      setUpMockHttpClientSuccessResponse(jsonPath, endpoint, mockHttpClient,queryParams);
+          setUpMockHttpClientSuccessResponse(jsonPath, endpoint, mockHttpClient,queryParams);
 
-      // act
-      final result = await dataSourceImpl.searchUpcomingEventsByQuery(
-          queryParam, page, startDateParam);
+          // act
+          final result = await eventHttpClient.searchUpcomingEventsByQuery(
+              queryParam, page, startDateParam);
 
-      expect(result, tUpcomingResponseModel.data);
-    });
+          expect(result, tUpcomingResponseModel.data);
+        });
 
-    test(
-        'search upcoming events by query when http timout occured throw Timeout exception',
-        () async {
-      // arrange
-      setUpMockHttpClientSuccessDelayedResponse(jsonPath,
-          endpoint,mockHttpClient,queryParams);
-
-      // act
-      final call = dataSourceImpl.searchUpcomingEventsByQuery(
-          queryParam, page, startDateParam);
-
-      // assert
-
-      expect(() => call, throwsA(isA<TimeoutException>()));
-    });
 
     test('search upcoming events by query when data is null or status is fail throw Server Exception',() async {
 
@@ -300,7 +270,7 @@ void main() {
       setUpMockHttpClientFailure404(failedJsonPath, mockHttpClient);
 
       // act
-      final call = dataSourceImpl.searchUpcomingEventsByQuery(queryParam, page, startDateParam);
+      final call = eventHttpClient.searchUpcomingEventsByQuery(queryParam, page, startDateParam);
 
       // assert
       expect(() => call, throwsA(isA<ServerExceptions>()));

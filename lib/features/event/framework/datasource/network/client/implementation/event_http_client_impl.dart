@@ -88,6 +88,8 @@ class EventHttpClientImpl extends EventHttpClient {
       'apikey': API_KEY_VALUE
     });
 
+    print('event_http_client_impl | response: ${response.statusCode}');
+
 
     final responseModel = GenericResponse.fromJson(json.decode(response.body));
 
