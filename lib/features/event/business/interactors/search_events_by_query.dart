@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
@@ -33,7 +35,6 @@ class SearchEventsByQuery
           yield Right([]);
           return;
         }
-
         List<Event> _apiResult = await _apiCall(params.query, params.page, params.filterAndOrder);
 
         if(_apiResult == null && _cachedEvents == null){
@@ -46,7 +47,6 @@ class SearchEventsByQuery
         _cachedEvents = await _readCache(params.query, params.page, params.filterAndOrder);
 
         yield Right(_cachedEvents);
-
         return;
       }
 
