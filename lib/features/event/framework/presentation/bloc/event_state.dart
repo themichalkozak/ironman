@@ -45,15 +45,6 @@ class Loaded extends EventState {
   String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted | orderAndFilter" $orderAndFilter';
 }
 
-class LoadedDetail extends EventState {
-  final EventDetail event;
-
-  LoadedDetail({
-    @required this.event,
-  }): assert(event != null)
-  ,super([event]);
-}
-
 class Error extends EventState {
   final String errorMessage;
 

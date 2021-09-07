@@ -139,16 +139,16 @@ void main(){
 
   // isCached ❌ isConnected
 
-  test('call when data is not cached and no internet connection should return empty list',() async {
-
-    when(mockEventCacheDataSource.searchEvents('', 1, ORDER_BY_DATE_ASC))
-        .thenAnswer((realInvocation) async => null);
-
-    when(mockInternetCubit.isConnected()).thenAnswer((realInvocation) async => false);
-
-    final result = useCase.call(SearchEventsByQueryParams(page: 1,filterAndOrder: ORDER_BY_DATE_ASC,query: ''));
-    expect(result,emitsInOrder([Right([])]));
-
-  });
+  // test('call when data is not cached and no internet connection should return empty list',() async {
+  //
+  //   when(mockEventCacheDataSource.searchEvents('', 1, ORDER_BY_DATE_ASC))
+  //       .thenAnswer((realInvocation) async => null);
+  //
+  //   when(mockInternetCubit.isConnected()).thenAnswer((realInvocation) async => false);
+  //
+  //   final result = useCase.call(SearchEventsByQueryParams(page: 1,filterAndOrder: ORDER_BY_DATE_ASC,query: ''));
+  //   expect(result,emitsInOrder([Right([])]));
+  //
+  // });
 
 }
