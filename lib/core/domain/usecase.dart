@@ -3,11 +3,7 @@ import 'package:equatable/equatable.dart';
 
 import '../error/failure.dart';
 
-abstract class UseCase<Type, Params> {
-  Future<Either<Failure, Type>> call(Params params);
-}
-
-abstract class UseCaseStream<Type,Params> {
+abstract class UseCase<Type,Params> {
   Stream<Either<Failure, Type>> call(Params params);
 }
 

@@ -13,7 +13,7 @@ import 'package:ironman/features/event/framework/datasource/cache/event/hive/abs
 import '../domain/models/event.dart';
 
 class SearchEventsByQuery
-    extends UseCaseStream<List<Event>, SearchEventsByQueryParams> {
+    extends UseCase<List<Event>, SearchEventsByQueryParams> {
   EventNetworkDataSource eventNetworkDataSource;
   EventCacheDataSource eventCacheDataSource;
   InternetCubit internetCubit;

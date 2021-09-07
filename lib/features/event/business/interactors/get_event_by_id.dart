@@ -10,7 +10,7 @@ import 'package:ironman/features/event/business/domain/models/event_detail.dart'
 import '../../../../core/domain/usecase.dart';
 import '../domain/models/event.dart';
 
-class GetEventById extends UseCaseStream<Event, GetEventByIdParams> {
+class GetEventById extends UseCase<Event, GetEventByIdParams> {
 
   final EventNetworkDataSource eventNetworkDataSource;
   final EventCacheDataSource eventCacheDataSource;
