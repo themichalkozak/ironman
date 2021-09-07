@@ -1,0 +1,1 @@
+const String NETWORK_ERROR = 'network error';

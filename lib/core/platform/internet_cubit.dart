@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'connection_type.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -17,6 +18,10 @@ class InternetCubit extends Cubit<InternetState> {
     @required this.connectivity
   }): super(InternetLoading()){
     connectivityStreamSubscription = connectivity.onConnectivityChanged.listen((connectivityResult) {
+
+      print('internet_cubit | connectivityResult: $connectivityResult');
+      print('internet_cubit | connectivity: ${connectivity.hashCode}');
+
       if(connectivityResult == ConnectivityResult.mobile){
         emitInternetConnection(ConnectionType.Mobile);
       }else if(connectivityResult == ConnectivityResult.wifi){
@@ -26,6 +31,14 @@ class InternetCubit extends Cubit<InternetState> {
       }
 
     });
+  }
+
+  Future<bool> isConnected() async {
+    final ConnectivityResult result = await connectivity.checkConnectivity();
+    if(result == ConnectivityResult.mobile || result == ConnectivityResult.wifi){
+      return true;
+    }
+    return false;
   }
 
   void emitInternetConnection(ConnectionType connectionType){
