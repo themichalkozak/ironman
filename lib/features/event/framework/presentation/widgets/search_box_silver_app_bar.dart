@@ -14,7 +14,6 @@ class SearchBoxSilverAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('search_box_silver_app_bar | build() ');
     return SliverAppBar(
       backgroundColor: Colors.white,
       pinned: true,
@@ -28,7 +27,6 @@ class SearchBoxSilverAppBar extends StatelessWidget {
             context
                 .read<EventBloc>()
                 .add(SearchNewQuery(query: value));
-
           },
           decoration: InputDecoration(
             border: OutlineInputBorder(

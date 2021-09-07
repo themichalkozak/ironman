@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/filters_group_chip_widget.dart';
 import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/widgets.dart';
@@ -80,7 +81,7 @@ class _EventScreenState extends State<EventScreen> {
       slivers: [
         TitledSilverAppBar(title: 'Event'),
         SearchBoxSilverAppBar(callback: searchQueryCallback),
-        silverChipEvent(context),
+        FilterGroupChipWidget(),
         SliverToBoxAdapter(
           child: SizedBox(
             height: 8,
@@ -91,84 +92,6 @@ class _EventScreenState extends State<EventScreen> {
     );
   }
 }
-
-Widget displayNetworkInfo(BuildContext context, String message, Color color) {
-  return SliverFillRemaining(
-    hasScrollBody: false,
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: 30,
-        color: color,
-        child: Text(message),
-      ),
-    ),
-  );
-}
-
-Widget silverChipEvent(BuildContext context) {
-  return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
-    if (state is Loaded) {
-      return SliverToBoxAdapter(
-        child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              _buildFilterChip(EVENT_FILTER_QUERY, state.orderAndFilter, context),
-              SizedBox(width: 8,),
-              _buildFilterChip(
-                  EVENT_FILTER_FUTURE_DATE, state.orderAndFilter, context),
-              SizedBox(width: 8,),
-              _buildFilterChip(
-                  EVENT_FILTER_PAST_DATE, state.orderAndFilter, context),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return SliverToBoxAdapter(child: SizedBox());
-    }
-  });
-}
-
-Widget _buildFilterChip(String currentOrderAndFilter,
-    String selectedOrderAndFilter, BuildContext context) {
-  return FilterChip(
-      selectedColor: Theme.of(context).primaryColor,
-      selected: isSelected(selectedOrderAndFilter,currentOrderAndFilter),
-      label: Text(_convertEventTenseToString(currentOrderAndFilter)),
-      onSelected: (bool selected) {
-        if (selected) {
-          updateOrderAndFilter(context, currentOrderAndFilter);
-          print(
-              'event_screen | FilterChips | eventTense: $currentOrderAndFilter | onSelect: $selectedOrderAndFilter');
-        }
-      });
-}
-
-bool isSelected(String selected, String current) => selected == current;
-
-void updateOrderAndFilter(BuildContext context, String orderAndFilter) {
-  context
-      .read<EventBloc>()
-      .add(UpdateOrderAndFilter(orderAndFilter: orderAndFilter));
-}
-
-String _convertEventTenseToString(String orderAndFilter) {
-  switch (orderAndFilter) {
-    case EVENT_FILTER_PAST_DATE:
-      return 'PAST';
-    case EVENT_FILTER_QUERY:
-      return 'ALL';
-    case EVENT_FILTER_FUTURE_DATE:
-      return 'UPCOMING';
-    default:
-      return 'ALL';
-  }
-}
-
-bool isHighlighted(String selected, String current) => selected == current;
 
 BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
   return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
@@ -190,3 +113,6 @@ BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
     }
   });
 }
+
+bool isHighlighted(String selected, String current) => selected == current;
+
