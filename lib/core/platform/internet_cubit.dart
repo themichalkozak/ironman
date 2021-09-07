@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'connection_type.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
