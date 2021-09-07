@@ -7,7 +7,11 @@ import 'package:ironman/features/event/framework/datasource/network/model/event_
 const String TEST_DATE_TIME = '2020-08-01';
 final DateTime testDateTime = DateTime(2020, 08, 01);
 
-List<Event> getEvents(int size) {
+List<Event> getEvents(int size, [int startIndex]) {
+
+  if(startIndex == null){
+    startIndex = 0;
+  }
   if (size == 0) {
     return [];
   }
@@ -24,7 +28,7 @@ List<Event> getEvents(int size) {
         eventFinishDate: "1992-01-01",
         eventFlag: "https://triathlon-images.imgix.net/images/icons/pl.png"));
   }
-  return events;
+  return events.getRange(startIndex, size).toList();
 }
 
 Future<List<EventCacheEntity>> getTestEventsCacheEntities(int size) async {

@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
+import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
 import '../../../business/domain/models/event.dart';
 import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:meta/meta.dart';
-import 'bloc.dart';
 
 class EventBloc extends Bloc<EventEvent, EventState> {
   final SearchEventsByQuery searchEventsByQuery;
@@ -119,6 +119,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
   @override
   Stream<EventState> mapEventToState(EventEvent event) async* {
+
+
     if (event is SearchNewQuery) {
       if (state is Loading) {
         return;
