@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import '../../../../business/domain/models/event_detail.dart';
 
 @immutable
-class EventDetailState extends Equatable {}
+class EventDetailState extends Equatable {
+  EventDetailState([List props = const <dynamic>[]]) : super(props);
+}
 
-class Empty extends EventDetailState {}
+class Initial extends EventDetailState {}
 
 class Loading extends EventDetailState {}
 
@@ -14,7 +16,7 @@ class Loaded extends EventDetailState {
 
   Loaded({
     @required this.data,
-  });
+  }):super([data]);
 }
 
 class Error extends EventDetailState {
