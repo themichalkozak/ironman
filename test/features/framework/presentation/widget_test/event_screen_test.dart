@@ -7,7 +7,6 @@ import 'package:ironman/core/platform/connection_type.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
 import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/business/domain/models/event.dart';
-import 'package:ironman/features/event/business/interactors/search_events_by_query.dart';
 import 'package:ironman/features/event/framework/datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/event_bloc.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/event_event.dart';
@@ -36,14 +35,10 @@ class EventEventFake extends Fake implements EventEvent {}
 extension on WidgetTester {
   Future<void> pumpEventScreen(
       MockEventBloc mockEventBloc, MockInternetBloc mockInternetBloc) {
-    return pumpWidget(BlocProvider(
-        create: (context) => mockInternetBloc,
-        child: MaterialApp(
-          home: MultiBlocProvider(providers: [
-            BlocProvider<InternetCubit>(create: (context) => mockInternetBloc),
-            BlocProvider<EventBloc>(create: (context) => mockEventBloc),
-          ], child: EventScreen()),
-        )));
+    return pumpWidget(MultiBlocProvider(providers: [
+      BlocProvider<InternetCubit>(create: (context) => mockInternetBloc),
+      BlocProvider<EventBloc>(create: (context) => mockEventBloc),
+    ], child: MaterialApp(home: EventScreen())));
   }
 }
 
@@ -222,7 +217,8 @@ void main() {
       await tester.testTextInput.receiveAction(TextInputAction.done);
       await tester.pump(Duration.zero);
 
-      verify(() => mockEventBloc.add(SearchNewQuery(query: 'poland'))).called(1);
+      verify(() => mockEventBloc.add(SearchNewQuery(query: 'poland')))
+          .called(1);
     });
   });
 }
