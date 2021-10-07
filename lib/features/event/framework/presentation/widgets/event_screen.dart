@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
+import 'package:ironman/core/utils/constants.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/filters_group_chip_widget.dart';
-import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/widgets.dart';
 
@@ -76,6 +76,7 @@ class _EventScreenState extends State<EventScreen> {
     print('Scaffold Type:');
     print(scaffold.runtimeType);
     return CustomScrollView(
+      key: Key(CUSTOM_SCROLL_VIEW_KEY),
       controller: _scrollController,
       shrinkWrap: true,
       slivers: [
@@ -106,7 +107,7 @@ BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
     } else {
       final loadState = state as Loaded;
       if (loadState.events.isEmpty) {
-        return SliverToBoxAdapter(child: MessageDisplay(message: 'Events not found',assetPath: 'assets/images/event_date_and_time_symbol.png'));
+        return SliverToBoxAdapter(child: MessageDisplay(message: EVENTS_NOT_FOUND_MESSAGE_TEXT,assetPath: 'assets/images/event_date_and_time_symbol.png'));
       }
       return EventDisplay(
           events: loadState.events, isExhausted: loadState.isExhausted);

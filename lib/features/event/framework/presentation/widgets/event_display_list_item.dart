@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import 'package:ironman/core/route/event/event_detail_screen_arguments.dart';
+import 'package:ironman/core/utils/constants.dart';
 import '../../../business/domain/models/event.dart';
 import 'package:ironman/features/event/framework/presentation/screens/event_detail_screen.dart';
 
@@ -28,6 +29,7 @@ class EventListItem extends StatelessWidget {
           height: 20,
           width: 20,
           child: CachedNetworkImage(
+            key: Key(EVENT_IMAGE_KEY),
             imageUrl: event.eventFlag,
             errorWidget:
                 (context, url, error) {
