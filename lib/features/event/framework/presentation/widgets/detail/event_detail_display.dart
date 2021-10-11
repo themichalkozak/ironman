@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ironman/core/utils/constants.dart';
 import '../../../../business/domain/models/event_detail.dart';
 import 'widgets.dart';
 
@@ -24,7 +25,8 @@ class EventDetailDisplay extends StatelessWidget {
         SliverToBoxAdapter(
           child: Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 16.0),
-            child: Text('Category: ',
+            child: Text('Category:',
+                key: Key(CATEGORY_HEADER_KEY),
                 style: Theme.of(context).textTheme.headline1),
           ),
         ),

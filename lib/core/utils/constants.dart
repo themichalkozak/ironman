@@ -7,3 +7,4 @@ const String EVENT_IMAGE_KEY = 'event_image_key';
 const String CUSTOM_SCROLL_VIEW_KEY = 'custom_scroll_view_key';
 
 const String EVENTS_NOT_FOUND_MESSAGE_TEXT = 'Events not found';
+const String CATEGORY_HEADER_KEY = 'category_header_key';
