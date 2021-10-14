@@ -45,7 +45,9 @@ void main() {
 
       expect(progressIndicatorFinder, findsOneWidget);
     });
+  });
 
+  group('event detail list', () {
     testWidgets('should render messageDisplay with error message',
         (WidgetTester tester) async {
       // Mock
@@ -103,19 +105,17 @@ void main() {
       var informationDescriptionFinder = find.text('No information');
       expect(informationDescriptionFinder, findsOneWidget);
 
-
       // Category Header
-      var categoryHeaderFinder = find.byKey(Key(CATEGORY_HEADER_KEY),skipOffstage: false);
+      var categoryHeaderFinder =
+          find.byKey(Key(CATEGORY_HEADER_KEY), skipOffstage: false);
       expect(categoryHeaderFinder, findsOneWidget);
 
       // Category List
 
-
       tEventDetail.eventSpecifications.forEach((element) {
-        var elementFinder = find.text(element.name,skipOffstage: false);
-        expect(elementFinder,findsOneWidget);
+        var elementFinder = find.text(element.name, skipOffstage: false);
+        expect(elementFinder, findsOneWidget);
       });
-
     });
   });
 }

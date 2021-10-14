@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ironman/core/utils/constants.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/titled_silver_app_bar.dart';
 import '../../../../business/domain/models/event_detail.dart';
 import 'widgets.dart';
 
@@ -14,7 +15,7 @@ class EventDetailDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        EventDetailSilverAppBar(title: eventDetail.eventTitle),
+        TitledSilverAppBar(title: eventDetail.eventTitle),
         EventDetailRow(
           date: eventDetail.eventDate,
           country: eventDetail.eventCountryName,
