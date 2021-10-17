@@ -32,9 +32,8 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       return false;
     }
     if (_filterAndOrder != newUpdateAndOrder) {
+
       _filterAndOrder = newUpdateAndOrder;
-      // add(SearchNewQuery(
-      //     query: _query, orderAndFilter: newUpdateAndOrder));
       return true;
     }
     return false;
@@ -207,4 +206,3 @@ class EventBloc extends Bloc<EventEvent, EventState> {
       super.onChange(change);
     }
   }
-
