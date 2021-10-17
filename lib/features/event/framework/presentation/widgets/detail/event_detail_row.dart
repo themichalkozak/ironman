@@ -18,26 +18,32 @@ class EventDetailRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
         child: Container(
-          padding: const EdgeInsets.all(4),
-          child: Row(
-            children: [
-              Text(date, style: Theme.of(context).textTheme.headline2),
-              Text(',', style: Theme.of(context).textTheme.headline2),
-              SizedBox(
-                width: 4,
-              ),
-              Text(country, style: Theme.of(context).textTheme.headline2),
-              Text(',', style: Theme.of(context).textTheme.headline2),
-              SizedBox(
-                width: 4,
-              ),
-              Text(venue, style: Theme.of(context).textTheme.headline2),
-              SizedBox(
-                width: 4,
-              ),
-              CachedNetworkImage(imageUrl: flagUrl),
-            ],
+      padding: const EdgeInsets.all(4),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Flexible(
+              fit: FlexFit.loose,
+              child: Text(date, style: Theme.of(context).textTheme.headline2)),
+          Text(',', style: Theme.of(context).textTheme.headline2),
+          SizedBox(
+            width: 4,
           ),
-        ));
+          Flexible(
+              fit: FlexFit.loose,
+              child:
+                  Text(country, style: Theme.of(context).textTheme.headline2)),
+          Text(',', style: Theme.of(context).textTheme.headline2),
+          SizedBox(
+            width: 4,
+          ),
+          Text(venue, style: Theme.of(context).textTheme.headline2),
+          SizedBox(
+            width: 4,
+          ),
+          CachedNetworkImage(imageUrl: flagUrl),
+        ],
+      ),
+    ));
   }
 }

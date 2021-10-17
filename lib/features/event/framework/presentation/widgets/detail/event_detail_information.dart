@@ -16,7 +16,7 @@ class EventDetailInformationWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Event Information: ',
+              'Event Information:',
               style: Theme.of(context).textTheme.headline1,
             ),
             SizedBox(

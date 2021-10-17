@@ -2,9 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ironman/core/platform/internet_cubit.dart';
+import 'package:ironman/core/utils/constants.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/event_list.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/filters_group_chip_widget.dart';
-import '../../datasource/cache/event/hive/abstraction/event_hive.dart';
 import 'package:ironman/features/event/framework/presentation/bloc/bloc.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/sliver_sub_header.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/widgets.dart';
 
 class EventScreen extends StatefulWidget {
@@ -73,46 +75,44 @@ class _EventScreenState extends State<EventScreen> {
 
   Widget buildBody(BuildContext context, Function searchQueryCallback) {
     final scaffold = ScaffoldMessenger.of(context);
-    print('Scaffold Type:');
     print(scaffold.runtimeType);
     return CustomScrollView(
+      key: Key(CUSTOM_SCROLL_VIEW_KEY),
       controller: _scrollController,
       shrinkWrap: true,
       slivers: [
         TitledSilverAppBar(title: 'Event'),
-        SearchBoxSilverAppBar(callback: searchQueryCallback),
-        FilterGroupChipWidget(),
-        SliverToBoxAdapter(
-          child: SizedBox(
-            height: 8,
+        SliverPadding(
+          padding: const EdgeInsets.all(16) ,
+          sliver: SliverSubHeader(
+            pinned: true,
+            minHeight: 40,
+            maxHeight: 40,
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              height: 40,
+              child: TextField(
+                onSubmitted: (value) {
+                  print(
+                      'search_box_silver_app_bar | TextFiled | onSubmitted | value: $value');
+                  searchQueryCallback();
+                  context.read<EventBloc>().add(SearchNewQuery(query: value));
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(const Radius.circular(10))),
+                  contentPadding: const EdgeInsets.all(12.0),
+                  labelText: 'Search',
+                ),
+              ),
+            ),
           ),
         ),
-        buildSilverBody(context)
+        FilterGroupChipWidget(),
+        EventList()
       ],
     );
   }
 }
 
-BlocBuilder<EventBloc, EventState> buildSilverBody(BuildContext context) {
-  return BlocBuilder<EventBloc, EventState>(builder: (context, state) {
-    if (state is Initial) {
-      return SliverFillRemaining(
-          child: MessageDisplay(message: 'Start searching'));
-    } else if (state is Loading) {
-      return SliverFillRemaining(child: LoadingWidget());
-    } else if (state is Error) {
-      return SliverFillRemaining(
-          child: MessageDisplay(message: state.errorMessage));
-    } else {
-      final loadState = state as Loaded;
-      if (loadState.events.isEmpty) {
-        return SliverToBoxAdapter(child: MessageDisplay(message: 'Events not found',assetPath: 'assets/images/event_date_and_time_symbol.png'));
-      }
-      return EventDisplay(
-          events: loadState.events, isExhausted: loadState.isExhausted);
-    }
-  });
-}
-
 bool isHighlighted(String selected, String current) => selected == current;
-
