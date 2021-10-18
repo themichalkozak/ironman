@@ -21,6 +21,9 @@ class EventHiveImpl extends EventHive {
 
   @override
   Future<void> insertEvents(List<EventCacheEntity> events) async {
+    if(events == null){
+      return;
+    }
     return events.forEach((element) {
       insertEvent(element);
     });

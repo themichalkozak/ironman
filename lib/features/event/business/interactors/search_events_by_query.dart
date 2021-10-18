@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
@@ -27,7 +28,11 @@ class SearchEventsByQuery
 
     try {
 
+      print('search_events_by_query | is an Internet: ${await internetCubit.isConnected()}');
+
       List<Event> _cachedEvents = await _readCache(params.query, params.page, params.filterAndOrder);
+
+      print('cached Events: $_cachedEvents');
 
       if(_cachedEvents == null || _cachedEvents.length < EVENT_PAGINATION_PAGE_SIZE){
 
@@ -36,6 +41,8 @@ class SearchEventsByQuery
           return;
         }
         List<Event> _apiResult = await _apiCall(params.query, params.page, params.filterAndOrder);
+
+        print('api Call: $_apiResult');
 
         if(_apiResult == null && _cachedEvents == null){
           yield Right([]);
@@ -58,6 +65,8 @@ class SearchEventsByQuery
       yield Left(TimeoutFailure(error: error.message));
     } on CacheException catch (error) {
       yield Left(CacheFailure(error: error.message));
+    } on SocketException catch (error) {
+      print('Socket Exception: $error');
     }
 
   }
