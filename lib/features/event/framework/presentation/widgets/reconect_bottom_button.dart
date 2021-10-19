@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const String RECONNECT_BOTTOM_BUTTON_KEY = 'reconnect_bottom_button_search';
+
 class ReconnectBottomButton extends StatelessWidget {
 
   final Function callback;
@@ -13,6 +15,7 @@ class ReconnectBottomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     print('reconnected_bottom_button | build ()');
     return Container(
+      key: Key(RECONNECT_BOTTOM_BUTTON_KEY),
       height: 60,
       color: Colors.green,
       child: TextButton(
