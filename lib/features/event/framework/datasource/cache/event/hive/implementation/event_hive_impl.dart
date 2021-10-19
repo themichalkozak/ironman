@@ -21,7 +21,7 @@ class EventHiveImpl extends EventHive {
 
   @override
   Future<void> insertEvents(List<EventCacheEntity> events) async {
-    if(events == null){
+    if (events == null) {
       return;
     }
     return events.forEach((element) {
@@ -32,7 +32,6 @@ class EventHiveImpl extends EventHive {
   @override
   Future<List<EventCacheEntity>> returnOrderedQuery(
       String query, String filterAndOrder, int page) async {
-
     switch (filterAndOrder) {
       case ORDER_BY_ASC_FUTURE_DATE:
         {
@@ -57,10 +56,9 @@ class EventHiveImpl extends EventHive {
   Future<List<EventCacheEntity>> searchEventsOrderByDateASC(
       String query, int page,
       {int pageSize = EVENT_PAGINATION_PAGE_SIZE}) async {
-
     List<EventCacheEntity> events = await getAllEvents();
 
-    if(events == null){
+    if (events == null) {
       return null;
     }
     events = _orderByDateASC(events);
@@ -68,7 +66,6 @@ class EventHiveImpl extends EventHive {
     events = setupPagination(events, page, pageSize);
     return events;
   }
-
 
   @override
   Future<List<EventCacheEntity>> searchEventsFilterByFutureDateASC(
@@ -79,12 +76,12 @@ class EventHiveImpl extends EventHive {
     }
     List<EventCacheEntity> events = await getAllEvents();
 
-    if(events == null){
+    if (events == null) {
       return null;
     }
 
     events = _filterByQuery(query, events);
-    events = _filterByFutureDate(events,dateTime: dateTime);
+    events = _filterByFutureDate(events, dateTime: dateTime);
     events = _orderByDateASC(events);
     events = setupPagination(events, page, pageSize);
 
@@ -100,24 +97,24 @@ class EventHiveImpl extends EventHive {
     }
     List<EventCacheEntity> events = await getAllEvents();
 
-    if(events == null){
+    if (events == null) {
       return null;
     }
 
     events = _filterByQuery(query, events);
-    events = _filterByPastDate(events,dateTime: dateTime);
+    events = _filterByPastDate(events, dateTime: dateTime);
     events = _orderByDateDESC(events);
     events = setupPagination(events, page, pageSize);
 
     return events;
   }
 
-  List<EventCacheEntity> _orderByDateASC(List<EventCacheEntity> events){
+  List<EventCacheEntity> _orderByDateASC(List<EventCacheEntity> events) {
     events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
     return events;
   }
 
-  List<EventCacheEntity> _orderByDateDESC(List<EventCacheEntity> events){
+  List<EventCacheEntity> _orderByDateDESC(List<EventCacheEntity> events) {
     events.sort((prev, next) => prev.eventDate.compareTo(next.eventDate));
     return events.reversed.toList();
   }
@@ -151,18 +148,36 @@ class EventHiveImpl extends EventHive {
 
     String _queryLowerCase = query.toLowerCase();
 
-    List<EventCacheEntity> _filteredEvents = events
-        .where((EventCacheEntity event) =>
-            event.eventTitle.toLowerCase().contains(_queryLowerCase) ||
-            event.eventVenue.toLowerCase().contains(_queryLowerCase) ||
-            event.eventCountryName.toLowerCase().contains(_queryLowerCase))
-        .toList();
+    final pattern = RegExp(_queryLowerCase);
 
-    return _filteredEvents;
+    print(
+        'event_hive_impl | _filterByQuery | _queryLoweCase: $_queryLowerCase');
+
+    // 1985 Ulster ETU Triathlon Team Relay European Championships
+
+    return events.where((EventCacheEntity event) {
+      var isEventTitleContain =
+      event.eventTitle.toLowerCase().contains(pattern);
+      var isEventCountryContain =
+      event.eventCountryName.toLowerCase().contains(pattern);
+      var isEventVenueContain =
+      event.eventVenue.toLowerCase().contains(pattern);
+
+
+      if (isEventVenueContain || isEventCountryContain || isEventTitleContain) {
+        print(
+            '''isEventTitleContain : $isEventTitleContain \n isEventCountryContain: $isEventCountryContain \n isEventVenueContain: $isEventVenueContain ''');
+      }
+
+      return event.eventCountryName.toLowerCase().contains(pattern) |
+          event.eventTitle.toLowerCase().contains(pattern) |
+          event.eventVenue.toLowerCase().contains(pattern);
+    }).toList();
   }
 
   @visibleForTesting
-  List<EventCacheEntity> setupPagination(List<EventCacheEntity> events, int page, int perPage) {
+  List<EventCacheEntity> setupPagination(
+      List<EventCacheEntity> events, int page, int perPage) {
     if (events == null) {
       return null;
     }
@@ -188,7 +203,6 @@ class EventHiveImpl extends EventHive {
 
     final list = events.getRange(indexStart, indexEnd).toList();
 
-
     print('event_local_data_source | _setUpPagination \n '
         ' params:'
         ' events.lengths: ${events.length}'
@@ -200,5 +214,4 @@ class EventHiveImpl extends EventHive {
 
     return events.getRange(indexStart, indexEnd).toList();
   }
-
 }

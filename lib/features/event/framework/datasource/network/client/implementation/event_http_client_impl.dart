@@ -132,8 +132,12 @@ class EventHttpClientImpl extends EventHttpClient {
 
     print('Uri: $uri');
 
-    final response = await client.get(uri,
-        headers: {'Content-Type': 'application/json', 'apikey': API_KEY_VALUE});
+    final response = await client.get(uri, headers: {
+      'Content-Type': 'application/json',
+      'apikey': API_KEY_VALUE
+    }).timeout(Duration(seconds: 3), onTimeout: () {
+      throw TimeoutException(message: NETWORK_TIMEOUT_ERROR);
+    });
 
     final responseModel = GenericResponse.fromJson(json.decode(response.body));
 

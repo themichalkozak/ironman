@@ -97,6 +97,11 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     final failOrEvents = searchEventsByQuery(SearchEventsByQueryParams(
         query: _query, page: page, filterAndOrder: _filterAndOrder));
 
+    if(prevList == null){
+      print('event_bloc | search_events: $prevList}');
+      return;
+    }
+
     await for (var event in failOrEvents) {
       yield event.fold((failure) {
         if (failure is TimeoutFailure) {
@@ -118,9 +123,14 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   @override
   Stream<EventState> mapEventToState(EventEvent event) async* {
     if (event is SearchNewQuery) {
+
       if (state is Loading) {
         return;
       }
+
+      // if(!updateSearchQuery(event.query) && state is Loaded){
+      //   return;
+      // }
 
       List<Event> prevList = [];
 

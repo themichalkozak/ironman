@@ -32,17 +32,14 @@ class SearchEventsByQuery
 
       List<Event> _cachedEvents = await _readCache(params.query, params.page, params.filterAndOrder);
 
-      print('cached Events: $_cachedEvents');
-
       if(_cachedEvents == null || _cachedEvents.length < EVENT_PAGINATION_PAGE_SIZE){
 
         if(!await internetCubit.isConnected() && _cachedEvents == null){
           yield Right([]);
           return;
         }
-        List<Event> _apiResult = await _apiCall(params.query, params.page, params.filterAndOrder);
 
-        print('api Call: $_apiResult');
+        List<Event> _apiResult = await _apiCall(params.query, params.page, params.filterAndOrder);
 
         if(_apiResult == null && _cachedEvents == null){
           yield Right([]);
@@ -52,6 +49,11 @@ class SearchEventsByQuery
         await _cacheEvents(_apiResult, params.page);
 
         _cachedEvents = await _readCache(params.query, params.page, params.filterAndOrder);
+
+        if(_cachedEvents == null){
+          yield Right([]);
+          return;
+        }
 
         yield Right(_cachedEvents);
         return;
