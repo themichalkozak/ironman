@@ -128,9 +128,9 @@ class EventBloc extends Bloc<EventEvent, EventState> {
         return;
       }
 
-      // if(!updateSearchQuery(event.query) && state is Loaded){
-      //   return;
-      // }
+      if(!updateSearchQuery(event.query) && state is Loaded){
+        return;
+      }
 
       List<Event> prevList = [];
 
@@ -138,7 +138,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       resetPage();
 
-      if (updateSearchQuery(event.query) || state is Initial) {
         yield Loading();
 
         yield* searchEvents(
@@ -146,7 +145,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
             query: _query,
             orderAndFilter: _filterAndOrder,
             prevList: prevList);
-      }
     }
 
     if (event is SearchNextPageResultEvent) {
