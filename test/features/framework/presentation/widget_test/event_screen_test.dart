@@ -16,6 +16,7 @@ import 'package:ironman/features/event/framework/presentation/widgets/event_disp
 import 'package:ironman/features/event/framework/presentation/widgets/event_screen.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/filter_chip_widget.dart';
 import 'package:ironman/features/event/framework/presentation/widgets/message_display.dart';
+import 'package:ironman/features/event/framework/presentation/widgets/reconect_bottom_button.dart';
 import 'package:mocktail/mocktail.dart';
 
 import '../../../../fixtures/test_generator.dart';
@@ -139,6 +140,27 @@ void main() {
       await tester.pump();
       verify(() => mockEventBloc.add(SearchNextPageResultEvent())).called(1);
     });
+
+    testWidgets('should render reconnect bottom widget when is timeout',
+        (WidgetTester tester) async {
+
+
+      /// mock EventDetail
+      when(() => mockEventBloc.state).thenAnswer((invocation) =>
+          Loaded(events: getEvents(10), isExhausted: false, isTimeout: true));
+
+      await tester.pumpEventScreen(mockEventBloc, mockInternetBloc);
+      final gesture = await tester.startGesture(Offset(0, 0)); //Position of the scrollview
+      await gesture.moveBy(Offset(0, -500)); //How much to scroll by
+      await tester.pump(Duration.zero);
+
+      final reconnectBottomWidgetFinder = find.byKey(Key(RECONNECT_BOTTOM_BUTTON_KEY),skipOffstage: false);
+
+      expect(find.byType(BottomLoader, skipOffstage: false), findsNothing);
+      expect(reconnectBottomWidgetFinder,findsOneWidget);
+
+    });
+
   });
 
   group('Events chips', () {

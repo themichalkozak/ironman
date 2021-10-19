@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ironman/core/error/failure.dart';
 import 'package:ironman/core/utils/constants.dart';
@@ -19,9 +20,9 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   int _page = 1;
   String _filterAndOrder = ORDER_BY_DATE_ASC;
 
-
-  EventBloc({@required this.searchEventsByQuery,})
-      : assert(searchEventsByQuery != null),
+  EventBloc({
+    @required this.searchEventsByQuery,
+  })  : assert(searchEventsByQuery != null),
         super(Initial());
 
   EventState get initialState => Initial();
@@ -33,15 +34,12 @@ class EventBloc extends Bloc<EventEvent, EventState> {
     }
     if (_filterAndOrder != newUpdateAndOrder) {
       _filterAndOrder = newUpdateAndOrder;
-      // add(SearchNewQuery(
-      //     query: _query, orderAndFilter: newUpdateAndOrder));
       return true;
     }
     return false;
   }
 
   int _getPageFromOffset(int offset) => offset ~/ PER_PAGE + 1;
-
 
   int getPage(List<Event> list) {
     if (list == null) {
@@ -51,7 +49,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   }
 
   bool updateSearchQuery(String newSearchQuery) {
-
     if (newSearchQuery == null || newSearchQuery == _query) {
       return false;
     }
@@ -92,37 +89,46 @@ class EventBloc extends Bloc<EventEvent, EventState> {
   }
 
   Stream<EventState> searchEvents(
-      {int page, String query, String orderAndFilter, List<
-          Event> prevList}) async* {
-    print(
-        'event_bloc | searchEvents | page: $_page | query: $_query | orderAndFilter: $orderAndFilter | prevList.size: ${prevList
-            .length}');
+      {int page,
+      String query,
+      String orderAndFilter,
+      List<Event> prevList}) async* {
 
     final failOrEvents = searchEventsByQuery(SearchEventsByQueryParams(
-        query: _query,
-        page: page,
-        filterAndOrder: _filterAndOrder));
+        query: _query, page: page, filterAndOrder: _filterAndOrder));
 
-    // reset orderAndFilter !
+    if(prevList == null){
+      print('event_bloc | search_events: $prevList}');
+      return;
+    }
 
     await for (var event in failOrEvents) {
-      yield event.fold(
-              (failure) =>
-              Error(errorMessage: _mapFailureToMessage(failure)),
-              (events) =>
-              Loaded(
-                  events: prevList + events,
-                  isExhausted: events.length < PER_PAGE,
-                  orderAndFilter: _filterAndOrder));
+      yield event.fold((failure) {
+        if (failure is TimeoutFailure) {
+          print('event_bloc | searchEvents | Timeout Failure');
+          if (state is Loaded) {
+            return (state as Loaded).copyWith(isTimeout: true);
+          }
+        }
+
+        return Error(errorMessage: _mapFailureToMessage(failure));
+      },
+          (events) => Loaded(
+              events: prevList + events,
+              isExhausted: events.length < PER_PAGE,
+              orderAndFilter: _filterAndOrder));
     }
   }
 
   @override
   Stream<EventState> mapEventToState(EventEvent event) async* {
-
-
     if (event is SearchNewQuery) {
+
       if (state is Loading) {
+        return;
+      }
+
+      if(!updateSearchQuery(event.query) && state is Loaded){
         return;
       }
 
@@ -132,7 +138,6 @@ class EventBloc extends Bloc<EventEvent, EventState> {
 
       resetPage();
 
-      if (updateSearchQuery(event.query) || state is Initial) {
         yield Loading();
 
         yield* searchEvents(
@@ -140,71 +145,85 @@ class EventBloc extends Bloc<EventEvent, EventState> {
             query: _query,
             orderAndFilter: _filterAndOrder,
             prevList: prevList);
-      }
     }
 
+    if (event is SearchNextPageResultEvent) {
+      List<Event> previousList = [];
 
-      if (event is SearchNextPageResultEvent) {
-        List<Event> previousList = [];
+      if (state is Loaded) {
+        previousList = (state as Loaded).events;
 
-        if (state is Loaded) {
-          previousList = (state as Loaded).events;
-          if ((state as Loaded).isExhausted) {
-            return;
-          }
+        if(state is Loaded){
+          final cState = state as Loaded;
 
-          _page = getPage(previousList);
-
-          print('event_bloc | mapEventToSate | page: $_page');
-
-          yield* searchEvents(page: _page,
-              orderAndFilter: _filterAndOrder,
-              prevList: previousList);
-        }
-      }
-
-      if (event is UpdateOrderAndFilter) {
-        List<Event> prevList = [];
-
-        resetPage();
-
-        if (updateFilterAndOrder(event.orderAndFilter)) {
-          yield Loading();
-
-          yield* searchEvents(page: _page,
-              orderAndFilter: _filterAndOrder,
-              prevList: prevList);
-        }
-      }
-
-
-      if (event is RefreshSearchEventsByQueryEvent) {
-        List<Event> previousList = [];
-
-        if (state is Loaded) {
-          previousList = (state as Loaded).events;
-          if ((state as Loaded).isExhausted) {
+          if(cState.isExhausted){
             return;
           }
         }
 
-        yield* searchEvents(page: _page,
-            query: _query,
+        _page = getPage(previousList);
+
+        print('event_bloc | mapEventToSate | page: $_page');
+
+        yield* searchEvents(
+            page: _page,
             orderAndFilter: _filterAndOrder,
             prevList: previousList);
       }
-
     }
 
-    @override
-    Future<void> close() {
-      return super.close();
+    if (event is UpdateOrderAndFilter) {
+      List<Event> prevList = [];
+
+      resetPage();
+
+      if (updateFilterAndOrder(event.orderAndFilter)) {
+        yield Loading();
+
+        yield* searchEvents(
+            page: _page, orderAndFilter: _filterAndOrder, prevList: prevList);
+      }
     }
 
-    @override
-    void onChange(Change<EventState> change) {
-      print(change);
-      super.onChange(change);
+    if (event is RefreshSearchEventsByQueryEvent) {
+      List<Event> previousList = [];
+
+      if (state is Loaded) {
+
+        final cState = state as Loaded;
+
+        previousList = cState.events;
+
+        if (cState.isExhausted) {
+          return;
+        }
+
+        if(cState.isTimeout){
+          yield cState.copyWith(isTimeout: false);
+        }
+
+        _page = getPage(previousList);
+
+        yield* searchEvents(
+            page: _page,
+            query: _query,
+            orderAndFilter: _filterAndOrder,
+            prevList: previousList);
+
+      }
+
     }
   }
 
+
+  @override
+  Future<void> close() {
+    return super.close();
+  }
+
+  @override
+  void onChange(Change<EventState> change) {
+    print(change);
+    super.onChange(change);
+  }
+}

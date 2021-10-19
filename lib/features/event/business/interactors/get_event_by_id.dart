@@ -16,39 +16,41 @@ class GetEventById extends UseCase<Event, GetEventByIdParams> {
   final EventCacheDataSource eventCacheDataSource;
   final InternetCubit internetCubit;
 
-  GetEventById(this.eventNetworkDataSource, this.eventCacheDataSource,this.internetCubit);
+  GetEventById(this.eventNetworkDataSource, this.eventCacheDataSource,
+      this.internetCubit);
 
   @override
   Stream<Either<Failure, EventDetail>> call(GetEventByIdParams params) async* {
+    try {
+      EventDetail cacheResult = await eventCacheDataSource.searchEvent(
+          params.id);
 
-    try{
-      EventDetail cacheResult = await eventCacheDataSource.searchEvent(params.id);
-
-      if(cacheResult == null){
-
-        if(await internetCubit.isConnected()){
+      if (cacheResult == null) {
+        if (await internetCubit.isConnected()) {
           print('get_event_by_id | apiCall');
           final result = await apiCall(params.id);
           await eventCacheDataSource.insertEventDetail(result);
           cacheResult = await eventCacheDataSource.searchEvent(params.id);
           yield(Right(cacheResult));
-        }else {
-         yield(Left(NoElementFailure()));
+        } else {
+          yield(Left(NoElementFailure()));
         }
-      }else {
+      } else {
         print('get_event_by_id | cacheCall | cacheResult: $cacheResult');
         yield Right(cacheResult);
       }
-
-    }on ServerExceptions catch(error){
+    } on ServerExceptions catch (error) {
       print('get_event_by_id | call | error exception: ${error.message}');
       yield Left(NetworkFailure());
-    }on CacheException catch(error){
+    } on CacheException catch (error) {
       yield Left(CacheFailure(error: error.message));
-    }on NoElementExceptions {
+    } on NoElementExceptions {
       yield Left(NoElementFailure());
+    } on TimeoutException catch (error) {
+      yield Left(TimeoutFailure(error: error.message));
+    } catch (error) {
+      yield Left(NetworkFailure(error: error.toString()));
     }
-
   }
 
   Future<EventDetail> apiCall(int eventId) async =>

@@ -82,13 +82,13 @@ class _EventScreenState extends State<EventScreen> {
       shrinkWrap: true,
       slivers: [
         TitledSilverAppBar(title: 'Event'),
-        SliverPadding(
-          padding: const EdgeInsets.all(16) ,
-          sliver: SliverSubHeader(
+          SliverSubHeader(
             pinned: true,
-            minHeight: 40,
+            minHeight: 100,
             maxHeight: 40,
             child: Container(
+              alignment: Alignment.center,
+              color: Colors.white,
               margin: const EdgeInsets.symmetric(horizontal: 10),
               height: 40,
               child: TextField(
@@ -107,7 +107,6 @@ class _EventScreenState extends State<EventScreen> {
               ),
             ),
           ),
-        ),
         FilterGroupChipWidget(),
         EventList()
       ],

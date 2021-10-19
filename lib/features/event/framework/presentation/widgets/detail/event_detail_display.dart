@@ -15,7 +15,24 @@ class EventDetailDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        TitledSilverAppBar(title: eventDetail.eventTitle),
+        SliverAppBar(
+          backgroundColor: Theme.of(context).primaryColor,
+          expandedHeight: 120,
+          centerTitle: true,
+          flexibleSpace: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Container(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                eventDetail.eventTitle,
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+        ),
         EventDetailRow(
           date: eventDetail.eventDate,
           country: eventDetail.eventCountryName,

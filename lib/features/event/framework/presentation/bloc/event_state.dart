@@ -15,34 +15,40 @@ class Loading extends EventState {}
 class Loaded extends EventState {
   final List events;
   final bool isExhausted;
+  final bool isTimeout;
   final String orderAndFilter;
 
   Loaded({
     @required this.events,
     @required this.isExhausted,
+    this.isTimeout = false,
     this.orderAndFilter = EVENT_FILTER_QUERY
-  }): super([events,isExhausted,orderAndFilter]);
+  }): super([events,isExhausted,orderAndFilter,isTimeout]);
 
   Loaded copyWith({
     List events,
     bool isExhausted,
+    bool isTimeout,
     String orderAndFilter,
   }) {
     if ((events == null || identical(events, this.events)) &&
         (isExhausted == null || identical(isExhausted, this.isExhausted)) &&
-        (orderAndFilter == null || identical(orderAndFilter, this.orderAndFilter))) {
+        (isTimeout == null || identical(isTimeout, this.isTimeout)) &&
+        (orderAndFilter == null ||
+            identical(orderAndFilter, this.orderAndFilter))) {
       return this;
     }
 
     return new Loaded(
       events: events ?? this.events,
       isExhausted: isExhausted ?? this.isExhausted,
+      isTimeout: isTimeout ?? this.isTimeout,
       orderAndFilter: orderAndFilter ?? this.orderAndFilter,
     );
   }
 
   @override
-  String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted | orderAndFilter" $orderAndFilter';
+  String toString() => 'Loaded | events.length: ${events.length} | isExhausted: $isExhausted | isTimeout: $isTimeout | orderAndFilter" $orderAndFilter';
 }
 
 class Error extends EventState {
