@@ -1,5 +1,7 @@
 # ironman
 
+# Author: Michał Kozak
+
 A new Flutter project.
 
 ## Getting Started
